@@ -10,20 +10,23 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :acqdat_iot, AcqdatIotWeb.Endpoint,
-  load_from_system_env: true,
-  url: [
-    host: Application.get_env(:acqdat_iot, :app_hostname),
-    port: Application.get_env(:acqdat_iot, :app_port)
-  ],
-  server: true
+  http: [:inet6, port: System.get_env("APIPORT") || 4000],
+  url: [scheme: "https", host: "madsiot.herokuapp.com/api/", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 config :acqdat_api, AcqdatApiWeb.Endpoint,
-  load_from_system_env: true,
-  url: [
-    host: Application.get_env(:acqdat_api, :app_hostname),
-    port: Application.get_env(:acqdat_api, :app_port)
-  ],
-  server: true
+  http: [:inet6, port: System.get_env("APIPORT") || 4001],
+  url: [scheme: "https", host: "madsiot.herokuapp.com/iot/", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
+
+# configure database
+config :acqdat_core, AcqdatCore.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
 
 # Do not print debug messages in production
 config :logger, level: :info
