@@ -10,14 +10,16 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :acqdat_iot, AcqdatIotWeb.Endpoint,
-  http: [:inet6, port: System.get_env("APIPORT") || 4000],
-  url: [scheme: "https", host: "madsiot.herokuapp.com/api/", port: 443],
+  http: [:inet6, port: System.get_env("IOTPORT") || 4001],
+  url: [host: "localhost", port: System.get_env("IOTPORT") || 4001],
+  server: true,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 config :acqdat_api, AcqdatApiWeb.Endpoint,
-  http: [:inet6, port: System.get_env("APIPORT") || 4001],
-  url: [scheme: "https", host: "madsiot.herokuapp.com/iot/", port: 443],
+  http: [:inet6, port: System.get_env("APIPORT") || 4000],
+  url: [host: "localhost", port: System.get_env("APIPORT") || 4000],
+  server: true,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
