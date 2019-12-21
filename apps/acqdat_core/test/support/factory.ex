@@ -11,7 +11,10 @@ defmodule AcqdatCore.Support.Factory do
     Device,
     SensorType,
     Sensor,
-    SensorNotifications
+    SensorNotifications,
+    Site,
+    Process,
+    DigitalTwin
   }
 
   alias AcqdatCore.Schema.ToolManagement.{
@@ -43,7 +46,29 @@ defmodule AcqdatCore.Support.Factory do
       uuid: UUID.uuid1(:hex),
       name: sequence(:device_name, &"device#{&1}"),
       access_token: "abcd1234",
-      description: "new user device"
+      description: "new user device",
+      site: build(:site)
+    }
+  end
+
+  def site_factory() do
+    %Site{
+      name: sequence(:site_name, &"site#{&1}")
+    }
+  end
+
+  def process_factory() do
+    %Process{
+      name: sequence(:process, &"process#{&1}"),
+      site: build(:site)
+    }
+  end
+
+  def digital_twin_factory do
+    %DigitalTwin{
+      name: sequence(:digital_twin, &"digital_twin#{&1}"),
+      site: build(:site),
+      process: build(:process)
     }
   end
 
