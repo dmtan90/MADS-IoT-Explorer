@@ -5,7 +5,8 @@ defmodule AcqdatApiWeb.Validators.Device do
     verify_device_params(%{
       name!: :string,
       access_token!: :string,
-      description: :string
+      description: :string,
+      site_id: :integer
     })
   )
 
