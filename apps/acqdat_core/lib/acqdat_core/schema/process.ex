@@ -9,6 +9,8 @@ defmodule AcqdatCore.Schema.Process do
 
   alias AcqdatCore.Schema.Site
   alias AcqdatCore.Schema.DigitalTwin
+  alias AcqdatCore.Schema.Image
+  alias AcqdatApi.Image
 
   @typedoc """
   `name`: Name for easy identification of the process.
@@ -17,14 +19,16 @@ defmodule AcqdatCore.Schema.Process do
 
   schema("acqdat_processes") do
     field(:name, :string)
+    field(:image_url, :string)
+    field(:image, :any, virtual: true)
     has_many(:digital_twins, DigitalTwin)
     belongs_to(:site, Site)
     timestamps(type: :utc_datetime)
   end
 
   @required_params ~w(name site_id)a
-
-  @permitted @required_params
+  @optional_params ~w(image_url)a
+  @permitted @required_params ++ @optional_params
   @update_required_params ~w(name)a
 
   @spec changeset(
@@ -35,11 +39,19 @@ defmodule AcqdatCore.Schema.Process do
     process
     |> cast(params, @permitted)
     |> validate_required(@required_params)
+    |> common_changeset()
   end
 
   def update_changeset(%__MODULE__{} = process, params) do
     process
     |> cast(params, @permitted)
     |> validate_required(@update_required_params)
+    |> common_changeset()
+  end
+
+  def common_changeset(changeset) do
+    changeset
+    |> assoc_constraint(:site)
+    |> unique_constraint(:name, name: :unique_process_per_site)
   end
 end

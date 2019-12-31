@@ -19,7 +19,8 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
         name: device_manifest.name,
         access_token: device_manifest.access_token,
         description: device_manifest.description,
-        uuid: device_manifest.uuid
+        uuid: device_manifest.uuid,
+        image_url: device_manifest.image_url
       }
 
       conn = post(conn, Routes.device_path(conn, :create, params), data)
@@ -28,6 +29,7 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
       assert Map.has_key?(response, "access_token")
       assert Map.has_key?(response, "description")
       assert Map.has_key?(response, "uuid")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if authorization header not found", %{conn: conn} do
@@ -60,7 +62,8 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
         name: device.name,
         access_token: device.access_token,
         description: device.description,
-        uuid: device.uuid
+        uuid: device.uuid,
+        image_url: device.image_url
       }
 
       conn = post(conn, Routes.device_path(conn, :create, params), data)
@@ -91,6 +94,30 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
                  }
                }
              }
+    end
+
+    test "image url is missing", %{conn: conn} do
+      device_manifest = build(:device)
+      site = insert(:site)
+
+      params = %{
+        site_id: site.id
+      }
+
+      data = %{
+        name: device_manifest.name,
+        access_token: device_manifest.access_token,
+        description: device_manifest.description,
+        uuid: device_manifest.uuid
+      }
+
+      conn = post(conn, Routes.device_path(conn, :create, params), data)
+      response = conn |> json_response(200)
+      assert Map.has_key?(response, "name")
+      assert Map.has_key?(response, "access_token")
+      assert Map.has_key?(response, "description")
+      assert Map.has_key?(response, "uuid")
+      assert Map.has_key?(response, "image_url")
     end
   end
 
@@ -159,11 +186,11 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
 
       conn = put(conn, Routes.device_path(conn, :update, device.id), data)
       response = conn |> json_response(200)
-
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "access_token")
       assert Map.has_key?(response, "description")
       assert Map.has_key?(response, "uuid")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do
@@ -255,6 +282,7 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
       assert Map.has_key?(response, "access_token")
       assert Map.has_key?(response, "description")
       assert Map.has_key?(response, "uuid")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do

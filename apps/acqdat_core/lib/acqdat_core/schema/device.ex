@@ -21,6 +21,8 @@ defmodule AcqdatCore.Schema.Device do
   schema("acqdat_devices") do
     field(:uuid, :string)
     field(:name, :string)
+    field(:image_url, :string)
+    field(:image, :any, virtual: true)
     field(:access_token, :string)
     field(:description, :string)
 
@@ -31,7 +33,7 @@ defmodule AcqdatCore.Schema.Device do
   end
 
   @required_params ~w(name access_token uuid)a
-  @optional_params ~w(description site_id)a
+  @optional_params ~w(description site_id image_url)a
 
   @permitted @required_params ++ @optional_params
   @update_required_params ~w(name access_token)a

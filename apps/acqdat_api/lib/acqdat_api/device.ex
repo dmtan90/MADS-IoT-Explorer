@@ -7,7 +7,8 @@ defmodule AcqdatApi.Device do
       name: name,
       access_token: access_token,
       description: description,
-      site_id: site_id
+      site_id: site_id,
+      image_url: image_url
     } = params
 
     verify_device(
@@ -15,7 +16,8 @@ defmodule AcqdatApi.Device do
         name: name,
         access_token: access_token,
         description: description,
-        site_id: site_id
+        site_id: site_id,
+        image_url: image_url
       })
     )
   end
@@ -28,7 +30,8 @@ defmodule AcqdatApi.Device do
        access_token: device.access_token,
        description: device.description,
        uuid: device.uuid,
-       site_id: device.site_id
+       site_id: device.site_id,
+       image_url: device.image_url
      }}
   end
 

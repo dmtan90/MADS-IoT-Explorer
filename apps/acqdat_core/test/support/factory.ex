@@ -5,6 +5,11 @@ defmodule AcqdatCore.Support.Factory do
   import Plug.Conn
 
   @access_time_hours 5
+  # @image %Plug.Upload{
+  #   content_type: "image/png",
+  #   filename: "image.png",
+  #   path: "test/support/image.png"
+  # }
 
   alias AcqdatCore.Schema.{
     User,
@@ -47,6 +52,7 @@ defmodule AcqdatCore.Support.Factory do
       name: sequence(:device_name, &"device#{&1}"),
       access_token: "abcd1234",
       description: "new user device",
+      image: sequence(:image_url, &"device-image_url-#{&1}.com"),
       site: build(:site)
     }
   end
@@ -60,7 +66,8 @@ defmodule AcqdatCore.Support.Factory do
   def process_factory() do
     %Process{
       name: sequence(:process, &"process#{&1}"),
-      site: build(:site)
+      site: build(:site),
+      image_url: sequence(:image_url, &"device-image_url-#{&1}.com")
     }
   end
 

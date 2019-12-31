@@ -6,7 +6,8 @@ defmodule AcqdatApiWeb.Validators.Device do
       name!: :string,
       access_token!: :string,
       description: :string,
-      site_id: :integer
+      site_id: :integer,
+      image_url: :string
     })
   )
 

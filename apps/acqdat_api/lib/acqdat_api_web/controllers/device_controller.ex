@@ -1,6 +1,7 @@
 defmodule AcqdatApiWeb.DeviceController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Device
+  alias AcqdatApi.Image
   alias AcqdatCore.Model.Device, as: DeviceModel
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
@@ -44,10 +45,20 @@ defmodule AcqdatApiWeb.DeviceController do
   end
 
   def create(conn, params) do
-    changeset = verify_device_params(params)
-
     case conn.status do
       nil ->
+        params = Map.put(params, "image_url", "")
+
+        changeset =
+          case is_nil(params["image"]) do
+            true ->
+              verify_device_params(params)
+
+            false ->
+              params = extract_url(conn, params)
+              verify_device_params(params)
+          end
+
         with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
              {:create, {:ok, device}} <- {:create, Device.create(data)} do
           conn
@@ -67,10 +78,28 @@ defmodule AcqdatApiWeb.DeviceController do
     end
   end
 
+  defp extract_url(conn, %{"image" => image} = params) do
+    with {:ok, image_name} <- Image.store(image) do
+      Map.replace!(params, "image_url", Image.url(image_name))
+    else
+      {:error, error} -> send_error(conn, 400, error)
+    end
+  end
+
   def update(conn, params) do
     case conn.status do
       nil ->
         %{assigns: %{device: device}} = conn
+        params = Map.put(params, "image_url", device.image_url)
+
+        params =
+          case is_nil(params["image"]) do
+            true ->
+              params
+
+            false ->
+              extract_url(conn, params)
+          end
 
         case DeviceModel.update(device, params) do
           {:ok, device} ->

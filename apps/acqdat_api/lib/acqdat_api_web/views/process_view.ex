@@ -7,7 +7,8 @@ defmodule AcqdatApiWeb.ProcessView do
     %{
       id: process.id,
       name: process.name,
-      site_id: process.site_id
+      site_id: process.site_id,
+      image_url: process.image_url
     }
   end
 
@@ -16,6 +17,7 @@ defmodule AcqdatApiWeb.ProcessView do
       id: process.id,
       name: process.name,
       site_id: process.site_id,
+      image_url: process.image_url,
       site: render_one(process.site, SiteView, "site.json")
     }
   end

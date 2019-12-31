@@ -1,6 +1,7 @@
 defmodule AcqdatApiWeb.ProcessController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Process
+  alias AcqdatApi.Image
   alias AcqdatCore.Model.Process, as: ProcessModel
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
@@ -46,7 +47,17 @@ defmodule AcqdatApiWeb.ProcessController do
   def create(conn, params) do
     case conn.status do
       nil ->
-        changeset = verify_process_params(params)
+        params = Map.put(params, "image_url", "")
+
+        changeset =
+          case is_nil(params["image"]) do
+            true ->
+              verify_process_params(params)
+
+            false ->
+              params = extract_url(conn, params)
+              verify_process_params(params)
+          end
 
         with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
              {:create, {:ok, process}} <- {:create, Process.create(data)} do
@@ -67,10 +78,28 @@ defmodule AcqdatApiWeb.ProcessController do
     end
   end
 
+  defp extract_url(conn, %{"image" => image} = params) do
+    with {:ok, image_name} <- Image.store(image) do
+      Map.replace!(params, "image_url", Image.url(image_name))
+    else
+      {:error, error} -> send_error(conn, 400, error)
+    end
+  end
+
   def update(conn, params) do
     case conn.status do
       nil ->
         %{assigns: %{process: process}} = conn
+        params = Map.put(params, "image_url", process.image_url)
+
+        params =
+          case is_nil(params["image"]) do
+            true ->
+              params
+
+            false ->
+              extract_url(conn, params)
+          end
 
         case ProcessModel.update(process, params) do
           {:ok, process} ->

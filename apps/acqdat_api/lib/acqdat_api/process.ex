@@ -5,13 +5,15 @@ defmodule AcqdatApi.Process do
   def create(params) do
     %{
       name: name,
-      site_id: site_id
+      site_id: site_id,
+      image_url: image_url
     } = params
 
     verify_process(
       ProcessModel.create(%{
         name: name,
-        site_id: site_id
+        site_id: site_id,
+        image_url: image_url
       })
     )
   end
@@ -21,7 +23,8 @@ defmodule AcqdatApi.Process do
      %{
        id: process.id,
        name: process.name,
-       site_id: process.site_id
+       site_id: process.site_id,
+       image_url: process.image_url
      }}
   end
 

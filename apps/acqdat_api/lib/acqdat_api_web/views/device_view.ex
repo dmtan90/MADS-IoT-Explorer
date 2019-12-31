@@ -9,7 +9,8 @@ defmodule AcqdatApiWeb.DeviceView do
       name: device.name,
       uuid: device.uuid,
       description: device.description,
-      access_token: device.access_token
+      access_token: device.access_token,
+      image_url: device.image_url
     }
   end
 
@@ -20,6 +21,7 @@ defmodule AcqdatApiWeb.DeviceView do
       uuid: device.uuid,
       description: device.description,
       access_token: device.access_token,
+      image_url: device.image_url,
       site_id: device.site_id,
       site: render_one(device.site, SiteView, "site.json")
     }

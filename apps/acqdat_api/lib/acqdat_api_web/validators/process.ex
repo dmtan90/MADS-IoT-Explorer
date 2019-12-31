@@ -4,7 +4,8 @@ defmodule AcqdatApiWeb.Validators.Process do
   defparams(
     verify_process_params(%{
       name!: :string,
-      site_id!: :integer
+      site_id!: :integer,
+      image_url: :string
     })
   )
 

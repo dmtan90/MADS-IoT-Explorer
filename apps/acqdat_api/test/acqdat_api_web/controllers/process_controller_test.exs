@@ -13,7 +13,8 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
       process = build(:process)
 
       data = %{
-        name: process.name
+        name: process.name,
+        image_url: process.image_url
       }
 
       params = %{
@@ -25,6 +26,7 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
       assert Map.has_key?(response, "site_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if authorization header not found", %{conn: conn} do
@@ -59,6 +61,26 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
                }
              }
     end
+
+    test "image url is missing", %{conn: conn} do
+      process = build(:process)
+      site = insert(:site)
+
+      params = %{
+        site_id: site.id
+      }
+
+      data = %{
+        name: process.name
+      }
+
+      conn = post(conn, Routes.process_path(conn, :create, params), data)
+      response = conn |> json_response(200)
+      assert Map.has_key?(response, "site_id")
+      assert Map.has_key?(response, "name")
+      assert Map.has_key?(response, "id")
+      assert Map.has_key?(response, "image_url")
+    end
   end
 
   describe "update/2" do
@@ -74,6 +96,7 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
       assert Map.has_key?(response, "site_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do
@@ -135,6 +158,7 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
       assertion_process = List.first(response["process"])
       assert assertion_process["id"] == process.id
       assert assertion_process["name"] == process.name
+      assert assertion_process["image_url"] == process.image_url
       assert assertion_process["site"]["id"] == process.site.id
       assert assertion_process["site"]["name"] == process.site.name
     end
