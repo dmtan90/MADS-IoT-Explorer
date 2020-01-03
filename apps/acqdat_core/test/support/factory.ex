@@ -65,7 +65,8 @@ defmodule AcqdatCore.Support.Factory do
         "lng" => "73.76185509999999",
         "name" => "acqdat_location",
         "place_id" => UUID.uuid1(:hex)
-      }
+      },
+      image: sequence(:image_url, &"device-image_url-#{&1}.com")
     }
   end
 

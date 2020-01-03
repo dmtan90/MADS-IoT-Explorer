@@ -4,7 +4,8 @@ defmodule AcqdatApiWeb.Validators.Site do
   defparams(
     verify_site_params(%{
       name!: :string,
-      location_details!: :map
+      location_details!: :map,
+      image_url: :string
     })
   )
 

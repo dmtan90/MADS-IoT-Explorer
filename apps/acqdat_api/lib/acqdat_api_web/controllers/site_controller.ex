@@ -1,6 +1,7 @@
 defmodule AcqdatApiWeb.SiteController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Site
+  alias AcqdatApi.Image
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Site
@@ -42,7 +43,17 @@ defmodule AcqdatApiWeb.SiteController do
   end
 
   def create(conn, params) do
-    changeset = verify_site_params(params)
+    params = Map.put(params, "image_url", "")
+
+    changeset =
+      case is_nil(params["image"]) do
+        true ->
+          verify_site_params(params)
+
+        false ->
+          params = extract_url(conn, params)
+          verify_site_params(params)
+      end
 
     with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
          {:create, {:ok, site}} <- {:create, Site.create(data)} do
@@ -62,6 +73,16 @@ defmodule AcqdatApiWeb.SiteController do
     case conn.status do
       nil ->
         %{assigns: %{site: site}} = conn
+        params = Map.put(params, "image_url", site.image_url)
+
+        params =
+          case is_nil(params["image"]) do
+            true ->
+              params
+
+            false ->
+              extract_url(conn, params)
+          end
 
         case SiteModel.update(site, params) do
           {:ok, site} ->
@@ -101,6 +122,14 @@ defmodule AcqdatApiWeb.SiteController do
       404 ->
         conn
         |> send_error(404, "Resource Not Found")
+    end
+  end
+
+  defp extract_url(conn, %{"image" => image} = params) do
+    with {:ok, image_name} <- Image.store({image, "site"}) do
+      Map.replace!(params, "image_url", Image.url({image_name, "site"}))
+    else
+      {:error, error} -> send_error(conn, 400, error)
     end
   end
 

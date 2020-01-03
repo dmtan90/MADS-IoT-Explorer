@@ -9,6 +9,8 @@ defmodule AcqdatCore.Schema.Site do
 
   alias AcqdatCore.Schema.Device
   alias AcqdatCore.Schema.Process
+  alias AcqdatCore.Schema.Image
+  alias AcqdatApi.Image
 
   @typedoc """
   `name`: Name for easy identification of the site.
@@ -18,13 +20,16 @@ defmodule AcqdatCore.Schema.Site do
   schema("acqdat_sites") do
     field(:name, :string)
     field(:location_details, :map)
+    field(:image_url, :string)
+    field(:image, :any, virtual: true)
     has_many(:devices, Device)
     has_many(:processes, Process)
     timestamps(type: :utc_datetime)
   end
 
   @required_params ~w(name location_details)a
-  @permitted @required_params
+  @optional_params ~w(image_url)a
+  @permitted @required_params ++ @optional_params
 
   @spec changeset(
           __MODULE__.t(),

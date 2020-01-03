@@ -12,7 +12,8 @@ defmodule AcqdatApiWeb.SiteControllerTest do
 
       data = %{
         name: site.name,
-        location_details: site.location_details
+        location_details: site.location_details,
+        image_url: site.image_url
       }
 
       conn = post(conn, Routes.site_path(conn, :create), data)
@@ -20,6 +21,7 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "location_details")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if authorization header is missing", %{conn: conn} do
@@ -40,7 +42,8 @@ defmodule AcqdatApiWeb.SiteControllerTest do
 
       data = %{
         name: site.name,
-        location_details: site.location_details
+        location_details: site.location_details,
+        image_url: site.image_url
       }
 
       conn = post(conn, Routes.site_path(conn, :create), data)
@@ -80,6 +83,7 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "location_details")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do
@@ -179,6 +183,7 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "location_details")
+      assert Map.has_key?(response, "image_url")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do

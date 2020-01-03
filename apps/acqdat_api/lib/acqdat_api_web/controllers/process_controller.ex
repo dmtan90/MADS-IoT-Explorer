@@ -79,8 +79,8 @@ defmodule AcqdatApiWeb.ProcessController do
   end
 
   defp extract_url(conn, %{"image" => image} = params) do
-    with {:ok, image_name} <- Image.store(image) do
-      Map.replace!(params, "image_url", Image.url(image_name))
+    with {:ok, image_name} <- Image.store({image, "process"}) do
+      Map.replace!(params, "image_url", Image.url({image_name, "process"}))
     else
       {:error, error} -> send_error(conn, 400, error)
     end

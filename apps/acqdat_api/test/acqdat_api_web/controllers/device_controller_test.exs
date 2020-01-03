@@ -168,7 +168,8 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
                    "site" => %{
                      "id" => device.site.id,
                      "name" => device.site.name,
-                     "location_details" => device.site.location_details
+                     "location_details" => device.site.location_details,
+                     "image_url" => device.site.image_url
                    },
                    "site_id" => device.site_id,
                    "uuid" => device.uuid

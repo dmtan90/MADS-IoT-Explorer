@@ -5,13 +5,15 @@ defmodule AcqdatApi.Site do
   def create(params) do
     %{
       name: name,
-      location_details: location_details
+      location_details: location_details,
+      image_url: image_url
     } = params
 
     verify_site(
       SiteModel.create(%{
         name: name,
-        location_details: location_details
+        location_details: location_details,
+        image_url: image_url
       })
     )
   end
@@ -21,7 +23,8 @@ defmodule AcqdatApi.Site do
      %{
        id: site.id,
        name: site.name,
-       location_details: site.location_details
+       location_details: site.location_details,
+       image_url: site.image_url
      }}
   end
 

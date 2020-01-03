@@ -6,7 +6,8 @@ defmodule AcqdatApiWeb.SiteView do
     %{
       id: site.id,
       name: site.name,
-      location_details: site.location_details
+      location_details: site.location_details,
+      image_url: site.image_url
     }
   end
 
