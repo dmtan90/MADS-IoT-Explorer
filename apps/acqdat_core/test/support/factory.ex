@@ -59,7 +59,13 @@ defmodule AcqdatCore.Support.Factory do
 
   def site_factory() do
     %Site{
-      name: sequence(:site_name, &"site#{&1}")
+      name: sequence(:site_name, &"site#{&1}"),
+      location_details: %{
+        "lat" => "18.5737046",
+        "lng" => "73.76185509999999",
+        "name" => "acqdat_location",
+        "place_id" => UUID.uuid1(:hex)
+      }
     }
   end
 

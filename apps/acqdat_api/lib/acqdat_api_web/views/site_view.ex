@@ -5,7 +5,8 @@ defmodule AcqdatApiWeb.SiteView do
   def render("site.json", %{site: site}) do
     %{
       id: site.id,
-      name: site.name
+      name: site.name,
+      location_details: site.location_details
     }
   end
 

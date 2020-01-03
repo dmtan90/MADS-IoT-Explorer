@@ -17,15 +17,14 @@ defmodule AcqdatCore.Schema.Site do
 
   schema("acqdat_sites") do
     field(:name, :string)
+    field(:location_details, :map)
     has_many(:devices, Device)
     has_many(:processes, Process)
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(name)a
-
+  @required_params ~w(name location_details)a
   @permitted @required_params
-  @update_required_params ~w(name)a
 
   @spec changeset(
           __MODULE__.t(),
@@ -41,7 +40,6 @@ defmodule AcqdatCore.Schema.Site do
   def update_changeset(%__MODULE__{} = site, params) do
     site
     |> cast(params, @permitted)
-    |> validate_required(@update_required_params)
     |> common_changeset()
   end
 

@@ -11,13 +11,15 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       site = build(:site)
 
       data = %{
-        name: site.name
+        name: site.name,
+        location_details: site.location_details
       }
 
       conn = post(conn, Routes.site_path(conn, :create), data)
       response = conn |> json_response(200)
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "name")
+      assert Map.has_key?(response, "location_details")
     end
 
     test "fails if authorization header is missing", %{conn: conn} do
@@ -37,7 +39,8 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       site = insert(:site)
 
       data = %{
-        name: site.name
+        name: site.name,
+        location_details: site.location_details
       }
 
       conn = post(conn, Routes.site_path(conn, :create), data)
@@ -57,7 +60,8 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       assert response == %{
                "errors" => %{
                  "message" => %{
-                   "name" => ["can't be blank"]
+                   "name" => ["can't be blank"],
+                   "location_details" => ["can't be blank"]
                  }
                }
              }
@@ -75,6 +79,7 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       response = conn |> json_response(200)
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "name")
+      assert Map.has_key?(response, "location_details")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do
@@ -173,6 +178,7 @@ defmodule AcqdatApiWeb.SiteControllerTest do
       response = conn |> json_response(200)
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
+      assert Map.has_key?(response, "location_details")
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do

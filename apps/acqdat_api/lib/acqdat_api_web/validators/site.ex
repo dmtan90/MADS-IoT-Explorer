@@ -3,7 +3,8 @@ defmodule AcqdatApiWeb.Validators.Site do
 
   defparams(
     verify_site_params(%{
-      name!: :string
+      name!: :string,
+      location_details!: :map
     })
   )
 
