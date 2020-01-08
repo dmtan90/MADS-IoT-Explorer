@@ -9,7 +9,6 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
 
     test "digital twin create", %{conn: conn} do
       process = insert(:process)
-      site = insert(:site)
 
       digital_twin_manifest = build(:digital_twin)
 
@@ -18,8 +17,7 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
       }
 
       params = %{
-        process_id: process.id,
-        site_id: site.id
+        process_id: process.id
       }
 
       conn = post(conn, Routes.digital_twin_path(conn, :create, params), data)
@@ -27,7 +25,6 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
       assert Map.has_key?(response, "process_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
-      assert Map.has_key?(response, "site_id")
     end
 
     test "fails if authorization header not found", %{conn: conn} do
@@ -47,14 +44,59 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
       digital_twin = insert(:digital_twin)
 
       params = %{
-        process_id: digital_twin.process_id,
-        site_id: digital_twin.site_id
+        process_id: digital_twin.process_id
       }
 
       conn = post(conn, Routes.digital_twin_path(conn, :create, params), %{})
       response = conn |> json_response(400)
 
       assert response == %{"errors" => %{"message" => %{"name" => ["can't be blank"]}}}
+    end
+
+    test "digital twin create when both site and process IDs are given", %{conn: conn} do
+      process = insert(:process)
+      site = insert(:site)
+
+      digital_twin_manifest = build(:digital_twin)
+
+      data = %{
+        name: digital_twin_manifest.name
+      }
+
+      params = %{
+        process_id: process.id,
+        site_id: site.id
+      }
+
+      conn = post(conn, Routes.digital_twin_path(conn, :create, params), data)
+      response = conn |> json_response(404)
+
+      assert response == %{
+               "errors" => %{
+                 "message" =>
+                   "Either Resource Not Found or Process and Site ID are not mutually exclusive or both are missing"
+               }
+             }
+    end
+
+    test "digital twin create when none site and process IDs are given", %{conn: conn} do
+      digital_twin_manifest = build(:digital_twin)
+
+      data = %{
+        name: digital_twin_manifest.name
+      }
+
+      params = %{}
+
+      conn = post(conn, Routes.digital_twin_path(conn, :create, params), data)
+      response = conn |> json_response(404)
+
+      assert response == %{
+               "errors" => %{
+                 "message" =>
+                   "Either Resource Not Found or Process and Site ID are not mutually exclusive or both are missing"
+               }
+             }
     end
   end
 
@@ -68,7 +110,6 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
       conn = put(conn, Routes.digital_twin_path(conn, :update, digital_twin.id), data)
       response = conn |> json_response(200)
 
-      assert Map.has_key?(response, "site_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "process_id")
@@ -97,7 +138,6 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
 
       conn = delete(conn, Routes.digital_twin_path(conn, :delete, digital_twin.id), %{})
       response = conn |> json_response(200)
-      assert Map.has_key?(response, "site_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
       assert Map.has_key?(response, "process_id")
@@ -133,9 +173,6 @@ defmodule AcqdatApiWeb.DigitalTwinControllerTest do
       assert length(response["digital_twin"]) == 1
       assertion_digital_twin = List.first(response["digital_twin"])
       assert assertion_digital_twin["id"] == digital_twin.id
-      assert assertion_digital_twin["site_id"] == digital_twin.site_id
-      assert assertion_digital_twin["site"]["id"] == digital_twin.site.id
-      assert assertion_digital_twin["site"]["name"] == digital_twin.site.name
       assert assertion_digital_twin["process_id"] == digital_twin.process_id
       assert assertion_digital_twin["process"]["id"] == digital_twin.process.id
       assert assertion_digital_twin["process"]["name"] == digital_twin.process.name

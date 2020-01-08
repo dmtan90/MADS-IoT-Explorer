@@ -81,7 +81,6 @@ defmodule AcqdatCore.Support.Factory do
   def digital_twin_factory do
     %DigitalTwin{
       name: sequence(:digital_twin, &"digital_twin#{&1}"),
-      site: build(:site),
       process: build(:process)
     }
   end

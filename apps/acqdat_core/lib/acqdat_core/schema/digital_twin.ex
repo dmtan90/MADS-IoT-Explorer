@@ -23,8 +23,9 @@ defmodule AcqdatCore.Schema.DigitalTwin do
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(name site_id process_id)a
-  @optional_params ~w(metadata)a
+  @mutual_exclusive_fields ~w(site_id process_id)a
+  @required_params ~w(name)a
+  @optional_params ~w(metadata site_id process_id)a
   @permitted @required_params ++ @optional_params
   @update_required_params ~w(name)a
 
@@ -36,19 +37,33 @@ defmodule AcqdatCore.Schema.DigitalTwin do
     digital_twin
     |> cast(params, @permitted)
     |> validate_required(@required_params)
-    |> common_changeset()
+    |> validate_mutual_exclusive(@mutual_exclusive_fields)
   end
 
   def update_changeset(%__MODULE__{} = digital_twin, params) do
     digital_twin
     |> cast(params, @permitted)
     |> validate_required(@update_required_params)
-    |> common_changeset()
+    |> validate_mutual_exclusive(@mutual_exclusive_fields)
   end
 
-  def common_changeset(changeset) do
-    changeset
-    |> assoc_constraint(:site)
-    |> assoc_constraint(:process)
+  defp validate_mutual_exclusive(changeset, fields) do
+    present = Enum.count(fields, fn field -> present?(get_field(changeset, field)) end)
+
+    case present do
+      1 ->
+        changeset
+
+      _ ->
+        add_error(
+          changeset,
+          :missing_or_mutual_exclusive_error,
+          "Either no ID is not present or both are present"
+        )
+    end
   end
+
+  defp present?(nil), do: false
+  defp present?(""), do: false
+  defp present?(_), do: true
 end

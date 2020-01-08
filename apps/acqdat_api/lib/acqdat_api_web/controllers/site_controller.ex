@@ -51,7 +51,7 @@ defmodule AcqdatApiWeb.SiteController do
           verify_site_params(params)
 
         false ->
-          params = extract_url(conn, params)
+          params = add_image_url(conn, params)
           verify_site_params(params)
       end
 
@@ -81,7 +81,7 @@ defmodule AcqdatApiWeb.SiteController do
               params
 
             false ->
-              extract_url(conn, params)
+              add_image_url(conn, params)
           end
 
         case SiteModel.update(site, params) do
@@ -108,6 +108,10 @@ defmodule AcqdatApiWeb.SiteController do
       nil ->
         case SiteModel.delete(id) do
           {:ok, site} ->
+            Task.Supervisor.async(Datakrew.TaskSupervisor, fn ->
+              delete_file(site.image_url, "site")
+            end)
+
             conn
             |> put_status(200)
             |> render("site.json", %{site: site})
@@ -125,12 +129,31 @@ defmodule AcqdatApiWeb.SiteController do
     end
   end
 
-  defp extract_url(conn, %{"image" => image} = params) do
+  defp add_image_url(conn, %{"image" => image} = params) do
     with {:ok, image_name} <- Image.store({image, "site"}) do
       Map.replace!(params, "image_url", Image.url({image_name, "site"}))
     else
       {:error, error} -> send_error(conn, 400, error)
     end
+  end
+
+  def delete_file(file_url, prefix) do
+    path = String.split(file_url, "/")
+    path_file_name = List.last(path) |> String.replace("%20", " ")
+
+    list =
+      ExAws.S3.list_objects(System.get_env("AWS_S3_BUCKET"), prefix: "uploads/#{prefix}")
+      |> ExAws.stream!()
+      |> Enum.to_list()
+
+    Enum.each(list, fn obj ->
+      [_, _, file_name] = String.split(obj.key, "/")
+
+      if file_name == path_file_name do
+        ExAws.S3.delete_object(System.get_env("AWS_S3_BUCKET"), obj.key)
+        |> ExAws.request()
+      end
+    end)
   end
 
   defp load_site(%{params: %{"id" => id}} = conn, _params) do

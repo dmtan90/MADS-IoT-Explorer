@@ -41,12 +41,15 @@ defmodule AcqdatApiWeb.DigitalTwinController do
             send_error(conn, 400, error)
 
           {:create, {:error, message}} ->
-            send_error(conn, 400, message)
+            send_error(conn, 400, message.error)
         end
 
       404 ->
         conn
-        |> send_error(404, "Resource Not Found")
+        |> send_error(
+          404,
+          "Either Resource Not Found or Process and Site ID are not mutually exclusive or both are missing"
+        )
     end
   end
 
@@ -114,28 +117,45 @@ defmodule AcqdatApiWeb.DigitalTwinController do
     end
   end
 
-  defp load_process_and_site(
-         %{params: %{"process_id" => process_id, "site_id" => site_id}} = conn,
-         _params
-       ) do
-    {process_id, _} = Integer.parse(process_id)
-    {site_id, _} = Integer.parse(site_id)
+  defp load_process_and_site(conn, _params) do
+    case is_nil(conn.params["process_id"]) do
+      false ->
+        case is_nil(conn.params["site_id"]) do
+          false ->
+            conn
+            |> put_status(404)
 
-    case SiteModel.get(site_id) do
-      {:ok, site} ->
-        case ProcessModel.get(process_id) do
-          {:ok, process} ->
-            process = Map.put(process, :site, site)
-            assign(conn, :process, process)
+          true ->
+            {process_id, _} = Integer.parse(conn.params["process_id"])
 
-          {:error, _message} ->
+            case ProcessModel.get(process_id) do
+              {:ok, process} ->
+                assign(conn, :process, process)
+
+              {:error, _message} ->
+                conn
+                |> put_status(404)
+            end
+        end
+
+      true ->
+        case is_nil(conn.params["site_id"]) do
+          false ->
+            {site_id, _} = Integer.parse(conn.params["site_id"])
+
+            case SiteModel.get(site_id) do
+              {:ok, site} ->
+                assign(conn, :site, site)
+
+              {:error, _message} ->
+                conn
+                |> put_status(404)
+            end
+
+          true ->
             conn
             |> put_status(404)
         end
-
-      {:error, _message} ->
-        conn
-        |> put_status(404)
     end
   end
 

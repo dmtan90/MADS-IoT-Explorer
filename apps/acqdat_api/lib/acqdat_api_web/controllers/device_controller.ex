@@ -55,7 +55,7 @@ defmodule AcqdatApiWeb.DeviceController do
               verify_device_params(params)
 
             false ->
-              params = extract_url(conn, params)
+              params = add_image_url(conn, params)
               verify_device_params(params)
           end
 
@@ -78,9 +78,9 @@ defmodule AcqdatApiWeb.DeviceController do
     end
   end
 
-  defp extract_url(conn, %{"image" => image} = params) do
-    with {:ok, image_name} <- Image.store(image) do
-      Map.replace!(params, "image_url", Image.url(image_name))
+  defp add_image_url(conn, %{"image" => image} = params) do
+    with {:ok, image_name} <- Image.store({image, "device"}) do
+      Map.replace!(params, "image_url", Image.url({image_name, "device"}))
     else
       {:error, error} -> send_error(conn, 400, error)
     end
@@ -98,7 +98,7 @@ defmodule AcqdatApiWeb.DeviceController do
               params
 
             false ->
-              extract_url(conn, params)
+              add_image_url(conn, params)
           end
 
         case DeviceModel.update(device, params) do
@@ -125,6 +125,10 @@ defmodule AcqdatApiWeb.DeviceController do
       nil ->
         case DeviceModel.delete(id) do
           {:ok, device} ->
+            Task.Supervisor.async(Datakrew.TaskSupervisor, fn ->
+              delete_file(device.image_url, "device")
+            end)
+
             conn
             |> put_status(200)
             |> render("device.json", %{device: device})
@@ -157,6 +161,25 @@ defmodule AcqdatApiWeb.DeviceController do
         conn
         |> send_error(404, "Resource Not Found")
     end
+  end
+
+  def delete_file(file_url, prefix) do
+    path = String.split(file_url, "/")
+    path_file_name = List.last(path) |> String.replace("%20", " ")
+
+    list =
+      ExAws.S3.list_objects(System.get_env("AWS_S3_BUCKET"), prefix: "uploads/#{prefix}")
+      |> ExAws.stream!()
+      |> Enum.to_list()
+
+    Enum.each(list, fn obj ->
+      [_, _, file_name] = String.split(obj.key, "/")
+
+      if file_name == path_file_name do
+        ExAws.S3.delete_object(System.get_env("AWS_S3_BUCKET"), obj.key)
+        |> ExAws.request()
+      end
+    end)
   end
 
   defp load_device(%{params: %{"id" => id}} = conn, _params) do

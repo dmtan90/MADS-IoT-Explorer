@@ -4,8 +4,8 @@ defmodule AcqdatApiWeb.Validators.DigitalTwin do
   defparams(
     verify_digital_twin_params(%{
       name!: :string,
-      process_id!: :integer,
-      site_id!: :integer
+      process_id: :integer,
+      site_id: :integer
     })
   )
 
