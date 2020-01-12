@@ -62,7 +62,7 @@ defmodule AcqdatApiWeb.ProcessControllerTest do
              }
     end
 
-    test "image url is missing", %{conn: conn} do
+    test "process created without image url", %{conn: conn} do
       process = build(:process)
       site = insert(:site)
 

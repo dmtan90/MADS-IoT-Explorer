@@ -9,8 +9,6 @@ defmodule AcqdatCore.Schema.Site do
 
   alias AcqdatCore.Schema.Device
   alias AcqdatCore.Schema.Process
-  alias AcqdatCore.Schema.Image
-  alias AcqdatApi.Image
 
   @typedoc """
   `name`: Name for easy identification of the site.

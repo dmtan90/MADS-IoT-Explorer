@@ -96,7 +96,7 @@ defmodule AcqdatApiWeb.DeviceControllerTest do
              }
     end
 
-    test "image url is missing", %{conn: conn} do
+    test "device created without image url", %{conn: conn} do
       device_manifest = build(:device)
       site = insert(:site)
 

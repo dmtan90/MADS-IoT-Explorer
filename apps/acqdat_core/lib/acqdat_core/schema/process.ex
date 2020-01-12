@@ -9,8 +9,6 @@ defmodule AcqdatCore.Schema.Process do
 
   alias AcqdatCore.Schema.Site
   alias AcqdatCore.Schema.DigitalTwin
-  alias AcqdatCore.Schema.Image
-  alias AcqdatApi.Image
 
   @typedoc """
   `name`: Name for easy identification of the process.

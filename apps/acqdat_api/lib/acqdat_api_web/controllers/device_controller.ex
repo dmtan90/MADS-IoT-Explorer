@@ -2,6 +2,7 @@ defmodule AcqdatApiWeb.DeviceController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Device
   alias AcqdatApi.Image
+  alias AcqdatApi.ImageDeletion
   alias AcqdatCore.Model.Device, as: DeviceModel
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
@@ -125,9 +126,7 @@ defmodule AcqdatApiWeb.DeviceController do
       nil ->
         case DeviceModel.delete(id) do
           {:ok, device} ->
-            Task.Supervisor.async(Datakrew.TaskSupervisor, fn ->
-              delete_file(device.image_url, "device")
-            end)
+            ImageDeletion.delete_operation(device, "device")
 
             conn
             |> put_status(200)
@@ -161,25 +160,6 @@ defmodule AcqdatApiWeb.DeviceController do
         conn
         |> send_error(404, "Resource Not Found")
     end
-  end
-
-  def delete_file(file_url, prefix) do
-    path = String.split(file_url, "/")
-    path_file_name = List.last(path) |> String.replace("%20", " ")
-
-    list =
-      ExAws.S3.list_objects(System.get_env("AWS_S3_BUCKET"), prefix: "uploads/#{prefix}")
-      |> ExAws.stream!()
-      |> Enum.to_list()
-
-    Enum.each(list, fn obj ->
-      [_, _, file_name] = String.split(obj.key, "/")
-
-      if file_name == path_file_name do
-        ExAws.S3.delete_object(System.get_env("AWS_S3_BUCKET"), obj.key)
-        |> ExAws.request()
-      end
-    end)
   end
 
   defp load_device(%{params: %{"id" => id}} = conn, _params) do

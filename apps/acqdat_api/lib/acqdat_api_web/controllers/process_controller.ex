@@ -2,6 +2,7 @@ defmodule AcqdatApiWeb.ProcessController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Process
   alias AcqdatApi.Image
+  alias AcqdatApi.ImageDeletion
   alias AcqdatCore.Model.Process, as: ProcessModel
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
@@ -125,9 +126,7 @@ defmodule AcqdatApiWeb.ProcessController do
       nil ->
         case ProcessModel.delete(id) do
           {:ok, process} ->
-            Task.Supervisor.async(Datakrew.TaskSupervisor, fn ->
-              delete_file(process.image_url, "process")
-            end)
+            ImageDeletion.delete_operation(process, "process")
 
             conn
             |> put_status(200)
@@ -144,25 +143,6 @@ defmodule AcqdatApiWeb.ProcessController do
         conn
         |> send_error(404, "Resource Not Found")
     end
-  end
-
-  def delete_file(file_url, prefix) do
-    path = String.split(file_url, "/")
-    path_file_name = List.last(path) |> String.replace("%20", " ")
-
-    list =
-      ExAws.S3.list_objects(System.get_env("AWS_S3_BUCKET"), prefix: "uploads/#{prefix}")
-      |> ExAws.stream!()
-      |> Enum.to_list()
-
-    Enum.each(list, fn obj ->
-      [_, _, file_name] = String.split(obj.key, "/")
-
-      if file_name == path_file_name do
-        ExAws.S3.delete_object(System.get_env("AWS_S3_BUCKET"), obj.key)
-        |> ExAws.request()
-      end
-    end)
   end
 
   defp load_site(

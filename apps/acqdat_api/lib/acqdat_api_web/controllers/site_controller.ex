@@ -2,6 +2,7 @@ defmodule AcqdatApiWeb.SiteController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Site
   alias AcqdatApi.Image
+  alias AcqdatApi.ImageDeletion
   alias AcqdatCore.Model.Site, as: SiteModel
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Site
@@ -108,9 +109,7 @@ defmodule AcqdatApiWeb.SiteController do
       nil ->
         case SiteModel.delete(id) do
           {:ok, site} ->
-            Task.Supervisor.async(Datakrew.TaskSupervisor, fn ->
-              delete_file(site.image_url, "site")
-            end)
+            ImageDeletion.delete_operation(site, "site")
 
             conn
             |> put_status(200)
@@ -135,25 +134,6 @@ defmodule AcqdatApiWeb.SiteController do
     else
       {:error, error} -> send_error(conn, 400, error)
     end
-  end
-
-  def delete_file(file_url, prefix) do
-    path = String.split(file_url, "/")
-    path_file_name = List.last(path) |> String.replace("%20", " ")
-
-    list =
-      ExAws.S3.list_objects(System.get_env("AWS_S3_BUCKET"), prefix: "uploads/#{prefix}")
-      |> ExAws.stream!()
-      |> Enum.to_list()
-
-    Enum.each(list, fn obj ->
-      [_, _, file_name] = String.split(obj.key, "/")
-
-      if file_name == path_file_name do
-        ExAws.S3.delete_object(System.get_env("AWS_S3_BUCKET"), obj.key)
-        |> ExAws.request()
-      end
-    end)
   end
 
   defp load_site(%{params: %{"id" => id}} = conn, _params) do
