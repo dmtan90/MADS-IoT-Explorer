@@ -5,15 +5,13 @@ defmodule AcqdatApi.Sensor do
   def create(params) do
     %{
       name: name,
-      device_id: device_id,
-      sensor_type_id: sensor_type_id
+      device_id: device_id
     } = params
 
     verify_sensor(
       SensorModel.create(%{
         name: name,
-        device_id: device_id,
-        sensor_type_id: sensor_type_id
+        device_id: device_id
       })
     )
   end
@@ -24,7 +22,6 @@ defmodule AcqdatApi.Sensor do
        id: sensor.id,
        name: sensor.name,
        device_id: sensor.device_id,
-       sensor_type_id: sensor.sensor_type_id,
        uuid: sensor.uuid
      }}
   end
@@ -35,6 +32,6 @@ defmodule AcqdatApi.Sensor do
 
   def sensor_by_criteria(%{"device_id" => device_id} = _criteria) do
     {device_id, _} = Integer.parse(device_id)
-    {:list, SensorModel.get_all_by_criteria(device_id, [:sensor_type])}
+    {:list, SensorModel.get_all_by_criteria(device_id)}
   end
 end

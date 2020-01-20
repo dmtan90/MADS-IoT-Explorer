@@ -9,7 +9,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
 
     test "sensor create", %{conn: conn} do
       device = insert(:device)
-      sensor_type = insert(:sensor_type)
 
       sensor_manifest = build(:sensor)
 
@@ -19,8 +18,7 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       }
 
       params = %{
-        device_id: device.id,
-        sensor_type_id: sensor_type.id
+        device_id: device.id
       }
 
       conn = post(conn, Routes.sensor_path(conn, :create, params), data)
@@ -28,7 +26,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       assert Map.has_key?(response, "device_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
-      assert Map.has_key?(response, "sensor_type_id")
       assert Map.has_key?(response, "uuid")
     end
 
@@ -54,8 +51,7 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       }
 
       params = %{
-        device_id: sensor.device_id,
-        sensor_type_id: sensor.sensor_type_id
+        device_id: sensor.device_id
       }
 
       conn = post(conn, Routes.sensor_path(conn, :create, params), data)
@@ -72,8 +68,7 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       sensor = insert(:sensor)
 
       params = %{
-        device_id: sensor.device_id,
-        sensor_type_id: sensor.sensor_type_id
+        device_id: sensor.device_id
       }
 
       conn = post(conn, Routes.sensor_path(conn, :create, params), %{})
@@ -137,14 +132,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
                    "device_id" => sensor.device_id,
                    "id" => sensor.id,
                    "name" => sensor.name,
-                   "sensor_type" => %{
-                     "id" => sensor.sensor_type.id,
-                     "identifier" => sensor.sensor_type.identifier,
-                     "make" => sensor.sensor_type.make,
-                     "name" => sensor.sensor_type.name,
-                     "value_keys" => sensor.sensor_type.value_keys
-                   },
-                   "sensor_type_id" => sensor.sensor_type_id,
                    "uuid" => sensor.uuid
                  }
                ]
@@ -165,7 +152,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       assert Map.has_key?(response, "device_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
-      assert Map.has_key?(response, "sensor_type_id")
       assert Map.has_key?(response, "uuid")
     end
 
@@ -195,7 +181,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       assert Map.has_key?(response, "device_id")
       assert Map.has_key?(response, "name")
       assert Map.has_key?(response, "id")
-      assert Map.has_key?(response, "sensor_type_id")
       assert Map.has_key?(response, "uuid")
     end
 
@@ -232,9 +217,6 @@ defmodule AcqdatApiWeb.SensorControllerTest do
       assert assertion_sensor["device_id"] == test_sensor.device_id
       assert assertion_sensor["device"]["id"] == test_sensor.device.id
       assert assertion_sensor["device"]["name"] == test_sensor.device.name
-      assert assertion_sensor["sensor_type_id"] == test_sensor.sensor_type_id
-      assert assertion_sensor["sensor_type"]["id"] == test_sensor.sensor_type.id
-      assert assertion_sensor["sensor_type"]["name"] == test_sensor.sensor_type.name
     end
 
     test "if params are missing", %{conn: conn} do

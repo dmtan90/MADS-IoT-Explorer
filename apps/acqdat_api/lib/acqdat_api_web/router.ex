@@ -29,9 +29,6 @@ defmodule AcqdatApiWeb.Router do
     post "/sign-out", AuthController, :sign_out
     post "/search-location", PlaceController, :search_location
 
-    resources "/sensor_type", SensorTypeController,
-      only: [:create, :update, :delete, :index, :show]
-
     resources "/device", DeviceController, only: [:create, :update, :delete, :index, :show]
     get "/sensor-criteria/:device_id", SensorController, :sensor_by_criteria
     get "/device-criteria/:site_id", DeviceController, :device_by_criteria

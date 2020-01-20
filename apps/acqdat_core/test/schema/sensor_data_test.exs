@@ -9,19 +9,9 @@ defmodule AcqdatCore.Schema.SensorDataTest do
     setup do
       device = insert(:device)
 
-      sensor_type =
-        insert(:sensor_type,
-          name: "Temperature",
-          make: "From Adafruit",
-          identifier: "temperature",
-          visualizer: "pie-chart",
-          value_keys: ["temp"]
-        )
-
       sensor =
         insert(:sensor,
           device: device,
-          sensor_type: sensor_type,
           name: "Temperature",
           uuid: UUID.uuid1(:hex)
         )

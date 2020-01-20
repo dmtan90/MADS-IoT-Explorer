@@ -24,7 +24,7 @@ defmodule AcqdatCore.Model.SensorNotification do
         {:error, "not found"}
 
       notification ->
-        notification = Repo.preload(notification, sensor: [:device, :sensor_type])
+        notification = Repo.preload(notification, sensor: [:device])
         {:ok, notification}
     end
   end

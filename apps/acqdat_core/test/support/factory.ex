@@ -14,7 +14,6 @@ defmodule AcqdatCore.Support.Factory do
   alias AcqdatCore.Schema.{
     User,
     Device,
-    SensorType,
     Sensor,
     SensorNotifications,
     Site,
@@ -85,22 +84,11 @@ defmodule AcqdatCore.Support.Factory do
     }
   end
 
-  def sensor_type_factory() do
-    %SensorType{
-      name: sequence(:sensor_type_name, &"Sensor#{&1}"),
-      make: "From Adafruit",
-      identifier: sequence(:type_identifier, &"identifier#{&1}"),
-      visualizer: "pie-chart",
-      value_keys: ["temp", "humid"]
-    }
-  end
-
   def sensor_factory() do
     %Sensor{
       uuid: UUID.uuid1(:hex),
       name: sequence(:sensor_name, &"Sensor#{&1}"),
-      device: build(:device),
-      sensor_type: build(:sensor_type)
+      device: build(:device)
     }
   end
 

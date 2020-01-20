@@ -10,7 +10,7 @@ defmodule AcqdatCore.Schema.Sensor do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.{Device, SensorType, SensorData}
+  alias AcqdatCore.Schema.{Device, SensorData}
 
   @typedoc """
   `uuid`: A universallly unique id for the sensor.
@@ -19,8 +19,6 @@ defmodule AcqdatCore.Schema.Sensor do
           device.
   `device_id`: id of the device to which the sensor belongs.
                See `AcqdatCore.Schema.Device`
-  `sensor_type_id`: id of the sensor type to which the sensor belongs.
-                    See `AcqdatCore.Schema.SensorType`
   """
   @type t :: %__MODULE__{}
 
@@ -30,14 +28,12 @@ defmodule AcqdatCore.Schema.Sensor do
 
     # associations
     belongs_to(:device, Device, on_replace: :delete)
-    belongs_to(:sensor_type, SensorType)
-
     has_many(:sensor_data, SensorData)
     timestamps(type: :utc_datetime)
   end
 
-  @permitted ~w(device_id sensor_type_id uuid name)a
-  @update_params ~w(device_id sensor_type_id name)a
+  @permitted ~w(device_id uuid name)a
+  @update_params ~w(device_id name)a
 
   @spec changeset(
           __MODULE__.t(),
@@ -61,7 +57,6 @@ defmodule AcqdatCore.Schema.Sensor do
   def common_changeset(changeset) do
     changeset
     |> assoc_constraint(:device)
-    |> assoc_constraint(:sensor_type)
     |> unique_constraint(:name, name: :unique_sensor_per_device)
   end
 

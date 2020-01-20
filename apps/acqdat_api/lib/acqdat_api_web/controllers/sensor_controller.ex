@@ -3,13 +3,11 @@ defmodule AcqdatApiWeb.SensorController do
   alias AcqdatApi.Sensor
   alias AcqdatCore.Model.Device, as: DeviceModel
   alias AcqdatCore.Model.Sensor, as: SensorModel
-  alias AcqdatCore.Model.SensorType, as: SensorTypeModel
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Sensor
 
-  plug :load_device_and_sensor_type when action in [:create]
   plug :load_sensor when action in [:update, :delete, :show]
-  plug :load_device when action in [:sensor_by_criteria]
+  plug :load_device when action in [:sensor_by_criteria, :create]
 
   def show(conn, %{"id" => id}) do
     case conn.status do
@@ -33,7 +31,7 @@ defmodule AcqdatApiWeb.SensorController do
     case conn.status do
       nil ->
         {:extract, {:ok, data}} = {:extract, extract_changeset_data(changeset)}
-        {:list, sensor} = {:list, SensorModel.get_all(data, [:sensor_type, :device])}
+        {:list, sensor} = {:list, SensorModel.get_all(data, [:device])}
 
         conn
         |> put_status(200)
@@ -138,31 +136,6 @@ defmodule AcqdatApiWeb.SensorController do
     case SensorModel.get(id) do
       {:ok, sensor} ->
         assign(conn, :sensor, sensor)
-
-      {:error, _message} ->
-        conn
-        |> put_status(404)
-    end
-  end
-
-  defp load_device_and_sensor_type(
-         %{params: %{"device_id" => device_id, "sensor_type_id" => sensor_type_id}} = conn,
-         _params
-       ) do
-    {device_id, _} = Integer.parse(device_id)
-    {sensor_type_id, _} = Integer.parse(sensor_type_id)
-
-    case DeviceModel.get(device_id) do
-      {:ok, device} ->
-        case SensorTypeModel.get(sensor_type_id) do
-          {:ok, sensor_type} ->
-            sensor_type = Map.put(sensor_type, :device, device)
-            assign(conn, :sensor_type, sensor_type)
-
-          {:error, _message} ->
-            conn
-            |> put_status(404)
-        end
 
       {:error, _message} ->
         conn

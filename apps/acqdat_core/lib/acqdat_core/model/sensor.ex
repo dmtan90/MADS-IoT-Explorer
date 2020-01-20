@@ -52,14 +52,14 @@ defmodule AcqdatCore.Model.Sensor do
     Repo.all(query)
   end
 
-  def get_all_by_criteria(id, preloads) when is_integer(id) do
+  def get_all_by_criteria(id) when is_integer(id) do
     query =
       from(sensor in Sensor,
         where: sensor.device_id == ^id,
         select: sensor
       )
 
-    Repo.all(query) |> Repo.preload(preloads)
+    Repo.all(query)
   end
 
   def update(sensor, params) do

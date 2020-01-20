@@ -14,7 +14,6 @@ defmodule AcqdatCore.Schema.SensorData do
   `inserted_timestamp`: The timestamp sent by device sending the sensor data.
   `datapoint`: Depicts the data point. Datapoint is a map containing different
                sensor values. The keys for this can be inferred from `value_keys`
-               field of `sensor_type` device belongs to.
   """
   @type t :: %__MODULE__{}
 
