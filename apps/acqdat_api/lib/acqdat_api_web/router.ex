@@ -34,6 +34,8 @@ defmodule AcqdatApiWeb.Router do
     get "/device-criteria/:site_id", DeviceController, :device_by_criteria
     resources "/sensor", SensorController, only: [:create, :update, :delete, :index, :show]
     resources "/site", SiteController, only: [:create, :update, :delete, :index, :show]
+    resources "/gateway", GatewayController, only: [:create, :update, :delete, :index, :show]
+
     resources "/process", ProcessController, only: [:create, :update, :delete, :index, :show]
 
     resources "/digital-twin", DigitalTwinController,
