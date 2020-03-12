@@ -10,7 +10,7 @@ defmodule AcqdatCore.Schema.Sensor do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.{Device, SensorData}
+  alias AcqdatCore.Schema.{Device, Gateway}
 
   @typedoc """
   `uuid`: A universallly unique id for the sensor.
@@ -24,16 +24,27 @@ defmodule AcqdatCore.Schema.Sensor do
 
   schema("acqdat_sensors") do
     field(:uuid, :string)
-    field(:name, :string)
-
+    field(:metadata, :map)
+    field(:aesthetic_name, :string)
+    field(:description, :string)
+    field(:telemetry_attributes, {:array, :string})
+    field(:image_url, :string)
+    field(:slug, :string)
+    field(:image, :any, virtual: true)
     # associations
-    belongs_to(:device, Device, on_replace: :delete)
-    has_many(:sensor_data, SensorData)
+    belongs_to(:gateway, Gateway, on_replace: :delete)
     timestamps(type: :utc_datetime)
   end
 
-  @permitted ~w(device_id uuid name)a
-  @update_params ~w(device_id name)a
+  @required_params ~w(gateway_id uuid aesthetic_name telemetry_attributes slug)a
+  @optional_params ~w(metadata description image_url)a
+
+  @permitted @required_params ++ @optional_params
+
+  @update_required_params ~w(gateway_id)a
+  @update_optional_params ~w(aesthetic_name telemetry_attributes metadata description image_url slug)a
+
+  @update_permitted @update_required_params ++ @update_optional_params
 
   @spec changeset(
           __MODULE__.t(),
@@ -43,25 +54,31 @@ defmodule AcqdatCore.Schema.Sensor do
     sensor
     |> cast(params, @permitted)
     |> add_uuid()
-    |> validate_required(@permitted)
+    |> add_slug()
+    |> validate_required(@required_params)
     |> common_changeset()
   end
 
   def update_changeset(%__MODULE__{} = sensor, params) do
     sensor
-    |> cast(params, @update_params)
-    |> validate_required(@permitted)
+    |> cast(params, @update_permitted)
+    |> validate_required(@update_required_params)
     |> common_changeset()
   end
 
   def common_changeset(changeset) do
     changeset
-    |> assoc_constraint(:device)
-    |> unique_constraint(:name, name: :unique_sensor_per_device)
+    |> assoc_constraint(:gateway)
+    |> unique_constraint(:slug)
   end
 
   defp add_uuid(%Ecto.Changeset{valid?: true} = changeset) do
     changeset
     |> put_change(:uuid, UUID.uuid1(:hex))
+  end
+
+  defp add_slug(%Ecto.Changeset{valid?: true} = changeset) do
+    changeset
+    |> put_change(:slug, Slugger.slugify(changeset.changes.aesthetic_name, ?@))
   end
 end

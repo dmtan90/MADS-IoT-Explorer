@@ -4,14 +4,22 @@ defmodule AcqdatApi.Sensor do
 
   def create(params) do
     %{
-      name: name,
-      device_id: device_id
+      aesthetic_name: aesthetic_name,
+      gateway_id: gateway_id,
+      telemetry_attributes: telemetry_attributes,
+      metadata: metadata,
+      description: description,
+      image_url: image_url
     } = params
 
     verify_sensor(
       SensorModel.create(%{
-        name: name,
-        device_id: device_id
+        aesthetic_name: aesthetic_name,
+        gateway_id: gateway_id,
+        telemetry_attributes: telemetry_attributes,
+        metadata: metadata,
+        description: description,
+        image_url: image_url
       })
     )
   end
@@ -20,8 +28,13 @@ defmodule AcqdatApi.Sensor do
     {:ok,
      %{
        id: sensor.id,
-       name: sensor.name,
-       device_id: sensor.device_id,
+       aesthetic_name: sensor.aesthetic_name,
+       gateway_id: sensor.gateway_id,
+       telemetry_attributes: sensor.telemetry_attributes,
+       metadata: sensor.metadata,
+       description: sensor.description,
+       image_url: sensor.image_url,
+       slug: sensor.slug,
        uuid: sensor.uuid
      }}
   end
@@ -30,8 +43,8 @@ defmodule AcqdatApi.Sensor do
     {:error, %{error: extract_changeset_error(sensor)}}
   end
 
-  def sensor_by_criteria(%{"device_id" => device_id} = _criteria) do
-    {device_id, _} = Integer.parse(device_id)
-    {:list, SensorModel.get_all_by_criteria(device_id)}
+  def sensor_by_criteria(%{"gateway_id" => gateway_id} = _criteria) do
+    {gateway_id, _} = Integer.parse(gateway_id)
+    {:list, SensorModel.get_all_by_criteria(gateway_id)}
   end
 end

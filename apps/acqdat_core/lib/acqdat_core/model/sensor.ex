@@ -42,10 +42,10 @@ defmodule AcqdatCore.Model.Sensor do
     end
   end
 
-  def get_all_by_device(device_id) do
+  def get_all_by_gateway(gateway_id) do
     query =
       from(sensor in Sensor,
-        where: sensor.device_id == ^device_id,
+        where: sensor.gateway_id == ^gateway_id,
         select: sensor
       )
 
@@ -55,7 +55,7 @@ defmodule AcqdatCore.Model.Sensor do
   def get_all_by_criteria(id) when is_integer(id) do
     query =
       from(sensor in Sensor,
-        where: sensor.device_id == ^id,
+        where: sensor.gateway_id == ^id,
         select: sensor
       )
 

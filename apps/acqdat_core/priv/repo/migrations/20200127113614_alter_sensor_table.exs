@@ -12,8 +12,11 @@ defmodule AcqdatCore.Repo.Migrations.AlterSensorTable do
       add(:description, :text)
       add(:telemetry_attributes, {:array, :string})
       add(:image_url, :string)
+      add(:slug, :string)
       add(:gateway_id, references("acqdat_gateways", on_delete: :delete_all), null: false)
     end
+
+    create unique_index("acqdat_sensors", [:slug])
   end
 
   def down do
@@ -25,6 +28,7 @@ defmodule AcqdatCore.Repo.Migrations.AlterSensorTable do
       remove(:telemetry_attributes)
       remove(:gateway_id)
       remove(:image_url)
+      remove(:slug)
       add(:name, :string, null: false)
       add(:device_id, references("acqdat_devices", on_delete: :delete_all), null: false)
     end

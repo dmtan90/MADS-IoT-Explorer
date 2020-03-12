@@ -75,6 +75,9 @@ defmodule AcqdatCore.MixProject do
       {:poison, "~> 3.1"},
       {:sweet_xml, "~> 0.6"},
 
+      # slugger
+      {:slugger, "~> 0.3"},
+
       # mailer
       {:poison, "~> 3.1"},
       {:bamboo, github: "thoughtbot/bamboo"},

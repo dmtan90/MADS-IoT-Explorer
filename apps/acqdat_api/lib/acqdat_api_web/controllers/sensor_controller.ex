@@ -1,13 +1,15 @@
 defmodule AcqdatApiWeb.SensorController do
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Sensor
-  alias AcqdatCore.Model.Device, as: DeviceModel
+  alias AcqdatApi.Image
+  alias AcqdatApi.ImageDeletion
+  alias AcqdatCore.Model.Gateway, as: GatewayModel
   alias AcqdatCore.Model.Sensor, as: SensorModel
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Sensor
 
   plug :load_sensor when action in [:update, :delete, :show]
-  plug :load_device when action in [:sensor_by_criteria, :create]
+  plug :load_gateway when action in [:sensor_by_criteria, :create]
 
   def show(conn, %{"id" => id}) do
     case conn.status do
@@ -31,7 +33,7 @@ defmodule AcqdatApiWeb.SensorController do
     case conn.status do
       nil ->
         {:extract, {:ok, data}} = {:extract, extract_changeset_data(changeset)}
-        {:list, sensor} = {:list, SensorModel.get_all(data, [:device])}
+        {:list, sensor} = {:list, SensorModel.get_all(data, [:gateway])}
 
         conn
         |> put_status(200)
@@ -63,7 +65,17 @@ defmodule AcqdatApiWeb.SensorController do
   def create(conn, params) do
     case conn.status do
       nil ->
-        changeset = verify_sensor_params(params)
+        params = Map.put(params, "image_url", "")
+
+        changeset =
+          case is_nil(params["image"]) do
+            true ->
+              verify_sensor_params(params)
+
+            false ->
+              params = add_image_url(conn, params)
+              verify_sensor_params(params)
+          end
 
         with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
              {:create, {:ok, sensor}} <- {:create, Sensor.create(data)} do
@@ -88,6 +100,16 @@ defmodule AcqdatApiWeb.SensorController do
     case conn.status do
       nil ->
         %{assigns: %{sensor: sensor}} = conn
+        params = Map.put(params, "image_url", sensor.image_url)
+
+        params =
+          case is_nil(params["image"]) do
+            true ->
+              params
+
+            false ->
+              add_image_url(conn, params)
+          end
 
         case SensorModel.update(sensor, params) do
           {:ok, sensor} ->
@@ -113,6 +135,8 @@ defmodule AcqdatApiWeb.SensorController do
       nil ->
         case SensorModel.delete(id) do
           {:ok, sensor} ->
+            ImageDeletion.delete_operation(sensor, "sensor")
+
             conn
             |> put_status(200)
             |> render("sensor.json", %{sensor: sensor})
@@ -143,16 +167,24 @@ defmodule AcqdatApiWeb.SensorController do
     end
   end
 
-  defp load_device(%{params: %{"device_id" => device_id}} = conn, _params) do
-    {device_id, _} = Integer.parse(device_id)
+  defp load_gateway(%{params: %{"gateway_id" => gateway_id}} = conn, _params) do
+    {gateway_id, _} = Integer.parse(gateway_id)
 
-    case DeviceModel.get(device_id) do
-      {:ok, device} ->
-        assign(conn, :device, device)
+    case GatewayModel.get(gateway_id) do
+      {:ok, gateway} ->
+        assign(conn, :gateway, gateway)
 
       {:error, _message} ->
         conn
         |> put_status(404)
+    end
+  end
+
+  defp add_image_url(conn, %{"image" => image} = params) do
+    with {:ok, image_name} <- Image.store({image, "sensor"}) do
+      Map.replace!(params, "image_url", Image.url({image_name, "sensor"}))
+    else
+      {:error, error} -> send_error(conn, 400, error)
     end
   end
 end

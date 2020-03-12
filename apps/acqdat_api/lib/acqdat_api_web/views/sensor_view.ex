@@ -1,33 +1,48 @@
 defmodule AcqdatApiWeb.SensorView do
   use AcqdatApiWeb, :view
   alias AcqdatApiWeb.SensorView
-  alias AcqdatApiWeb.DeviceView
+  alias AcqdatApiWeb.GatewayView
 
   def render("sensor.json", %{sensor: sensor}) do
     %{
       id: sensor.id,
-      name: sensor.name,
+      aesthetic_name: sensor.aesthetic_name,
       uuid: sensor.uuid,
-      device_id: sensor.device_id
+      slug: sensor.slug,
+      metadata: sensor.metadata,
+      description: sensor.description,
+      image_url: sensor.image_url,
+      telemetry_attributes: sensor.telemetry_attributes,
+      gateway_id: sensor.gateway_id
     }
   end
 
   def render("sensor_with_preloads.json", %{sensor: sensor}) do
     %{
       id: sensor.id,
-      name: sensor.name,
+      aesthetic_name: sensor.aesthetic_name,
       uuid: sensor.uuid,
-      device_id: sensor.device_id,
-      device: render_one(sensor.device, DeviceView, "device.json")
+      slug: sensor.slug,
+      metadata: sensor.metadata,
+      description: sensor.description,
+      image_url: sensor.image_url,
+      telemetry_attributes: sensor.telemetry_attributes,
+      gateway_id: sensor.gateway_id,
+      gateway: render_one(sensor.gateway, GatewayView, "gateway.json")
     }
   end
 
   def render("sensors_details.json", %{sensor: sensor}) do
     %{
       id: sensor.id,
-      name: sensor.name,
+      aesthetic_name: sensor.aesthetic_name,
       uuid: sensor.uuid,
-      device_id: sensor.device_id
+      slug: sensor.slug,
+      metadata: sensor.metadata,
+      description: sensor.description,
+      image_url: sensor.image_url,
+      telemetry_attributes: sensor.telemetry_attributes,
+      gateway_id: sensor.gateway_id
     }
   end
 

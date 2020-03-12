@@ -3,8 +3,12 @@ defmodule AcqdatApiWeb.Validators.Sensor do
 
   defparams(
     verify_sensor_params(%{
-      name!: :string,
-      device_id!: :integer
+      gateway_id!: :integer,
+      aesthetic_name!: :string,
+      telemetry_attributes!: {:array, :string},
+      metadata: :map,
+      description: :string,
+      image_url: :string
     })
   )
 
