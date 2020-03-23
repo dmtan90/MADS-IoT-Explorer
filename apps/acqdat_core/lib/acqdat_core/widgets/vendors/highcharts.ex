@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.WidgetTypeSchema do
+defmodule AcqdatCore.Widget.Vendors.HighCharts do
   @moduledoc """
     Embedded Schema of the settings of the widget with it keys and subkeys
   """

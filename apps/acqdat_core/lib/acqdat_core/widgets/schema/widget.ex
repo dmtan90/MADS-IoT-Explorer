@@ -7,8 +7,6 @@ defmodule AcqdatCore.Schema.Widget do
   """
 
   use AcqdatCore.Schema
-  import AcqdatCore.Schema.Settings
-  alias AcqdatCore.Schema.User
   alias AcqdatCore.Schema.WidgetType
 
   @typedoc """
@@ -17,7 +15,7 @@ defmodule AcqdatCore.Schema.Widget do
   `image_url`: image of widget
   `default value`: default intial values of widget
   `category`: category of the widget
-  `policies`: policy of that widget 
+  `policies`: policy of that widget
   `properties`: properties of the widget that includes other things also'
   `settings`: settings or current configuration of the widget
   """
@@ -27,7 +25,7 @@ defmodule AcqdatCore.Schema.Widget do
   schema("acqdat_widgets") do
     field(:label, :string, null: false)
     field(:properties, :map)
-    embeds_one(:settings, Settings)
+    embeds_one(:settings, :map)
     field(:uuid, :string)
     field(:image_url, :string)
     field(:default_values, :map)
