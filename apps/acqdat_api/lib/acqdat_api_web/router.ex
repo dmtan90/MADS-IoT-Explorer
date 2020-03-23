@@ -29,6 +29,11 @@ defmodule AcqdatApiWeb.Router do
     post "/sign-out", AuthController, :sign_out
     post "/search-location", PlaceController, :search_location
 
+    resources "/widget-type", WidgetTypeController,
+      only: [:create, :update, :delete, :index, :show] do
+      resources "/widget", WidgetController, only: [:create, :update, :delete, :index, :show]
+    end
+
     resources "/sensor_type", SensorTypeController,
       only: [:create, :update, :delete, :index, :show]
 
