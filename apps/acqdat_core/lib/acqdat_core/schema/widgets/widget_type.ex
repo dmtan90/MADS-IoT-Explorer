@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.WidgetType do
+defmodule AcqdatCore.Schema.Widgets.WidgetType do
   @moduledoc """
     Track down the different widgets that we have used from different vendors and whats the settings of each widget that we are storing
     Schema
@@ -6,11 +6,11 @@ defmodule AcqdatCore.Schema.WidgetType do
 
   use AcqdatCore.Schema
 
-  alias AcqdatCore.Schema.Widget
+  alias AcqdatCore.Schema.Widgets.Widget
 
   @typedoc """
   'vendor': name of the vendor
-  'schema': widget schema
+  'module': widget schema
   'vendor metadata': it's metadata
   """
 
@@ -45,7 +45,5 @@ defmodule AcqdatCore.Schema.WidgetType do
   def update_changeset(%__MODULE__{} = widget_type, params) do
     widget_type
     |> cast(params, @params)
-    |> validate_required(@required)
   end
-
 end

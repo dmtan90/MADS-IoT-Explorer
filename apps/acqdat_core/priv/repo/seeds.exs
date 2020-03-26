@@ -14,6 +14,6 @@ alias AcqdatCore.Seed.{User, SensorType, Device, Sensor}
 # The order here is important, don't modify it.
 
 User.seed_user!()
-SensorType.seed_sensor_types()
-Device.see_device!()
-Sensor.seed_sensors()
+# SensorType.seed_sensor_types()
+# Device.see_device!()
+# Sensor.seed_sensors()

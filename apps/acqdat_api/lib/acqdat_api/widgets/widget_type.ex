@@ -1,19 +1,21 @@
-defmodule AcqdatApi.WidgetType do
-  alias AcqdatCore.Model.WidgetType, as: WidgetTypeModel
+defmodule AcqdatApi.Widgets.WidgetType do
+  alias AcqdatCore.Model.Widgets.WidgetType, as: WidgetTypeModel
   import AcqdatApiWeb.Helpers
 
   def create(params) do
     %{
       vendor: vendor,
-      schema: schema,
-      vendor_metadata: vendor_metadata
+      name: name,
+      vendor_metadata: vendor_metadata,
+      module: module
     } = params
 
     verify_widget_type(
       WidgetTypeModel.create(%{
         vendor: vendor,
-        schema: schema,
-        vendor_metadata: vendor_metadata
+        name: name,
+        vendor_metadata: vendor_metadata,
+        module: module
       })
     )
   end
@@ -23,7 +25,8 @@ defmodule AcqdatApi.WidgetType do
      %{
        id: widget_type.id,
        vendor: widget_type.vendor,
-       schema: widget_type.schema,
+       module: widget_type.module,
+       name: widget_type.name,
        vendor_metadata: widget_type.vendor_metadata
      }}
   end

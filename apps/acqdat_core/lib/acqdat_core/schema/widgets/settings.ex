@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Settings do
+defmodule AcqdatCore.Schema.Widgets.Settings do
   @moduledoc """
     Embedded Schema of the settings of the widget with it keys and subkeys
   """

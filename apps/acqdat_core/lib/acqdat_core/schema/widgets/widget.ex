@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Widget do
+defmodule AcqdatCore.Schema.Widgets.Widget do
   @moduledoc """
   Models a Widget in the system.
 
@@ -7,7 +7,7 @@ defmodule AcqdatCore.Schema.Widget do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.WidgetType
+  alias AcqdatCore.Schema.Widgets.WidgetType
 
   @typedoc """
   `label`: widget name
@@ -25,7 +25,7 @@ defmodule AcqdatCore.Schema.Widget do
   schema("acqdat_widgets") do
     field(:label, :string, null: false)
     field(:properties, :map)
-    embeds_one(:settings, :map)
+    field(:settings, :map)
     field(:uuid, :string)
     field(:image_url, :string)
     field(:default_values, :map)

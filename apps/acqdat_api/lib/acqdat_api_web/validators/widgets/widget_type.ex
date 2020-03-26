@@ -1,12 +1,12 @@
-defmodule AcqdatApiWeb.Validators.Widget do
+defmodule AcqdatApiWeb.Validators.Widgets.WidgetType do
   use Params
 
   defparams(
-    verify_widget_params(%{
+    verify_widget_type_params(%{
+      vendor!: :string,
       name!: :string,
-      author!: :string,
-      properties: :map,
-      settings: :map
+      module!: :string,
+      vendor_metadata!: :map
     })
   )
 

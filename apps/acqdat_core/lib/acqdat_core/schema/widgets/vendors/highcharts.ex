@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Widget.Vendors.HighCharts do
+defmodule AcqdatCore.Schema.Widgets.Vendors.HighCharts do
   @moduledoc """
     Embedded Schema of the settings of the widget with it keys and subkeys
   """
@@ -151,72 +151,93 @@ defmodule AcqdatCore.Widget.Vendors.HighCharts do
     end
   end
 
-  def changeset(%__MODULE__{} = data, params) do
+  def changeset(data, params) do
     data
     |> cast(params, @master_params)
     |> put_change(
       :chart,
-      chart_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Chart{}, params["chart"])
+      chart_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Chart{}, params["chart"])
     )
     |> put_change(
       :caption,
-      caption_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Caption{}, params["caption"])
+      caption_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Caption{},
+        params["caption"]
+      )
     )
     |> put_change(
       :credits,
-      credits_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Credits{}, params["credits"])
+      credits_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Credits{},
+        params["credits"]
+      )
     )
     |> put_change(
       :exporting,
-      exporting_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Exporting{}, params["exporting"])
+      exporting_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Exporting{},
+        params["exporting"]
+      )
     )
     |> put_change(
       :legend,
-      legend_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Legend{}, params["legend"])
+      legend_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Legend{}, params["legend"])
     )
     |> put_change(
       :navigation,
-      navigation_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Navigation{}, params["navigation"])
+      navigation_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Navigation{},
+        params["navigation"]
+      )
     )
     |> put_change(
       :pane,
-      pane_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Pane{}, params["pane"])
+      pane_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Pane{}, params["pane"])
     )
     |> put_change(
       :responsive,
-      responsive_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Responsive{}, params["responsive"])
+      responsive_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Responsive{},
+        params["responsive"]
+      )
     )
     |> put_change(
       :subtitle,
-      subtitle_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Subtitle{}, params["subtitle"])
+      subtitle_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Subtitle{},
+        params["subtitle"]
+      )
     )
     |> put_change(
       :time,
-      time_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Timezone{}, params["time"])
+      time_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Timezone{}, params["time"])
     )
     |> put_change(
       :title,
-      title_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Title{}, params["title"])
+      title_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Title{}, params["title"])
     )
     |> put_change(
       :tool_tip,
-      tool_tip_changeset(%AcqdatCore.Schema.WidgetTypeSchema.ToolTip{}, params["tool_tip"])
+      tool_tip_changeset(
+        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.ToolTip{},
+        params["tool_tip"]
+      )
     )
     |> put_change(
       :z_axis,
-      z_axis_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Zaxis{}, params["z_axis"])
+      z_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Zaxis{}, params["z_axis"])
     )
     |> put_change(
       :x_axis,
-      x_axis_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Xaxis{}, params["x_axis"])
+      x_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Xaxis{}, params["x_axis"])
     )
     |> put_change(
       :y_axis,
-      y_axis_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Yaxis{}, params["y_axis"])
+      y_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Yaxis{}, params["y_axis"])
     )
     |> put_change(
       :series,
-      series_changeset(%AcqdatCore.Schema.WidgetTypeSchema.Series{}, params["series"])
+      series_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Series{}, params["series"])
     )
   end
 

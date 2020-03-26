@@ -3,8 +3,9 @@ defmodule AcqdatCore.Repo.Migrations.AddWidgetType do
 
   def change do
     create table("acqdat_widget_type") do
-      add(:vendor, :string, null: false)
-      add(:schema, :map)
+      add(:name, :string, null: false)
+      add(:vendor, WidgetVendorEnum.type(), null: false)
+      add(:module, WidgetVendorSchemaEnum.type(), null: false)
       add(:vendor_metadata, :map)
       
       timestamps(type: :timestamptz)

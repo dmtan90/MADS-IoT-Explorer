@@ -1,5 +1,5 @@
-defmodule AcqdatCore.Model.WidgetType do
-  alias AcqdatCore.Schema.WidgetType
+defmodule AcqdatCore.Model.Widgets.WidgetType do
+  alias AcqdatCore.Schema.Widgets.WidgetType
   alias AcqdatCore.Repo
   alias AcqdatCore.Model.Helper, as: ModelHelper
   import Ecto.Query
@@ -21,5 +21,16 @@ defmodule AcqdatCore.Model.WidgetType do
 
   def delete(widget_type) do
     Repo.delete(widget_type)
+  end
+
+  def update(widget_type, params) do
+    changeset = WidgetType.update_changeset(widget_type, params)
+    Repo.update(changeset)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    WidgetType
+    |> order_by(:id)
+    |> Repo.paginate(page: page_number, page_size: page_size)
   end
 end
