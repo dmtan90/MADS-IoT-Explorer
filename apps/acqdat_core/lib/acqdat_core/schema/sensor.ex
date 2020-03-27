@@ -10,34 +10,41 @@ defmodule AcqdatCore.Schema.Sensor do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.{Device, SensorType, SensorData}
+  alias AcqdatCore.Schema.{Gateway, Organisation}
 
   @typedoc """
   `uuid`: A universallly unique id for the sensor.
   `name`: A unique name for sensor per device. Note the same
           name can be used for sensor associated with another
           device.
-  `device_id`: id of the device to which the sensor belongs.
-               See `AcqdatCore.Schema.Device`
-  `sensor_type_id`: id of the sensor type to which the sensor belongs.
-                    See `AcqdatCore.Schema.SensorType`
   """
   @type t :: %__MODULE__{}
 
   schema("acqdat_sensors") do
-    field(:uuid, :string)
+    field(:uuid, :string, null: false)
+    field(:slug, :string, null: false)
     field(:name, :string)
+    field(:parent_id, :integer)
+    field(:parent_type, :string)
+
+    embeds_many :parameters, Parameters do
+      field(:name, :string, null: false)
+      field(:uuid, :string, null: false)
+      field(:type, :string, null: false)
+    end
 
     # associations
-    belongs_to(:device, Device, on_replace: :delete)
-    belongs_to(:sensor_type, SensorType)
+    belongs_to(:org, Organisation, on_replace: :delete)
+    belongs_to(:gateway, Gateway, on_replace: :delete)
 
-    has_many(:sensor_data, SensorData)
     timestamps(type: :utc_datetime)
   end
 
-  @permitted ~w(device_id sensor_type_id uuid name)a
-  @update_params ~w(device_id sensor_type_id name)a
+  @required_params ~w(org_id gateway_id uuid slug name)a
+  @optional_params ~w(parameters parent_id parent_type)a
+  @embedded_required_params ~w(name uuid type)a
+
+  @permitted @required_params ++ @optional_params
 
   @spec changeset(
           __MODULE__.t(),
@@ -46,27 +53,45 @@ defmodule AcqdatCore.Schema.Sensor do
   def changeset(%__MODULE__{} = sensor, params) do
     sensor
     |> cast(params, @permitted)
+    |> cast_embed(:parameters, with: &parameters_changeset/2)
     |> add_uuid()
-    |> validate_required(@permitted)
+    |> add_slug()
+    |> validate_required(@required_params)
     |> common_changeset()
   end
 
   def update_changeset(%__MODULE__{} = sensor, params) do
     sensor
-    |> cast(params, @update_params)
-    |> validate_required(@permitted)
+    |> cast(params, @permitted)
+    |> cast_embed(:parameters, with: &parameters_changeset/2)
+    |> validate_required(@required_params)
     |> common_changeset()
   end
 
   def common_changeset(changeset) do
     changeset
-    |> assoc_constraint(:device)
-    |> assoc_constraint(:sensor_type)
-    |> unique_constraint(:name, name: :unique_sensor_per_device)
+    |> assoc_constraint(:org)
+    |> assoc_constraint(:gateway)
   end
 
   defp add_uuid(%Ecto.Changeset{valid?: true} = changeset) do
     changeset
     |> put_change(:uuid, UUID.uuid1(:hex))
+  end
+
+  defp add_slug(%Ecto.Changeset{valid?: true} = changeset) do
+    changeset
+    |> put_change(:slug, Slugger.slugify(random_string(12)))
+  end
+
+  defp random_string(length) do
+    :crypto.strong_rand_bytes(length) |> Base.url_encode64() |> binary_part(0, length)
+  end
+
+  defp parameters_changeset(schema, params) do
+    schema
+    |> cast(params, @embedded_required_params)
+    |> add_uuid()
+    |> validate_required(@embedded_required_params)
   end
 end
