@@ -8,10 +8,11 @@ defmodule AcqdatCore.Repo.Migrations.AddWidgetTable do
       add(:default_values, :map)
       add(:uuid, :string, null: false)
       add(:properties, :map)
-      add(:settings, :map)
+      add(:visual_settings, :map)
+      add(:data_settings, :map)
       add(:category, :string)
       add(:image_url, :string)
-      
+
       timestamps(type: :timestamptz)
     end
   end

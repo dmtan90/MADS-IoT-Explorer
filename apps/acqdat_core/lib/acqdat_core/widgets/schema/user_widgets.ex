@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Widgets.UserWidgets do
+defmodule AcqdatCore.Widgets.Schema.UserWidgets do
   @moduledoc """
   Models a User Widget in the system.
 
@@ -6,7 +6,7 @@ defmodule AcqdatCore.Schema.Widgets.UserWidgets do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.Widgets.Widget
+  alias AcqdatCore.Widgets.Schema.Widget
   alias AcqdatCore.Schema.User
 
   @typedoc """

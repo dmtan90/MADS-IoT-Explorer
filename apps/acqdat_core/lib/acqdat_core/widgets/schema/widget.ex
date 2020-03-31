@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Widgets.Widget do
+defmodule AcqdatCore.Widgets.Schema.Widget do
   @moduledoc """
   Models a Widget in the system.
 
@@ -7,7 +7,9 @@ defmodule AcqdatCore.Schema.Widgets.Widget do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.Widgets.WidgetType
+  alias AcqdatCore.Widgets.Schema.WidgetType
+  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
+  alias AcqdatCore.Widgets.Schema.Widget.DataSettings
 
   @typedoc """
   `label`: widget name
@@ -25,13 +27,17 @@ defmodule AcqdatCore.Schema.Widgets.Widget do
   schema("acqdat_widgets") do
     field(:label, :string, null: false)
     field(:properties, :map)
-    field(:settings, :map)
     field(:uuid, :string)
     field(:image_url, :string)
     field(:default_values, :map)
     field(:category, :string)
     field(:policies, :map)
 
+    # embedded associations
+    embeds_many(:visual_settings, VisualSettings)
+    embeds_many(:data_settings, DataSettings)
+
+    # associations
     belongs_to(:widget_type, WidgetType)
 
     timestamps(type: :utc_datetime)
@@ -60,5 +66,49 @@ defmodule AcqdatCore.Schema.Widgets.Widget do
   defp add_uuid(%Ecto.Changeset{valid?: true} = changeset) do
     changeset
     |> put_change(:uuid, UUID.uuid1(:hex))
+  end
+end
+
+
+defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
+  @moduledoc """
+  Embed schema for visual settings in widget
+  """
+  use AcqdatCore.Schema
+  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
+
+  embedded_schema do
+    field(:key, :string)
+    field(:type, :string)
+    field(:source, :map)
+    field(:value, :string, default: "")
+    field(:user_controlled, :boolean, default: false)
+    embeds_one(:properties, VisualSettings)
+  end
+  @permitted ~w(key type source value user_controlled properties)a
+
+  def chagngeset(%__MODULE__{} = settings, params) do
+    cast(settings, params, @permitted)
+  end
+
+end
+
+defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
+  @moduledoc """
+  Embed schema for data related settings in widget.
+  """
+  use AcqdatCore.Schema
+
+  embedded_schema do
+    field(:axes, {:array, :map})
+    field(:series, {:array, :map})
+    field(:axes_values, {:array, :map})
+    field(:series_values, {:array, :map})
+  end
+
+  @permitted ~w(axes series axes_values series_values)a
+
+  def chagngeset(%__MODULE__{} = settings, params) do
+    cast(settings, params, @permitted)
   end
 end

@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Widgets.WidgetType do
+defmodule AcqdatCore.Widgets.Schema.WidgetType do
   @moduledoc """
     Track down the different widgets that we have used from different vendors and whats the settings of each widget that we are storing
     Schema
@@ -6,7 +6,7 @@ defmodule AcqdatCore.Schema.Widgets.WidgetType do
 
   use AcqdatCore.Schema
 
-  alias AcqdatCore.Schema.Widgets.Widget
+  alias AcqdatCore.Widgets.Schema.Widget
 
   @typedoc """
   'vendor': name of the vendor

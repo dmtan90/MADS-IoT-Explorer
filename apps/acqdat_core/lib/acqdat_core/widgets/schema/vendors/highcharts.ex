@@ -1,4 +1,4 @@
-defmodule AcqdatCore.Schema.Widgets.Vendors.HighCharts do
+defmodule AcqdatCore.Widgets.Schema.Vendors.HighCharts do
   @moduledoc """
     Embedded Schema of the settings of the widget with it keys and subkeys
   """
@@ -156,12 +156,12 @@ defmodule AcqdatCore.Schema.Widgets.Vendors.HighCharts do
     |> cast(params, @master_params)
     |> put_change(
       :chart,
-      chart_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Chart{}, params["chart"])
+      chart_changeset(%AcqdatCore.Widgets.Schema.Vendors.HighCharts.Chart{}, params["chart"])
     )
     |> put_change(
       :caption,
       caption_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Caption{},
+        %AcqdatCore.Widgets.Schema.Vendors.HighCharts.Caption{},
         params["caption"]
       )
     )
