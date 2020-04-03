@@ -10,7 +10,7 @@ defmodule AcqdatCore.Widgets.Schema.Vendors.HighCharts do
       user_controlled: false,
       properties:
       %{
-        type: %{data_type: :string, default_value: ""},
+        type: %{data_type: :string, default_value: "", user_controlled: false},
         backgroundColor: %{data_type: :color, default_value: "#ffffff", user_controlled: true},
         borderColor: %{data_type: :color, default_value: "#335cad", user_controlled: true},
         plotBackgroundColor: %{data_type: :string, default_value: "", user_controlled: true},
@@ -234,11 +234,35 @@ defmodule AcqdatCore.Widgets.Schema.Vendors.HighCharts do
   in the format specified by highcharts.
 
   The `axes` map has data by axes name and it's values.
+  ## Example
+    %{
+      x: [[1,2,3,4]],
+      y: [[1,2,3,4],
+          [101, 102, 103, 104]
+         ]
+    }
 
+  A `series` refers to a set of combination of axes data.
+  From above example a series would consist of [x, y[0]], [x, y[1]].
+  A series usually is made of horizontal axes data combined with a set
+  of values from any other axes.
+
+  So for two different set of values in y there are two series.
+  The series is a list of visual settings for the above data.
+
+  ## Example
+    series: [
+      {name: "Manufacturing", color: "#ffffff" }  # for series [x, y[0]]
+      {name: "Installation", color: "#dacbde" }  # for series [x, y[1]]
+    ]
+
+  Highcharts stores data and it's related information in different format
+  for different widgets. A detailed information can be found
+  [here](https://api.highcharts.com/highcharts/series)
   """
-
+  #TODO: Data handling to be implmented.
   @spec arrange_series_structure(map, list) :: map
   def arrange_series_structure(axes, series) do
-
+    %{}
   end
 end

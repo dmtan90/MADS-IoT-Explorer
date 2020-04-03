@@ -4,7 +4,7 @@ import EctoEnum
 # contains the name of the module which will define the module
 # contianing all the key definitions for a vendor.
 defenum(WidgetVendorSchemaEnum,
-  "Elixir.AcqdatCore.Schema.Widgets.Vendors.HighCharts": 0
+  "Elixir.AcqdatCore.Widgets.Schema.Vendors.HighCharts": 0
 )
 
 # Creates an enum for different vendors for which widget

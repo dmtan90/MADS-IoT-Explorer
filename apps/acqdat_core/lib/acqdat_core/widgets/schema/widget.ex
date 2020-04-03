@@ -20,7 +20,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
 
   use AcqdatCore.Schema
   alias AcqdatCore.Widgets.Schema.WidgetType
-  alias AcqdatCore.Widgets.Schema.Widget.Settings
+  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
   alias AcqdatCore.Widgets.Schema.Widget.DataSettings
 
   @typedoc """
@@ -44,11 +44,11 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     field(:uuid, :string)
     field(:image_url, :string)
     field(:default_values, :map)
-    field(:category, :string)
+    field(:category, {:array, :map})
     field(:policies, :map)
 
     # embedded associations
-    embeds_many(:visual_settings, Settings)
+    embeds_many(:visual_settings, VisualSettings)
     embeds_many(:data_settings, DataSettings)
 
     # associations
@@ -69,6 +69,8 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     widget
     |> cast(params, @params)
     |> add_uuid()
+    |> cast_embed(:visual_settings, with: &VisualSettings.changeset/2)
+    |> cast_embed(:data_settings, with: &DataSettings.changeset/2)
     |> validate_required(@required)
   end
 
@@ -83,7 +85,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
   end
 end
 
-defmodule AcqdatCore.Widgets.Schema.Widget.Settings do
+defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
   @moduledoc """
   Embed schema for visual settings in widget
 
@@ -94,22 +96,23 @@ defmodule AcqdatCore.Widgets.Schema.Widget.Settings do
   the value field. For user controlled fields it would be empty.
   """
   use AcqdatCore.Schema
-  alias AcqdatCore.Widgets.Schema.Widget.Settings
+  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
 
   embedded_schema do
     field(:key, :string)
-    field(:type, :string)
+    field(:data_type, :string)
     field(:source, :map)
     field(:value, :map)
     field(:user_controlled, :boolean, default: false)
-    embeds_one(:properties, Settings)
+    embeds_many(:properties, VisualSettings)
   end
   @permitted ~w(key type source value user_controlled properties)a
 
-  def chagngeset(%__MODULE__{} = settings, params) do
-    cast(settings, params, @permitted)
+  def changeset(%__MODULE__{} = settings, params) do
+    settings
+    |> cast(settings, params, @permitted)
+    |> cast_embed(:properties, with: &VisualSettings.changeset/2)
   end
-
 end
 
 defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
@@ -118,19 +121,20 @@ defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
   """
 
   use AcqdatCore.Schema
-  alias AcqdatCore.Widgets.Schema.Widget.Settings
+  alias AcqdatCore.Widgets.Schema.Widget.DataSettings
 
   embedded_schema do
-    embeds_many(:axes) do
-      field(:name, :string)
-      field(:multiple, :boolean, default: false)
-    end
-    embeds_many(:series, Settings)
+    field(:key, :string)
+    field(:data_type, :string)
+    field(:source, :map)
+    embeds_many(:properties, DataSettings)
   end
 
   @permitted ~w(axes series axes_values series_values)a
 
   def changeset(%__MODULE__{} = settings, params) do
-    cast(settings, params, @permitted)
+    settings
+    |> cast(settings, params, @permitted)
+    |> cast_embed(:properties, with: &DataSettings.changeset/2)
   end
 end

@@ -47,3 +47,4 @@ defmodule AcqdatCore.Widgets.Schema.WidgetType do
     |> cast(params, @params)
   end
 end
+
