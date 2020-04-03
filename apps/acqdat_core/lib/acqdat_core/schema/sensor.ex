@@ -40,8 +40,8 @@ defmodule AcqdatCore.Schema.Sensor do
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(org_id gateway_id uuid slug name)a
-  @optional_params ~w(parameters parent_id parent_type)a
+  @required_params ~w(org_id uuid slug name)a
+  @optional_params ~w(gateway_id parent_id parent_type)a
   @embedded_required_params ~w(name uuid type)a
 
   @permitted @required_params ++ @optional_params

@@ -6,6 +6,7 @@ defmodule AcqdatCore.Schema.Organisation do
   """
   use AcqdatCore.Schema
 
+  # use AsNestedSet, scope: [:id]
   @typedoc """
   `uuid`: A universally unique id to identify the Organisation.
   `name`: Name for easy identification of the Organisation.

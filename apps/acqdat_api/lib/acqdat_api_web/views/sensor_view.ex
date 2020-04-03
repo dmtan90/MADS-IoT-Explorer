@@ -14,6 +14,26 @@ defmodule AcqdatApiWeb.SensorView do
     }
   end
 
+  def render("sensor_tree.json", %{sensor: sensor}) do
+    %{
+      type: "Sensor",
+      id: sensor.id,
+      # inserted_at: sensor.inserted_at,
+      name: sensor.name,
+      entities: render_many(sensor.parameters, SensorView, "data_tree.json")
+    }
+  end
+
+  def render("data_tree.json", %{sensor: parameter}) do
+    %{
+      id: parameter.id,
+      name: parameter.name,
+      type: "Parameter"
+      # type: parameter.type,
+      # uuid: parameter.uuid
+    }
+  end
+
   def render("sensor_with_preloads.json", %{sensor: sensor}) do
     %{
       id: sensor.id,

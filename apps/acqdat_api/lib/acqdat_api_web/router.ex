@@ -28,6 +28,7 @@ defmodule AcqdatApiWeb.Router do
     post "/refresh", AuthController, :refresh_token
     post "/sign-out", AuthController, :sign_out
     post "/search-location", PlaceController, :search_location
+    resources "/org", OrganisationController, only: [:show]
 
     resources "/sensor_type", SensorTypeController,
       only: [:create, :update, :delete, :index, :show]

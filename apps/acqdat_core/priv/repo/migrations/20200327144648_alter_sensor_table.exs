@@ -13,8 +13,8 @@ defmodule AcqdatCore.Repo.Migrations.AlterSensorTable do
       add(:parent_type, :string)
       add(:parent_id, :integer)
       add(:org_id, references("acqdat_organisation", on_delete: :delete_all), null: false)
-      add(:gateway_id, references("acqdat_gateway", on_delete: :delete_all), null: false)
-      add(:parameters, :map)
+      add(:gateway_id, references("acqdat_gateway", on_delete: :delete_all))
+      add(:parameters, {:array, :map})
     end
 
     create unique_index("acqdat_sensors", [:slug])

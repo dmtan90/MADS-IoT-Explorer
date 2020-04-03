@@ -9,6 +9,8 @@ defmodule AcqdatCore.Schema.Asset do
 
   alias AcqdatCore.Schema.Organisation
 
+  use AsNestedSet, scope: [:org_id]
+
   @typedoc """
   `uuid`: A universally unique id to identify the Asset.
   `name`: Name for easy identification of the Asset.
@@ -42,7 +44,7 @@ defmodule AcqdatCore.Schema.Asset do
   end
 
   @required_params ~w(uuid slug parent_id org_id)a
-  @optional_params ~w(name lft rgt metadata description mapped_parameters)a
+  @optional_params ~w(name lft rgt metadata description)a
 
   @required_embedded_params ~w(name uuid parameter_uuid)a
   @permitted @required_params ++ @optional_params
@@ -54,7 +56,7 @@ defmodule AcqdatCore.Schema.Asset do
   def changeset(%__MODULE__{} = asset, params) do
     asset
     |> cast(params, @permitted)
-    |> cast_embed(:mapped_parameters, with: &mapped_parameters_changeset/2)
+    # |> put_change(:mapped_parameters, with: &mapped_parameters_changeset/2)
     |> add_uuid()
     |> add_slug()
     |> validate_required(@required_params)
@@ -64,7 +66,7 @@ defmodule AcqdatCore.Schema.Asset do
   def update_changeset(%__MODULE__{} = asset, params) do
     asset
     |> cast(params, @permitted)
-    |> cast_embed(:mapped_parameters, with: &mapped_parameters_changeset/2)
+    |> put_change(:mapped_parameters, with: &mapped_parameters_changeset/2)
     |> validate_required(@required_params)
     |> common_changeset()
   end
