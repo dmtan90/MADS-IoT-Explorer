@@ -2,338 +2,243 @@ defmodule AcqdatCore.Widgets.Schema.Vendors.HighCharts do
   @moduledoc """
     Embedded Schema of the settings of the widget with it keys and subkeys
   """
+  @data_types ~w(string color object list integer boolean)a
 
-  use AcqdatCore.Schema
-  # alias AcqdatCore.Schema.WidgetTypeSchema
+  defstruct [
+    chart: %{
+      data_type: :object,
+      user_controlled: false,
+      properties:
+      %{
+        type: %{data_type: :string, default_value: ""},
+        backgroundColor: %{data_type: :color, default_value: "#ffffff", user_controlled: true},
+        borderColor: %{data_type: :color, default_value: "#335cad", user_controlled: true},
+        plotBackgroundColor: %{data_type: :string, default_value: "", user_controlled: true},
+        height: %{data_type: :string, default_value: "", user_controlled: false},
+        width: %{data_type: :string, default_value: "", user_controlled: false}
+     },
+    },
 
-  @master_params ~w(color_axis plot_options)a
-  @chart_params ~w(vendor type background_color border_color plot_background_color height width)a
-  @caption_params ~w(vendor text)a
-  @credits_params ~w(vendor enabled)a
-  @exporting_params ~w(vendor enabled)a
-  @legend_params ~w(vendor enabled)a
-  @navigation_params ~w(vendor button_options menu_item_style menu_style)a
-  @pane_params ~w(vendor size class_name background_color)a
-  @responsive_params ~w(vendor rules)a
-  @subtitle_params ~w(vendor align style text)a
-  @time_params ~w(vendor timezone useUTC)a
-  @title_params ~w(vendor align style text)a
-  @tool_tip_params ~w(vendor background_color datetime_labelformat text value_prefix value_suffix x_dateformat)a
-  @x_axis_params ~w(vendor align_tricks alternate_grid_color datetime_labelformat labels title visible type opposite)a
-  @z_axis_params ~w(vendor align_tricks alternate_grid_color datetime_labelformat labels title visible type opposite)a
-  @y_axis_params ~w(vendor align_tricks alternate_grid_color datetime_labelformat labels title visible type opposite)a
-  @series_params ~w(vendor data name)a
+    caption: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        text: %{data_type: :string, default_value: "", user_controlled: true},
+        align: %{data_type: :string, default_value: "left", user_controlled: true},
+      },
+    },
 
-  embedded_schema do
-    embeds_one :chart, Chart do
-      field(:vendor, :string)
-      field(:type, :string)
-      field(:background_color, :string)
-      field(:border_color, :string)
-      field(:plot_background_color, :string)
-      field(:height, :string)
-      field(:width, :string)
-    end
+    color_axis: %{
+      data_type: :list,
+      user_controlled: false,
+      properties: %{
+        min: %{data_type: :integer, default_value: 0, user_controlled: false},
+        max: %{data_type: :integer, default_value: 0, user_controlled: false},
+        layout: %{data_type: :string, default_value: "horizontal", user_controlled: false},
+      },
+    },
 
-    embeds_one :caption, Caption do
-      field(:vendor, :string)
-      field(:text, :string)
-    end
+    credits: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        enabled: %{data_type: :boolean, default: false, user_controlled: false}
+      },
+    },
 
-    field(:color_axis, :boolean, default: false)
+    exporting: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        enabled: %{data_type: :boolean, default: false, user_controlled: false}
+      }
+    },
 
-    embeds_one :credits, Credits do
-      field(:vendor, :string)
-      field(:enabled, :boolean, default: false)
-    end
+    legend: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        enabled: %{data_type: :boolean, default: false, user_controlled: false},
+        layout: %{data_type: :string, default: "right", user_controlled: true},
+        align: %{data_type: :string, default: "right", user_controlled: true},
+        verticalAlign: %{data_type: :string, default: "middle", user_controlled: true},
+      }
+    },
 
-    embeds_one :exporting, Exporting do
-      field(:vendor, :string)
-      field(:enabled, :boolean, default: false)
-    end
+    navigation: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        menuStyle: %{data_type: :object, default: %{}, user_controlled: false},
+        menuItemHoverStyle: %{data_type: :object, default: %{}, user_controlled: false}
+      }
+    },
 
-    embeds_one :legend, Legend do
-      field(:vendor, :string)
-      field(:enabled, :boolean, default: false)
-    end
+    pane: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        size: %{data_type: :string, default: "85%", user_controlled: false},
+        background: %{data_type: :list, properties: %{
+          backgroundColor: %{data_type: :string,
+            default: "{ linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 }, stops: [[0, #ffffff], [1, #e6e6e6]]}",
+            user_controlled: false
+          },
+          borderColor: %{data_type: :color, default: "#cccccc", user_controlled: false},
+          innerRadius: %{data_type: :string, default: "0", user_controlled: false},
+          outerRadius: %{data_type: :string, default: "", user_controlled: false},
+        }},
+        startAngle: %{data_type: :integer, default: 0, user_controlled: true},
+        endAngle: %{data_type: :integer, default: 0, user_controlled: true}
+      }
+    },
 
-    embeds_one :navigation, Navigation do
-      field(:vendor, :string)
-      field(:button_options, :string)
-      field(:menu_item_style, :string)
-      field(:menu_style, :string)
-    end
+    plotOptions: %{
+      data_type: :object,
+      user_controlled: false
+    },
 
-    embeds_one :pane, Pane do
-      field(:vendor, :string)
-      field(:size, :string)
-      field(:class_name, :string)
-      field(:background_color, :string)
-    end
+    responsive: %{
+      user_controlled: false,
+      data_type: :object,
+      rules: %{
+          data_type: :list,
+          properties: %{
+            condition: %{
+              data_type: :object,
+              maxHeight: %{data_type: :integer, default: 0, user_controlled: false},
+              maxWidth: %{data_type: :integer, default: 0, user_controlled: false},
+              minHeight: %{data_type: :integer, default: 0, user_controlled: false},
+              minWidth: %{data_type: :integer, default: 0, user_controlled: false}
+            }
+          }
+       }
+    },
 
-    field(:plot_options, :boolean, default: false)
+    subtitle: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        text: %{data_type: :string, default: "", user_controlled: true},
+        style: %{data_type: :object, default: %{}, user_controlled: false},
+        align: %{data_type: :string, default: "center", user_controlled: true},
+      }
+    },
 
-    embeds_one :responsive, Responsive do
-      field(:vendor, :string)
-      field(:rules, :string)
-    end
+    time: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        timezone: %{data_type: :string, default: "", user_controlled: false},
+        useUTC: %{data_type: :boolean, default: true, user_controlled: false},
+      }
+    },
 
-    embeds_one :subtitle, Subtitle do
-      field(:vendor, :string)
-      field(:align, :string)
-      field(:style, :string)
-      field(:text, :string)
-    end
+    title: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        text: %{data_type: :string, default: "", user_controlled: true},
+        style: %{data_type: :object, default: %{}, user_controlled: false},
+        align: %{data_type: :string, default: "center", user_controlled: true},
+      }
+    },
 
-    embeds_one :time, Timezone do
-      field(:vendor, :string)
-      field(:timezone, :string)
-      field(:useUTC, :boolean, default: false)
-    end
+    tooltip: %{
+      data_type: :object,
+      user_controlled: false,
+      properties: %{
+        backgroundColor: %{data_type: :string, default: "", user_controlled: true},
+        valuePrefix: %{data_type: :string, default: "", user_controlled: true},
+        valueSuffix: %{data_type: :string, default: "", user_controlled: true},
+        pointFormat: %{data_type: :string, default: "center", user_controlled: false},
+      }
+    },
 
-    embeds_one :title, Title do
-      field(:vendor, :string)
-      field(:align, :map)
-      field(:style, :string)
-      field(:text, :string)
-    end
+    xAxis: %{
+      data_type: :list,
+      user_controlled: false,
+      properties: %{
+        alignTricks: %{data_type: :boolean, default: true, user_controlled: false},
+        alternateGridColor: %{data_type: :color, default: "", user_controlled: true},
+        dateTimeLabelFormats: %{data_type: :object, default: %{}, user_controlled: false},
+        labels: %{data_type: :object, default: %{}, user_controlled: false},
+        title: %{
+          data_type: :object, default: %{}, user_controlled: false,
+          properties: %{
+            text: %{data_type: :string, default: "", user_controlled: true},
+          }
+        },
+        visible: %{data_type: :boolean, default: true, user_controlled: false},
+        type: %{data_type: :string, default: true, user_controlled: true},
+        min: %{data_type: :integer, default: "null", user_controlled: true},
+        max: %{data_type: :integer, default: "null", user_controlled: true},
+        plotBands: %{data_type: :list, default: %{}, user_controlled: true}
+      }
+    },
 
-    embeds_one :tool_tip, ToolTip do
-      field(:vendor, :string)
-      field(:background_color, :string)
-      field(:datetime_labelformat, :string)
-      field(:text, :string)
-      field(:value_prefix, :string)
-      field(:value_suffix, :string)
-      field(:x_dateformat, :string)
-    end
+    yAxis: %{
+      data_type: :list,
+      user_controlled: false,
+      properties: %{
+        alignTricks: %{data_type: :boolean, default: true, user_controlled: false},
+        alternateGridColor: %{data_type: :color, default: "", user_controlled: true},
+        dateTimeLabelFormats: %{data_type: :object, default: %{}, user_controlled: false},
+        labels: %{data_type: :object, default: %{}, user_controlled: false},
+        title: %{
+          data_type: :object, default: %{}, user_controlled: false,
+          properties: %{
+            text: %{data_type: :string, default: "", user_controlled: true},
+          }
+        },
+        visible: %{data_type: :boolean, default: true, user_controlled: false},
+        type: %{data_type: :string, default: true, user_controlled: true},
+        min: %{data_type: :integer, default: "null", user_controlled: true},
+        max: %{data_type: :integer, default: "null", user_controlled: true},
+        plotBands: %{data_type: :list, default: %{}, user_controlled: true}
+      }
+    },
 
-    embeds_one :x_axis, Xaxis do
-      field(:vendor, :string)
-      field(:align_tricks, :string)
-      field(:alternate_grid_color, :string)
-      field(:datetime_labelformat, :string)
-      field(:labels, :string)
-      field(:title, :string)
-      field(:visible, :string)
-      field(:type, :string)
-      field(:opposite, :string)
-    end
+    zAxis: %{
+      data_type: :list,
+      user_controlled: false,
+      properties: %{
+        alignTricks: %{data_type: :boolean, default: true, user_controlled: false},
+        alternateGridColor: %{data_type: :color, default: "", user_controlled: true},
+        dateTimeLabelFormats: %{data_type: :object, default: %{}, user_controlled: false},
+        labels: %{data_type: :object, default: %{}, user_controlled: false},
+        title: %{
+          data_type: :object, default: %{}, user_controlled: false,
+          properties: %{
+            text: %{data_type: :string, default: "", user_controlled: true},
+          }
+        },
+        visible: %{data_type: :boolean, default: true, user_controlled: false},
+        type: %{data_type: :string, default: true, user_controlled: true},
+        min: %{data_type: :integer, default: "null", user_controlled: true},
+        max: %{data_type: :integer, default: "null", user_controlled: true},
+        plotBands: %{data_type: :list, default: %{}, user_controlled: true}
+      }
+    },
 
-    embeds_one :y_axis, Yaxis do
-      field(:vendor, :string)
-      field(:align_tricks, :string)
-      field(:alternate_grid_color, :string)
-      field(:datetime_labelformat, :string)
-      field(:labels, :string)
-      field(:title, :string)
-      field(:visible, :string)
-      field(:type, :string)
-      field(:opposite, :string)
-    end
+    series: %{
+      data_type: :list,
+      user_defined: false,
+      properties: %{}
+    }
+  ]
 
-    embeds_one :z_axis, Zaxis do
-      field(:vendor, :string)
-      field(:align_tricks, :string)
-      field(:alternate_grid_color, :string)
-      field(:datetime_labelformat, :string)
-      field(:labels, :string)
-      field(:title, :string)
-      field(:visible, :string)
-      field(:type, :string)
-      field(:opposite, :string)
-    end
 
-    embeds_one :series, Series do
-      field(:vendor, :string)
-      field(:data, :string)
-      field(:name, :string)
-    end
-  end
+  @doc """
+  Takes data in the form of axes and series and arranges the data
+  in the format specified by highcharts.
 
-  def changeset(data, params) do
-    data
-    |> cast(params, @master_params)
-    |> put_change(
-      :chart,
-      chart_changeset(%AcqdatCore.Widgets.Schema.Vendors.HighCharts.Chart{}, params["chart"])
-    )
-    |> put_change(
-      :caption,
-      caption_changeset(
-        %AcqdatCore.Widgets.Schema.Vendors.HighCharts.Caption{},
-        params["caption"]
-      )
-    )
-    |> put_change(
-      :credits,
-      credits_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Credits{},
-        params["credits"]
-      )
-    )
-    |> put_change(
-      :exporting,
-      exporting_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Exporting{},
-        params["exporting"]
-      )
-    )
-    |> put_change(
-      :legend,
-      legend_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Legend{}, params["legend"])
-    )
-    |> put_change(
-      :navigation,
-      navigation_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Navigation{},
-        params["navigation"]
-      )
-    )
-    |> put_change(
-      :pane,
-      pane_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Pane{}, params["pane"])
-    )
-    |> put_change(
-      :responsive,
-      responsive_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Responsive{},
-        params["responsive"]
-      )
-    )
-    |> put_change(
-      :subtitle,
-      subtitle_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.Subtitle{},
-        params["subtitle"]
-      )
-    )
-    |> put_change(
-      :time,
-      time_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Timezone{}, params["time"])
-    )
-    |> put_change(
-      :title,
-      title_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Title{}, params["title"])
-    )
-    |> put_change(
-      :tool_tip,
-      tool_tip_changeset(
-        %AcqdatCore.Schema.Widgets.Vendors.HighCharts.ToolTip{},
-        params["tool_tip"]
-      )
-    )
-    |> put_change(
-      :z_axis,
-      z_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Zaxis{}, params["z_axis"])
-    )
-    |> put_change(
-      :x_axis,
-      x_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Xaxis{}, params["x_axis"])
-    )
-    |> put_change(
-      :y_axis,
-      y_axis_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Yaxis{}, params["y_axis"])
-    )
-    |> put_change(
-      :series,
-      series_changeset(%AcqdatCore.Schema.Widgets.Vendors.HighCharts.Series{}, params["series"])
-    )
-  end
+  The `axes` map has data by axes name and it's values.
 
-  def chart_changeset(data, params) do
-    data
-    |> cast(params, @chart_params)
-    |> validate_required(@chart_params)
-  end
+  """
 
-  def caption_changeset(data, params) do
-    data
-    |> cast(params, @caption_params)
-    |> validate_required(@caption_params)
-  end
+  @spec arrange_series_structure(map, list) :: map
+  def arrange_series_structure(axes, series) do
 
-  def credits_changeset(data, params) do
-    data
-    |> cast(params, @credits_params)
-    |> validate_required(@credits_params)
-  end
-
-  def exporting_changeset(data, params) do
-    data
-    |> cast(params, @exporting_params)
-    |> validate_required(@exporting_params)
-  end
-
-  def legend_changeset(data, params) do
-    data
-    |> cast(params, @legend_params)
-    |> validate_required(@legend_params)
-  end
-
-  def navigation_changeset(data, params) do
-    data
-    |> cast(params, @navigation_params)
-    |> validate_required(@navigation_params)
-  end
-
-  def pane_changeset(data, params) do
-    data
-    |> cast(params, @pane_params)
-    |> validate_required(@pane_params)
-  end
-
-  def responsive_changeset(data, params) do
-    data
-    |> cast(params, @responsive_params)
-    |> validate_required(@responsive_params)
-  end
-
-  def subtitle_changeset(data, params) do
-    data
-    |> cast(params, @subtitle_params)
-    |> validate_required(@subtitle_params)
-  end
-
-  def time_changeset(data, params) do
-    data
-    |> cast(params, @time_params)
-    |> validate_required(@time_params)
-  end
-
-  def title_changeset(data, params) do
-    data
-    |> cast(params, @title_params)
-    |> validate_required(@title_params)
-  end
-
-  def tool_tip_changeset(data, params) do
-    data
-    |> cast(params, @tool_tip_params)
-    |> validate_required(@tool_tip_params)
-  end
-
-  def x_axis_changeset(data, params) do
-    data
-    |> cast(params, @x_axis_params)
-    |> validate_required(@x_axis_params)
-  end
-
-  def z_axis_changeset(data, params) do
-    data
-    |> cast(params, @z_axis_params)
-    |> validate_required(@z_axis_params)
-  end
-
-  def y_axis_changeset(data, params) do
-    data
-    |> cast(params, @y_axis_params)
-    |> validate_required(@y_axis_params)
-  end
-
-  def series_changeset(data, params) do
-    data
-    |> cast(params, @series_params)
-    |> validate_required(@series_params)
   end
 end

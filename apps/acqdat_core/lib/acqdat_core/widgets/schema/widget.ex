@@ -1,25 +1,39 @@
 defmodule AcqdatCore.Widgets.Schema.Widget do
   @moduledoc """
-  Models a Widget in the system.
+  Widgets are used for creating visualizations from data sources.
 
-  To handle a widget entity it is being assumed that a widget
-  is a seperate entity and will be imported by user if payed.
+  A widget has two important properties along with others:
+  - `data_settings`
+  - `visual_settings`
+
+  **Data Settings**
+  The data settings holds properties of data source which would be
+  shown by an instance of the specific widget.
+  A data source would be put on different axes for a widget. A data source
+  is a columnar for an axes.
+
+  **Visual Settings**
+  Visual Settings hold the keys that can be set for the particular widget.
+  The keys are defined by module for a particular vendor the information
+  is derived from widget_type to which the widget belongs.
   """
 
   use AcqdatCore.Schema
   alias AcqdatCore.Widgets.Schema.WidgetType
-  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
+  alias AcqdatCore.Widgets.Schema.Widget.Settings
   alias AcqdatCore.Widgets.Schema.Widget.DataSettings
 
   @typedoc """
   `label`: widget name
   `uuid`: unique number
-  `image_url`: image of widget
-  `default value`: default intial values of widget
+  `image_url`: holds the image url for a widget
+  `default_values`: holds initial values for keys defined in data and visual
+    settings
   `category`: category of the widget
   `policies`: policy of that widget
-  `properties`: properties of the widget that includes other things also'
-  `settings`: settings or current configuration of the widget
+  `properties`: properties of a widget
+  `visual_settings`: holds visualization related settings
+  `data_settings`: holds data related settings for a widget
   """
 
   @type t :: %__MODULE__{}
@@ -34,7 +48,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     field(:policies, :map)
 
     # embedded associations
-    embeds_many(:visual_settings, VisualSettings)
+    embeds_many(:visual_settings, Settings)
     embeds_many(:data_settings, DataSettings)
 
     # associations
@@ -69,21 +83,26 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
   end
 end
 
-
-defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
+defmodule AcqdatCore.Widgets.Schema.Widget.Settings do
   @moduledoc """
   Embed schema for visual settings in widget
+
+  ## Note
+  - User controlled field holds whether user will fill in the values for the
+  given key.
+  - A field which is not controlled by the user should have it's value set in
+  the value field. For user controlled fields it would be empty.
   """
   use AcqdatCore.Schema
-  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
+  alias AcqdatCore.Widgets.Schema.Widget.Settings
 
   embedded_schema do
     field(:key, :string)
     field(:type, :string)
     field(:source, :map)
-    field(:value, :string, default: "")
+    field(:value, :map)
     field(:user_controlled, :boolean, default: false)
-    embeds_one(:properties, VisualSettings)
+    embeds_one(:properties, Settings)
   end
   @permitted ~w(key type source value user_controlled properties)a
 
@@ -97,18 +116,21 @@ defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
   @moduledoc """
   Embed schema for data related settings in widget.
   """
+
   use AcqdatCore.Schema
+  alias AcqdatCore.Widgets.Schema.Widget.Settings
 
   embedded_schema do
-    field(:axes, {:array, :map})
-    field(:series, {:array, :map})
-    field(:axes_values, {:array, :map})
-    field(:series_values, {:array, :map})
+    embeds_many(:axes) do
+      field(:name, :string)
+      field(:multiple, :boolean, default: false)
+    end
+    embeds_many(:series, Settings)
   end
 
   @permitted ~w(axes series axes_values series_values)a
 
-  def chagngeset(%__MODULE__{} = settings, params) do
+  def changeset(%__MODULE__{} = settings, params) do
     cast(settings, params, @permitted)
   end
 end

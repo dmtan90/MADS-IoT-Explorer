@@ -1,5 +1,5 @@
 defmodule AcqdatCore.Model.Widgets.User do
-  alias AcqdatCore.Schema.Widgets.UserWidgets, as: User
+  alias AcqdatCore.Widgets.Schema.UserWidgets, as: User
   alias AcqdatCore.Repo
   alias AcqdatCore.Model.Helper, as: ModelHelper
   import Ecto.Query
