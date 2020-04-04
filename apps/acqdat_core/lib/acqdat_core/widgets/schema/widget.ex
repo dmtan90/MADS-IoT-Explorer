@@ -59,7 +59,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
 
   @required ~w(label default_values widget_type_id)a
   @optional ~w(properties image_url policies category)a
-  @params @required ++ @optional
+  @permitted @required ++ @optional
 
   @spec changeset(
           __MODULE__.t(),
@@ -67,10 +67,10 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
         ) :: Ecto.Changeset.t()
   def changeset(%__MODULE__{} = widget, params) do
     widget
-    |> cast(params, @params)
+    |> cast(params, @permitted)
     |> add_uuid()
-    |> cast_assoc(:visual_settings, with: &VisualSettings.changeset/2)
-    |> cast_assoc(:data_settings, with: &DataSettings.changeset/2)
+    |> cast_embed(:visual_settings, with: &VisualSettings.changeset/2)
+    |> cast_embed(:data_settings, with: &DataSettings.changeset/2)
     |> validate_required(@required)
   end
 
@@ -114,8 +114,8 @@ defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
 
   def changeset(%__MODULE__{} = settings, params) do
     settings
-    |> cast(settings, params, @permitted)
-    |> cast_assoc(:properties, with: &VisualSettings.changeset/2)
+    |> cast(params, @permitted)
+    |> cast_embed(:properties, with: &VisualSettings.changeset/2)
   end
 end
 
@@ -138,7 +138,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
 
   def changeset(%__MODULE__{} = settings, params) do
     settings
-    |> cast(settings, params, @permitted)
-    |> cast_assoc(:properties, with: &DataSettings.changeset/2)
+    |> cast(params, @permitted)
+    |> cast_embed(:properties, with: &DataSettings.changeset/2)
   end
 end

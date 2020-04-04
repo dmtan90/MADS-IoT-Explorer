@@ -3,16 +3,16 @@ defmodule AcqdatCore.Test.Support.WidgetData do
     category: ["chart", "line"],
     data_settings: [
       %{
-        data_type: :object,
-        key: :axes,
+        data_type: "object",
+        key: "axes",
         properties: [
           %{
-            data_type: :list,
-            key: :x,
+            data_type: "list",
+            key: "x",
             properties: [
               %{
-                data_type: :boolean,
-                key: :multiple,
+                data_type: "boolean",
+                key: "multiple",
                 properties: %{},
                 value: %{data: false}
               }
@@ -20,12 +20,12 @@ defmodule AcqdatCore.Test.Support.WidgetData do
             value: %{}
           },
           %{
-            data_type: :list,
-            key: :y,
+            data_type: "list",
+            key: "y",
             properties: [
               %{
-                data_type: :boolean,
-                key: :multiple,
+                data_type: "boolean",
+                key: "multiple",
                 properties: %{},
                 value: %{data: true}
               }
@@ -36,11 +36,11 @@ defmodule AcqdatCore.Test.Support.WidgetData do
         value: %{}
       },
       %{
-        data_type: :list,
-        key: :series,
+        data_type: "list",
+        key: "series",
         properties: [
-          %{data_type: :string, key: :color, properties: %{}, value: %{}},
-          %{data_type: :string, key: :name, properties: %{}, value: %{}}
+          %{data_type: "string", key: "color", properties: %{}, value: %{}},
+          %{data_type: "string", key: "name", properties: %{}, value: %{}}
         ],
         value: %{}
       }
@@ -86,139 +86,64 @@ defmodule AcqdatCore.Test.Support.WidgetData do
     uuid: "3cb9d71c763611ea836c482ae331d1eb",
     visual_settings: [
       %{
-        data_type: :object,
-        key: :caption,
+        data_type: "object",
+        key: "caption",
         properties: [
           %{
-            data_type: :string,
-            key: :text,
+            data_type: "string",
+            key: "text",
             properties: %{},
-            source: "",
+            source: %{},
             user_controlled: true,
             value: %{data: ""}
           },
           %{
-            data_type: :string,
-            key: :align,
+            data_type: "string",
+            key: "align",
             properties: %{},
             source: "",
             user_controlled: true,
             value: %{data: "left"}
           }
         ],
-        source: "",
+        source: %{},
         user_controlled: false,
         value: %{}
       },
       %{
-        data_type: :object,
-        key: :chart,
+        data_type: "object",
+        key: "chart",
         properties: [
           %{
-            data_type: :string,
-            key: :type,
+            data_type: "string",
+            key: "type",
             properties: %{},
-            source: "",
+            source: %{},
             user_controlled: false,
-            value: %{data: 'line'}
+            value: %{data: "line"}
           },
           %{
-            data_type: :color,
-            key: :backgroundColor,
+            data_type: "color",
+            key: "backgroundColor",
             properties: %{},
             source: "",
             user_controlled: true,
             value: %{data: "#ffffff"}
           },
           %{
-            data_type: :string,
-            key: :plotBackgroundColor,
+            data_type: "string",
+            key: "plotBackgroundColor",
             properties: %{},
-            source: "",
+            source: %{},
             user_controlled: true,
             value: %{data: ""}
           }
         ],
-        source: "",
+        source: %{},
         user_controlled: false,
         value: %{}
       },
-      %{
-        data_type: :object,
-        key: :subtitle,
-        properties: [
-          %{
-            data_type: :string,
-            key: :text,
-            properties: %{},
-            source: "",
-            user_controlled: true,
-            value: %{data: ""}
-          },
-          %{
-            data_type: :string,
-            key: :align,
-            properties: %{},
-            source: "",
-            user_controlled: true,
-            value: %{data: "center"}
-          }
-        ],
-        source: "",
-        user_controlled: false,
-        value: %{}
-      },
-      %{
-        data_type: :object,
-        key: :title,
-        properties: [
-          %{
-            data_type: :string,
-            key: :text,
-            properties: %{},
-            source: "",
-            user_controlled: true,
-            value: %{data: ""}
-          },
-          %{
-            data_type: :string,
-            key: :align,
-            properties: %{},
-            source: "",
-            user_controlled: true,
-            value: %{data: "center"}
-          }
-        ],
-        source: "",
-        user_controlled: false,
-        value: %{}
-      },
-      %{
-        data_type: :list,
-        key: :yAxis,
-        properties: [
-          %{
-            data_type: :object,
-            key: :title,
-            properties: [
-              %{
-                data_type: :string,
-                key: :text,
-                properties: %{},
-                source: "",
-                user_controlled: true,
-                value: %{data: ""}
-              }
-            ],
-            source: "",
-            user_controlled: false,
-            value: %{}
-          }
-        ],
-        source: "",
-        user_controlled: false,
-        value: %{}
-      }
+
     ],
     widget_type_id: 1
 

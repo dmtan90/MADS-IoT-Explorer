@@ -13,9 +13,11 @@ defmodule AcqdatCore.Widgets.Schema.WidgetTest do
 
   describe "changeset/2 " do
 
+    @tag timeout: :infinity
     test "returns a valid changeset", context do
       %{widget_params: params} = context
-      changeset = Widget.changeset(%Widget{}, params)
+      %{valid?: valid} = changeset = Widget.changeset(%Widget{}, params)
+      assert valid
     end
 
   end
