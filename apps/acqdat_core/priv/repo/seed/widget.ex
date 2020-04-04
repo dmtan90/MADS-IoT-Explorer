@@ -2,22 +2,48 @@ defmodule AcqdatCore.Seed.Widget do
   @moduledoc """
   Holds seeds for initial widgets.
   """
+
+
   alias AcqdatCore.Repo
   alias AcqdatCore.Widgets.Schema.WidgetType
   alias AcqdatCore.Widgets.Schema.Vendors.HighCharts
+  alias AcqdatCore.Widgets.Schema.Widget, as: WidgetSchema
+  alias AcqdatCore.Widgets.Schema.Widget.VisualSettings
+  alias AcqdatCore.Widgets.Schema.Widget.DataSettings
+
+  @non_value_types ~w(object list)a
+  @highchart_struct %HighCharts{}
 
   @highchart_key_widget_settings %{
     line: %{
       visual: %{
         chart: [type: %{value: 'line'}, backgroundColor: %{}, plotBackgroundColor: %{}],
-        title: [:text, :align],
-        caption: [:text, :align],
-        subtitle: [:text, :align],
-        yAxis: [title: [:text]],
+        title: [text: %{}, align: %{}],
+        caption: [text: %{}, align: %{}],
+        subtitle: [text: %{}, align: %{}],
+        yAxis: [title: [text: %{}]],
       },
       data: %{
-        axes: [x: %{multiple: false}, y: %{multiple: true}],
-        series: [:name, :color]
+        series: %{
+          data_type: :list,
+          value: %{},
+          properties: %{
+            name: %{data_type: :string, value: %{}, properties: %{}},
+            color: %{data_type: :string, value: %{}, properties: %{}},
+          }
+        },
+        axes: %{
+          data_type: :object,
+          value: %{},
+          properties: %{
+            x: %{data_type: :list, value: %{},
+              properties: %{multiple: %{data_type: :boolean, value: %{data: false}, properties: %{}}}
+            },
+            y: %{data_type: :list, value: %{},
+              properties: %{multiple: %{data_type: :boolean, value: %{data: true}, properties: %{}}}
+            }
+          }
+        }
       }
     }
   }
@@ -62,7 +88,12 @@ defmodule AcqdatCore.Seed.Widget do
     }
   }
 
-  def seed_widget_types() do
+  def seed() do
+    widget_type = seed_widget_type()
+    seed_widgets(widget_type)
+  end
+
+  def seed_widget_type() do
     params = %{
       name: "Highcharts",
       vendor: "Highcharts",
@@ -81,11 +112,13 @@ defmodule AcqdatCore.Seed.Widget do
       set_widget_data(key, widget_settings, @high_chart_value_settings[key],
         widget_type)
     end)
-
+    |> Enum.each(fn data ->
+      Repo.insert!(data)
+    end)
   end
 
   def set_widget_data(key, widget_settings, data, widget_type) do
-    %{
+    %WidgetSchema{
       label: to_string(key),
       properties: %{},
       uuid: UUID.uuid1(:hex),
@@ -93,19 +126,81 @@ defmodule AcqdatCore.Seed.Widget do
       category: ["chart", "line"],
       policies: %{},
       widget_type_id: widget_type.id,
-      visual_settings: do_settings(key, widget_settings),
-      data_settings: do_settings(key, widget_settings),
-      default_values: data[key]
+      visual_settings: do_settings(widget_settings, :visual),
+      data_settings: do_settings(widget_settings, :data),
+      default_values: data
     }
   end
 
-  def do_settings(key, %{visual: settings}) do
-    require IEx
-    IEx.pry
-
+  def do_settings(%{visual: settings}, :visual) do
+    Enum.map(settings, fn {key, value} ->
+      set_keys_from_vendor(key, value, Map.get(@highchart_struct, key))
+    end)
   end
 
-  def do_settings(key, %{data: settings}) do
+  def do_settings(%{data: settings}, :data) do
+    Enum.map(settings, fn {key, value} ->
+      set_data_keys(key, value)
+    end)
+  end
 
+  def set_data_keys(key, %{properties: properties} = value) when properties == %{} do
+    %DataSettings{
+      key: key,
+      value: value.value,
+      data_type: value.data_type,
+      properties: []
+    }
+  end
+
+  def set_data_keys(key, value) do
+    %DataSettings{
+      key: key,
+      data_type: value.data_type,
+      value: value.value,
+      properties: Enum.map(value.properties, fn {key, value} ->
+        set_data_keys(key, value)
+      end)
+    }
+  end
+
+  def set_keys_from_vendor(key, value, metadata) when is_list(value) do
+    %VisualSettings{
+      key: key,
+      data_type: metadata.data_type,
+      user_controlled: metadata.user_controlled,
+      value: set_default_or_given_value(key, value, metadata),
+      source: %{},
+      properties: Enum.map(value,
+        fn {child_key, child_value} ->
+          set_keys_from_vendor(child_key, child_value, metadata.properties[child_key])
+      end)
+    }
+  end
+
+  def set_keys_from_vendor(key, value, metadata) when is_map(value) do
+    %VisualSettings{
+      key: key,
+      data_type: metadata.data_type,
+      user_controlled: metadata.user_controlled,
+      source: %{},
+      value: set_default_or_given_value(key, value, metadata),
+      properties: []
+    }
+  end
+
+  def set_default_or_given_value(key, value, metadata) do
+    if metadata.data_type not in @non_value_types do
+      %{
+        data:
+        if Map.has_key?(value, :value) do
+          value.value
+        else
+          metadata.default_value
+        end
+      }
+    else
+      %{}
+    end
   end
 end

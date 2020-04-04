@@ -10,9 +10,7 @@ defmodule AcqdatCore.Repo.Migrations.AddWidgetManager do
 
       timestamps(type: :timestamptz)
     end
-  end
 
-  def change do
     create table("acqdat_widgets") do
       add(:label, :string)
       add(:policies, :map)
@@ -29,9 +27,7 @@ defmodule AcqdatCore.Repo.Migrations.AddWidgetManager do
 
       timestamps(type: :timestamptz)
     end
-  end
 
-  def change do
     create table("acqdat_user_widgets") do
       add(:widget_id, references("acqdat_widgets", on_delete: :delete_all), null: false)
       add(:user_id, references("users", on_delete: :delete_all), null: false)

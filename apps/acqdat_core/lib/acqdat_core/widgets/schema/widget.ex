@@ -44,7 +44,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     field(:uuid, :string)
     field(:image_url, :string)
     field(:default_values, :map)
-    field(:category, {:array, :map})
+    field(:category, {:array, :string})
     field(:policies, :map)
 
     # embedded associations
@@ -57,7 +57,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     timestamps(type: :utc_datetime)
   end
 
-  @required ~w(label settings default_values uuid widget_type_id)a
+  @required ~w(label default_values widget_type_id)a
   @optional ~w(properties image_url policies category)a
   @params @required ++ @optional
 
@@ -69,11 +69,15 @@ defmodule AcqdatCore.Widgets.Schema.Widget do
     widget
     |> cast(params, @params)
     |> add_uuid()
-    |> cast_embed(:visual_settings, with: &VisualSettings.changeset/2)
-    |> cast_embed(:data_settings, with: &DataSettings.changeset/2)
+    |> cast_assoc(:visual_settings, with: &VisualSettings.changeset/2)
+    |> cast_assoc(:data_settings, with: &DataSettings.changeset/2)
     |> validate_required(@required)
   end
 
+  @spec update_changeset(
+          AcqdatCore.Widgets.Schema.Widget.t(),
+          :invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}
+        ) :: Ecto.Changeset.t()
   def update_changeset(%__MODULE__{} = widget, params) do
     widget
     |> cast(params, @params)
@@ -106,12 +110,12 @@ defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
     field(:user_controlled, :boolean, default: false)
     embeds_many(:properties, VisualSettings)
   end
-  @permitted ~w(key type source value user_controlled properties)a
+  @permitted ~w(key data_type source value user_controlled)a
 
   def changeset(%__MODULE__{} = settings, params) do
     settings
     |> cast(settings, params, @permitted)
-    |> cast_embed(:properties, with: &VisualSettings.changeset/2)
+    |> cast_assoc(:properties, with: &VisualSettings.changeset/2)
   end
 end
 
@@ -125,16 +129,16 @@ defmodule AcqdatCore.Widgets.Schema.Widget.DataSettings do
 
   embedded_schema do
     field(:key, :string)
+    field(:value, :map)
     field(:data_type, :string)
-    field(:source, :map)
     embeds_many(:properties, DataSettings)
   end
 
-  @permitted ~w(axes series axes_values series_values)a
+  @permitted ~w(key value data_type)a
 
   def changeset(%__MODULE__{} = settings, params) do
     settings
     |> cast(settings, params, @permitted)
-    |> cast_embed(:properties, with: &DataSettings.changeset/2)
+    |> cast_assoc(:properties, with: &DataSettings.changeset/2)
   end
 end
