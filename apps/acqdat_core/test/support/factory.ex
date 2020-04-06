@@ -19,7 +19,8 @@ defmodule AcqdatCore.Support.Factory do
     SensorNotifications,
     Site,
     Process,
-    DigitalTwin
+    DigitalTwin,
+    Organisation
   }
 
   alias AcqdatCore.Schema.ToolManagement.{
@@ -78,10 +79,18 @@ defmodule AcqdatCore.Support.Factory do
     }
   end
 
-  def digital_twin_factory do
+  def digital_twin_factory() do
     %DigitalTwin{
       name: sequence(:digital_twin, &"digital_twin#{&1}"),
       process: build(:process)
+    }
+  end
+
+  def organisation_factory() do
+    %Organisation{
+      uuid: UUID.uuid1(:hex),
+      name: sequence(:org_name, &"org#{&1}"),
+      description: "new organisation",
     }
   end
 
@@ -99,8 +108,8 @@ defmodule AcqdatCore.Support.Factory do
     %Sensor{
       uuid: UUID.uuid1(:hex),
       name: sequence(:sensor_name, &"Sensor#{&1}"),
-      device: build(:device),
-      sensor_type: build(:sensor_type)
+      slug: sequence(:sensor_name, &"Sensor#{&1}"),
+      org_id: build(:organisation)
     }
   end
 
