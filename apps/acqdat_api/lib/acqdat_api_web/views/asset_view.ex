@@ -14,17 +14,18 @@ defmodule AcqdatApiWeb.AssetView do
 
     %{
       type: "Asset",
-      # description: asset.description,
       id: asset.id,
+      name: asset.name,
+      entities: params
+      # TODO: Need to uncomment below fields depending on the future usecases in the view
+      # description: asset.description,
       # image_url: asset.image_url,
       # inserted_at: asset.inserted_at,
       # mapped_parameters: asset.mapped_parameters,
       # metadata: asset.metadata,
-      name: asset.name,
       # slug: asset.slug,
       # updated_at: asset.updated_at,
       # uuid: asset.uuid,
-      entities: params
     }
   end
 end

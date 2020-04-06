@@ -28,9 +28,9 @@ defmodule AcqdatApiWeb.SensorView do
     %{
       id: parameter.id,
       name: parameter.name,
-      type: "Parameter"
-      # type: parameter.type,
-      # uuid: parameter.uuid
+      type: "Parameter",
+      type: parameter.type,
+      uuid: parameter.uuid
     }
   end
 
