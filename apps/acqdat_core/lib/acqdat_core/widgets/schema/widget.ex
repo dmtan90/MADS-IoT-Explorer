@@ -110,6 +110,7 @@ defmodule AcqdatCore.Widgets.Schema.Widget.VisualSettings do
     field(:user_controlled, :boolean, default: false)
     embeds_many(:properties, VisualSettings)
   end
+
   @permitted ~w(key data_type source value user_controlled)a
 
   def changeset(%__MODULE__{} = settings, params) do

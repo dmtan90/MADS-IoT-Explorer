@@ -19,7 +19,7 @@ defmodule AcqdatApiWeb.Widgets.UserController do
              {:create, {:ok, user_widget}} <- {:create, User.create(data)} do
           conn
           |> put_status(200)
-          |> render("user_widget.json", %{user_widget: user_widget})
+          |> json(%{"Widget Added" => true})
         else
           {:extract, {:error, error}} ->
             send_error(conn, 400, error)

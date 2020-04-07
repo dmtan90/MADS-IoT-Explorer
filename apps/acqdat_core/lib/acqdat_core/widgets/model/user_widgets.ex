@@ -23,10 +23,11 @@ defmodule AcqdatCore.Model.Widgets.User do
     Repo.delete(user)
   end
 
-  def update(user, params) do
-    changeset = User.update_changeset(user, params)
-    Repo.update(changeset)
-  end
+  # TODO
+  # def update(user, params) do
+  #   changeset = User.update_changeset(user, params)
+  #   Repo.update(changeset)
+  # end
 
   def get_all(%{page_size: page_size, page_number: page_number}) do
     User

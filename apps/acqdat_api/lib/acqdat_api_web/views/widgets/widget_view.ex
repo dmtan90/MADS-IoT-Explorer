@@ -9,7 +9,7 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
       widget_type_id: widget.widget_type_id,
       label: widget.label,
       properties: widget.properties,
-      settings: widget.settings,
+      # settings: widget.settings,
       policies: widget.policies,
       category: widget.category,
       default_values: widget.default_values,
@@ -21,7 +21,7 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
 
   def render("index.json", widget_type) do
     %{
-      widget: render_many(widget_type.entries, WidgetView, "widget.json"),
+      widget: render_many(widget_type.entries, WidgetView, "widget_index.json"),
       page_number: widget_type.page_number,
       page_size: widget_type.page_size,
       total_entries: widget_type.total_entries,
@@ -35,12 +35,28 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
       widget_type_id: widget.widget_type_id,
       label: widget.label,
       properties: widget.properties,
-      settings: widget.settings,
+      # settings: widget.settings,
       policies: widget.policies,
       category: widget.category,
-      default_values: widget.default_values,
+      # default_values: widget.default_values,
       image_url: widget.image_url,
       uuid: widget.uuid
+    }
+  end
+
+  def render("widget_index.json", %{widget: widget}) do
+    %{
+      id: widget.id,
+      widget_type_id: widget.widget_type_id,
+      label: widget.label,
+      properties: widget.properties,
+      # settings: widget.settings,
+      policies: widget.policies,
+      category: widget.category,
+      # default_values: widget.default_values,
+      image_url: widget.image_url,
+      uuid: widget.uuid,
+      widget_type: render_one(widget.widget_type, WidgetTypeView, "widget_type.json")
     }
   end
 end

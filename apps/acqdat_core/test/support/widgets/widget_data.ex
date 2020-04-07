@@ -1,5 +1,5 @@
 defmodule AcqdatCore.Test.Support.WidgetData do
-  @data  %{
+  @data %{
     category: ["chart", "line"],
     data_settings: [
       %{
@@ -13,7 +13,7 @@ defmodule AcqdatCore.Test.Support.WidgetData do
               %{
                 data_type: "boolean",
                 key: "multiple",
-                properties: %{},
+                properties: [],
                 value: %{data: false}
               }
             ],
@@ -26,7 +26,7 @@ defmodule AcqdatCore.Test.Support.WidgetData do
               %{
                 data_type: "boolean",
                 key: "multiple",
-                properties: %{},
+                properties: [],
                 value: %{data: true}
               }
             ],
@@ -39,8 +39,8 @@ defmodule AcqdatCore.Test.Support.WidgetData do
         data_type: "list",
         key: "series",
         properties: [
-          %{data_type: "string", key: "color", properties: %{}, value: %{}},
-          %{data_type: "string", key: "name", properties: %{}, value: %{}}
+          %{data_type: "string", key: "color", properties: [], value: %{}},
+          %{data_type: "string", key: "name", properties: [], value: %{}}
         ],
         value: %{}
       }
@@ -49,7 +49,7 @@ defmodule AcqdatCore.Test.Support.WidgetData do
       data_settings_values: %{
         series: [
           %{
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175],
+            data: [43934, 52503, 57177, 69658, 97031, 119_931, 137_133, 154_175],
             name: 'Installation'
           },
           %{
@@ -79,7 +79,8 @@ defmodule AcqdatCore.Test.Support.WidgetData do
         yAxis: %{title: %{text: 'Number of Employees'}}
       }
     },
-    image_url: "https://assets.highcharts.com/images/demo-thumbnails/highcharts/line-basic-default.png",
+    image_url:
+      "https://assets.highcharts.com/images/demo-thumbnails/highcharts/line-basic-default.png",
     label: "line",
     policies: %{},
     properties: %{},
@@ -92,7 +93,7 @@ defmodule AcqdatCore.Test.Support.WidgetData do
           %{
             data_type: "string",
             key: "text",
-            properties: %{},
+            properties: [],
             source: %{},
             user_controlled: true,
             value: %{data: ""}
@@ -100,8 +101,8 @@ defmodule AcqdatCore.Test.Support.WidgetData do
           %{
             data_type: "string",
             key: "align",
-            properties: %{},
-            source: "",
+            properties: [],
+            source: %{},
             user_controlled: true,
             value: %{data: "left"}
           }
@@ -117,7 +118,7 @@ defmodule AcqdatCore.Test.Support.WidgetData do
           %{
             data_type: "string",
             key: "type",
-            properties: %{},
+            properties: [],
             source: %{},
             user_controlled: false,
             value: %{data: "line"}
@@ -125,15 +126,15 @@ defmodule AcqdatCore.Test.Support.WidgetData do
           %{
             data_type: "color",
             key: "backgroundColor",
-            properties: %{},
-            source: "",
+            properties: [],
+            source: %{},
             user_controlled: true,
             value: %{data: "#ffffff"}
           },
           %{
             data_type: "string",
             key: "plotBackgroundColor",
-            properties: %{},
+            properties: [],
             source: %{},
             user_controlled: true,
             value: %{data: ""}
@@ -142,16 +143,12 @@ defmodule AcqdatCore.Test.Support.WidgetData do
         source: %{},
         user_controlled: false,
         value: %{}
-      },
-
+      }
     ],
     widget_type_id: 1
-
   }
 
   def data() do
     @data
   end
-
-
 end
