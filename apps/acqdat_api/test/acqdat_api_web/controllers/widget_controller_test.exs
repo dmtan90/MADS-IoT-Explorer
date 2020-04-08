@@ -17,8 +17,8 @@ defmodule AcqdatApiWeb.WidgetControllerTest do
 
       conn = get(conn, Routes.widget_path(conn, :index, params))
       response = conn |> json_response(200)
-      assert length(response["widget"]) == 1
-      assertion_widget = List.first(response["widget"])
+      assert length(response["widgets"]) == 1
+      assertion_widget = List.first(response["widgets"])
       assert assertion_widget["id"] == test_widget.id
       assert assertion_widget["widget_type_id"] == test_widget.widget_type_id
       assert assertion_widget["widget_type"]["id"] == test_widget.widget_type.id
@@ -31,7 +31,7 @@ defmodule AcqdatApiWeb.WidgetControllerTest do
       conn = get(conn, Routes.widget_path(conn, :index, %{}))
       response = conn |> json_response(200)
       assert response["total_pages"] == 1
-      assert length(response["widget"]) == response["total_entries"]
+      assert length(response["widgets"]) == response["total_entries"]
     end
 
     test "Big page size", %{conn: conn} do
@@ -47,7 +47,7 @@ defmodule AcqdatApiWeb.WidgetControllerTest do
       assert response["page_number"] == params["page_number"]
       assert response["page_size"] == params["page_size"]
       assert response["total_pages"] == 1
-      assert length(response["widget"]) == response["total_entries"]
+      assert length(response["widgets"]) == response["total_entries"]
     end
 
     test "Pagination", %{conn: conn} do
@@ -63,7 +63,7 @@ defmodule AcqdatApiWeb.WidgetControllerTest do
       assert page1_response["page_number"] == params["page_number"]
       assert page1_response["page_size"] == params["page_size"]
       assert page1_response["total_pages"] == 2
-      assert length(page1_response["widget"]) == page1_response["page_size"]
+      assert length(page1_response["widgets"]) == page1_response["page_size"]
 
       params = Map.put(params, "page_number", 2)
       conn = get(conn, Routes.widget_path(conn, :index, params))
@@ -72,7 +72,7 @@ defmodule AcqdatApiWeb.WidgetControllerTest do
       assert page2_response["page_number"] == params["page_number"]
       assert page2_response["page_size"] == params["page_size"]
       assert page2_response["total_pages"] == 2
-      assert length(page2_response["widget"]) == 1
+      assert length(page2_response["widgets"]) == 1
     end
 
     test "fails if invalid token in authorization header", %{conn: conn} do

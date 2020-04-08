@@ -21,7 +21,7 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
 
   def render("index.json", widget_type) do
     %{
-      widget: render_many(widget_type.entries, WidgetView, "widget_index.json"),
+      widgets: render_many(widget_type.entries, WidgetView, "widget_index.json"),
       page_number: widget_type.page_number,
       page_size: widget_type.page_size,
       total_entries: widget_type.total_entries,
