@@ -16,16 +16,32 @@ defmodule AcqdatApiWeb.Widgets.UserController do
         changeset = verify_user_widget_params(params)
 
         with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
-             {:create, {:ok, user_widget}} <- {:create, User.create(data)} do
+             {:create, {:ok, _user_widget}} <- {:create, User.create(data)} do
           conn
           |> put_status(200)
-          |> json(%{"Widget Added" => true})
+          |> json(%{
+            "success" => true,
+            "error" => false,
+            "message:" => "Widget Added Successfully"
+          })
         else
-          {:extract, {:error, error}} ->
-            send_error(conn, 400, error)
+          {:extract, {:error, _error}} ->
+            conn
+            |> put_status(400)
+            |> json(%{
+              "success" => false,
+              "error" => true,
+              "message:" => "Widget could not be Added"
+            })
 
-          {:create, {:error, message}} ->
-            send_error(conn, 400, message)
+          {:create, {:error, _message}} ->
+            conn
+            |> put_status(400)
+            |> json(%{
+              "success" => false,
+              "error" => true,
+              "message:" => "Widget could not be Added"
+            })
         end
 
       404 ->

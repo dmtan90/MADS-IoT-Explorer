@@ -17,7 +17,6 @@ defmodule AcqdatCore.Support.Factory do
   alias AcqdatCore.Schema.{
     User,
     Sensor,
-    SensorNotifications,
     DigitalTwin
   }
 
@@ -76,19 +75,6 @@ defmodule AcqdatCore.Support.Factory do
     asd = %Sensor{
       uuid: UUID.uuid1(:hex),
       name: sequence(:sensor_name, &"Sensor#{&1}")
-    }
-  end
-
-  def sensor_notification_factory() do
-    %SensorNotifications{
-      alarm_status: true,
-      sensor: build(:sensor),
-      rule_values: %{
-        "temp" => %{
-          "module" => "Elixir.AcqdatCore.Schema.Notification.RangeBased",
-          "preferences" => %{"lower_limit" => "10.0", "upper_limit" => "20"}
-        }
-      }
     }
   end
 

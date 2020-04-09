@@ -15,6 +15,3 @@ alias AcqdatCore.Seed.{User, Widget}
 
 User.seed_user!()
 Widget.seed()
-# SensorType.seed_sensor_types()
-# Device.see_device!()
-# Sensor.seed_sensors()

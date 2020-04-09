@@ -9,7 +9,6 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
       widget_type_id: widget.widget_type_id,
       label: widget.label,
       properties: widget.properties,
-      # settings: widget.settings,
       policies: widget.policies,
       category: widget.category,
       default_values: widget.default_values,
@@ -35,10 +34,8 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
       widget_type_id: widget.widget_type_id,
       label: widget.label,
       properties: widget.properties,
-      # settings: widget.settings,
       policies: widget.policies,
       category: widget.category,
-      # default_values: widget.default_values,
       image_url: widget.image_url,
       uuid: widget.uuid
     }
@@ -50,10 +47,8 @@ defmodule AcqdatApiWeb.Widgets.WidgetView do
       widget_type_id: widget.widget_type_id,
       label: widget.label,
       properties: widget.properties,
-      # settings: widget.settings,
       policies: widget.policies,
       category: widget.category,
-      # default_values: widget.default_values,
       image_url: widget.image_url,
       uuid: widget.uuid,
       widget_type: render_one(widget.widget_type, WidgetTypeView, "widget_type.json")

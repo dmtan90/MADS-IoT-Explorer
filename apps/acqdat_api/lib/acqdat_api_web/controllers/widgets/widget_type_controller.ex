@@ -1,121 +1,116 @@
 defmodule AcqdatApiWeb.Widgets.WidgetTypeController do
-  @moduledoc """
+  use AcqdatApiWeb, :controller
+  alias AcqdatApi.Widgets.WidgetType
+  alias AcqdatCore.Model.Widgets.WidgetType, as: WTModel
+  import AcqdatApiWeb.Helpers
+  import AcqdatApiWeb.Validators.Widgets.WidgetType
 
-  Widget Type Controller For Adding Widget Type from different Vendors.
+  plug :load_widget_type when action in [:update, :show, :delete]
 
-    use AcqdatApiWeb, :controller
-    alias AcqdatApi.Widgets.WidgetType
-    alias AcqdatCore.Model.Widgets.WidgetType, as: WTModel
-    import AcqdatApiWeb.Helpers
-    import AcqdatApiWeb.Validators.Widgets.WidgetType
+  def index(conn, params) do
+    changeset = verify_index_params(params)
 
-    plug :load_widget_type when action in [:update, :show, :delete]
+    case conn.status do
+      nil ->
+        {:extract, {:ok, data}} = {:extract, extract_changeset_data(changeset)}
+        {:list, widget_type} = {:list, WTModel.get_all(data)}
 
-    def index(conn, params) do
-      changeset = verify_index_params(params)
-
-      case conn.status do
-        nil ->
-          {:extract, {:ok, data}} = {:extract, extract_changeset_data(changeset)}
-          {:list, widget_type} = {:list, WTModel.get_all(data)}
-
-          conn
-          |> put_status(200)
-          |> render("index.json", widget_type)
-
-        404 ->
-          conn
-          |> send_error(404, "Resource Not Found")
-      end
-    end
-
-    def create(conn, params) do
-      changeset = verify_widget_type_params(params)
-
-      with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
-           {:create, {:ok, widget_type}} <- {:create, WidgetType.create(data)} do
         conn
         |> put_status(200)
-        |> render("widget_type.json", %{widget_type: widget_type})
-      else
-        {:extract, {:error, error}} ->
-          send_error(conn, 400, error)
+        |> render("index.json", widget_type)
 
-        {:create, {:error, message}} ->
-          send_error(conn, 400, message)
-      end
+      404 ->
+        conn
+        |> send_error(404, "Resource Not Found")
     end
+  end
 
-    def show(conn, params) do
-      case conn.status do
-        nil ->
-          conn
-          |> put_status(200)
-          |> render("widget_type.json", %{widget_type: conn.assigns.widget_type})
+  def create(conn, params) do
+    changeset = verify_widget_type_params(params)
 
-        404 ->
-          conn
-          |> send_error(404, "Resource Not Found")
-      end
+    with {:extract, {:ok, data}} <- {:extract, extract_changeset_data(changeset)},
+         {:create, {:ok, widget_type}} <- {:create, WidgetType.create(data)} do
+      conn
+      |> put_status(200)
+      |> render("widget_type.json", %{widget_type: widget_type})
+    else
+      {:extract, {:error, error}} ->
+        send_error(conn, 400, error)
+
+      {:create, {:error, message}} ->
+        send_error(conn, 400, message)
     end
+  end
 
-    def delete(conn, params) do
-      case conn.status do
-        nil ->
-          case WTModel.delete(conn.assigns.widget_type) do
-            {:ok, widget_type} ->
-              conn
-              |> put_status(200)
-              |> render("widget_type.json", %{widget_type: widget_type})
+  def show(conn, _params) do
+    case conn.status do
+      nil ->
+        conn
+        |> put_status(200)
+        |> render("widget_type.json", %{widget_type: conn.assigns.widget_type})
 
-            {:error, widget_type} ->
-              error = extract_changeset_error(widget_type)
-
-              conn
-              |> send_error(400, error)
-          end
-
-        404 ->
-          conn
-          |> send_error(404, "Resource Not Found")
-      end
+      404 ->
+        conn
+        |> send_error(404, "Resource Not Found")
     end
+  end
 
-    def update(conn, params) do
-      case conn.status do
-        nil ->
-          %{assigns: %{widget_type: widget_type}} = conn
+  def delete(conn, _params) do
+    case conn.status do
+      nil ->
+        case WTModel.delete(conn.assigns.widget_type) do
+          {:ok, widget_type} ->
+            conn
+            |> put_status(200)
+            |> render("widget_type.json", %{widget_type: widget_type})
 
-          case WTModel.update(widget_type, params) do
-            {:ok, widget_type} ->
-              conn
-              |> put_status(200)
-              |> render("widget_type.json", %{widget_type: widget_type})
+          {:error, widget_type} ->
+            error = extract_changeset_error(widget_type)
 
-            {:error, widget_type} ->
-              error = extract_changeset_error(widget_type)
+            conn
+            |> send_error(400, error)
+        end
 
-              conn
-              |> send_error(400, error)
-          end
-
-        404 ->
-          conn
-          |> send_error(404, "Resource Not Found")
-      end
+      404 ->
+        conn
+        |> send_error(404, "Resource Not Found")
     end
+  end
 
-    defp load_widget_type(%{params: %{"id" => widget_type_id}} = conn, _params) do
-      {widget_type_id, _} = Integer.parse(widget_type_id)
+  def update(conn, params) do
+    case conn.status do
+      nil ->
+        %{assigns: %{widget_type: widget_type}} = conn
 
-      case WTModel.get(widget_type_id) do
-        {:ok, widget_type} ->
-          assign(conn, :widget_type, widget_type)
+        case WTModel.update(widget_type, params) do
+          {:ok, widget_type} ->
+            conn
+            |> put_status(200)
+            |> render("widget_type.json", %{widget_type: widget_type})
 
-        {:error, _message} ->
-          conn
-          |> put_status(404)
-      end
+          {:error, widget_type} ->
+            error = extract_changeset_error(widget_type)
+
+            conn
+            |> send_error(400, error)
+        end
+
+      404 ->
+        conn
+        |> send_error(404, "Resource Not Found")
     end
-  """
+  end
+
+  defp load_widget_type(%{params: %{"id" => widget_type_id}} = conn, _params) do
+    {widget_type_id, _} = Integer.parse(widget_type_id)
+
+    case WTModel.get(widget_type_id) do
+      {:ok, widget_type} ->
+        assign(conn, :widget_type, widget_type)
+
+      {:error, _message} ->
+        conn
+        |> put_status(404)
+    end
+  end
 end

@@ -18,7 +18,12 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
 
       conn = post(conn, Routes.user_path(conn, :create, params), %{})
       response = conn |> json_response(200)
-      assert response == %{"Widget Added" => true}
+
+      assert response == %{
+               "error" => false,
+               "message:" => "Widget Added Successfully",
+               "success" => true
+             }
     end
 
     test "fails if authorization header not found", %{conn: conn} do
@@ -49,9 +54,9 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
       response = conn |> json_response(400)
 
       assert response == %{
-               "errors" => %{
-                 "message" => %{"error" => %{"name" => ["has already been taken"]}}
-               }
+               "error" => true,
+               "message:" => "Widget could not be Added",
+               "success" => false
              }
     end
 

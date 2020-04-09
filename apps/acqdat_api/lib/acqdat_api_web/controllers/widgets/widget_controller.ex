@@ -1,15 +1,15 @@
 defmodule AcqdatApiWeb.Widgets.WidgetController do
   use AcqdatApiWeb, :controller
-  # alias AcqdatApi.Widgets.Widget
-  # alias AcqdatCore.Model.Widgets.WidgetType, as: WTModel
-  # alias AcqdatApi.Image
-  # alias AcqdatApi.ImageDeletion
+  alias AcqdatApi.Widgets.Widget
+  alias AcqdatCore.Model.Widgets.WidgetType, as: WTModel
+  alias AcqdatApi.Image
+  alias AcqdatApi.ImageDeletion
   alias AcqdatCore.Model.Widgets.Widget, as: WidgetModel
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Widgets.Widget
 
   plug :load_widget when action in [:show]
-  # plug :load_widget_type when action in [:create]
+  plug :load_widget_type when action in [:create]
 
   def index(conn, params) do
     changeset = verify_index_params(params)
@@ -28,9 +28,6 @@ defmodule AcqdatApiWeb.Widgets.WidgetController do
         |> send_error(404, "Resource Not Found")
     end
   end
-
-  @doc """
-  Widget POST API
 
   def create(conn, params) do
     case conn.status do
@@ -66,8 +63,6 @@ defmodule AcqdatApiWeb.Widgets.WidgetController do
     end
   end
 
-  """
-
   def show(conn, _params) do
     case conn.status do
       nil ->
@@ -93,9 +88,6 @@ defmodule AcqdatApiWeb.Widgets.WidgetController do
         |> put_status(404)
     end
   end
-
-  @doc """
-  Widget Update API
 
   def update(conn, params) do
     case conn.status do
@@ -131,8 +123,7 @@ defmodule AcqdatApiWeb.Widgets.WidgetController do
     end
   end
 
-  Delete Widget API
-  def delete(conn, params) do
+  def delete(conn, _params) do
     case conn.status do
       nil ->
         case WidgetModel.delete(conn.assigns.widget) do
@@ -176,5 +167,4 @@ defmodule AcqdatApiWeb.Widgets.WidgetController do
       {:error, error} -> send_error(conn, 400, error)
     end
   end
-  """
 end

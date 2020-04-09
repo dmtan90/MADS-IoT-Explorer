@@ -40,11 +40,6 @@ defmodule AcqdatApiWeb.Router do
 
     resources "/digital-twin", DigitalTwinController,
       only: [:create, :update, :delete, :index, :show]
-
-    resources "/policies", NotificationPolicyController, only: [:index]
-
-    resources "/sensor_notification", SensorNotificationController,
-      only: [:create, :update, :delete, :index, :show]
   end
 
   scope "/tl-mgmt", AcqdatApiWeb do
