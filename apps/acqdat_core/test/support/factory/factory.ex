@@ -43,7 +43,8 @@ defmodule AcqdatCore.Support.Factory do
       first_name: sequence(:first_name, &"Tony-#{&1}"),
       last_name: sequence(:last_name, &"Stark-#{&1}"),
       email: sequence(:email, &"ceo-#{&1}@stark.com"),
-      password_hash: "NOTASECRET"
+      password_hash: "NOTASECRET",
+      role: build(:role)
     }
   end
 
@@ -64,8 +65,8 @@ defmodule AcqdatCore.Support.Factory do
 
   def role_factory() do
     %Role{
-      name: "admin",
-      description: "Admin of the organisation"
+      name: "member",
+      description: "Member of the organisation"
     }
   end
 
@@ -188,6 +189,10 @@ defmodule AcqdatCore.Support.Factory do
   end
 
   def organisation() do
+    %Organisation{
+      uuid: UUID.uuid1(:hex),
+      name: sequence(:organisation_name, &"Organisation#{&1}")
+    }
   end
 
   def setup_conn(%{conn: conn}) do
