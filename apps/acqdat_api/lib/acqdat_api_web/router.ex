@@ -32,9 +32,11 @@ defmodule AcqdatApiWeb.Router do
     # resources "/widget-type", Widgets.WidgetTypeController,
     #   only: [:create, :update, :delete, :index, :show]
 
-    resources "/users", UserController, only: [:show] do
+    resources "/users", UserController, only: [:show, :update] do
       resources "/settings", UserSettingController, only: [:create, :update]
     end
+
+    resources "/roles", RoleController, only: [:index]
 
     resources "/user_widgets", Widgets.UserController, only: [:index, :create]
 
