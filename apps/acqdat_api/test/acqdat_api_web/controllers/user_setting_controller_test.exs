@@ -7,9 +7,15 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
   describe "create/2" do
     setup :setup_conn
 
-    test "fails if authorization header not found", %{conn: conn} do
-      bad_access_token = "avcbd123489u"
+    setup do
       org = insert(:organisation)
+      user = insert(:user)
+      [org: org, user: user]
+    end
+
+    test "fails if authorization header not found", context do
+      %{org: org, conn: conn} = context
+      bad_access_token = "avcbd123489u"
 
       conn =
         conn
@@ -21,9 +27,8 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
 
-    test "fails if required params are missing", %{conn: conn} do
-      org = insert(:organisation)
-      user = insert(:user)
+    test "fails if required params are missing", context do
+      %{org: org, user: user, conn: conn} = context
 
       conn = post(conn, Routes.user_settings_path(conn, :create, org.id, user.id), %{})
 
@@ -39,9 +44,8 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
              }
     end
 
-    test "user setting create", %{conn: conn} do
-      org = insert(:organisation)
-      user = insert(:user)
+    test "user setting create", context do
+      %{org: org, user: user, conn: conn} = context
       user_setting = build(:user_setting)
 
       data = %{
@@ -60,9 +64,14 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
   describe "update/2" do
     setup :setup_conn
 
-    test "fails if authorization header not found", %{conn: conn} do
-      bad_access_token = "avcbd123489u"
+    setup do
       org = insert(:organisation)
+      [org: org]
+    end
+
+    test "fails if authorization header not found", context do
+      %{org: org, conn: conn} = context
+      bad_access_token = "avcbd123489u"
 
       conn =
         conn
@@ -74,8 +83,8 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
 
-    test "fails if required params are missing", %{conn: conn} do
-      org = insert(:organisation)
+    test "fails if required params are missing", context do
+      %{org: org, conn: conn} = context
       user_setting = insert(:user_setting)
 
       conn =
@@ -103,8 +112,8 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
              }
     end
 
-    test "user setting update", %{conn: conn} do
-      org = insert(:organisation)
+    test "user setting update", context do
+      %{org: org, conn: conn} = context
       user_setting = insert(:user_setting)
 
       data = %{

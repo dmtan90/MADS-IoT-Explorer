@@ -7,9 +7,14 @@ defmodule AcqdatApiWeb.UserControllerTest do
   describe "show/2" do
     setup :setup_conn
 
-    test "fails if authorization header not found", %{conn: conn} do
-      bad_access_token = "avcbd123489u"
+    setup do
       org = insert(:organisation)
+      [org: org]
+    end
+
+    test "fails if authorization header not found", context do
+      %{org: org, conn: conn} = context
+      bad_access_token = "avcbd123489u"
 
       conn =
         conn
@@ -20,18 +25,16 @@ defmodule AcqdatApiWeb.UserControllerTest do
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
 
-    test "user with invalid organisation id", %{conn: conn} do
-      insert(:user)
-      org = insert(:organisation)
-
+    test "user with invalid organisation id", context do
+      %{org: org, conn: conn} = context
       conn = get(conn, Routes.user_path(conn, :show, org.id, -1))
       result = conn |> json_response(400)
       assert result == %{"errors" => %{"message" => "not found"}}
     end
 
-    test "user with valid id", %{conn: conn} do
+    test "user with valid id", context do
+      %{org: org, conn: conn} = context
       user = insert(:user)
-      org = insert(:organisation)
 
       params = %{
         id: user.id

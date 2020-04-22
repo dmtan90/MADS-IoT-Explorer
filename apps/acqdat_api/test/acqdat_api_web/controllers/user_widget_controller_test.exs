@@ -7,10 +7,15 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
   describe "create/2" do
     setup :setup_conn
 
-    test "user widget create", %{conn: conn} do
-      widget = insert(:widget)
-      user = insert(:user)
+    setup do
       org = insert(:organisation)
+      user = insert(:user)
+      [org: org, user: user]
+    end
+
+    test "user widget create", context do
+      %{org: org, user: user, conn: conn} = context
+      widget = insert(:widget)
 
       params = %{
         user_id: user.id,
@@ -27,9 +32,9 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
              }
     end
 
-    test "fails if authorization header not found", %{conn: conn} do
+    test "fails if authorization header not found", context do
+      %{org: org, conn: conn} = context
       bad_access_token = "qwerty1234567uiop"
-      org = insert(:organisation)
 
       conn =
         conn
@@ -41,10 +46,9 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
 
-    test "fails if sent params are not unique", %{conn: conn} do
+    test "fails if sent params are not unique", context do
+      %{org: org, user: user, conn: conn} = context
       widget = insert(:widget)
-      user = insert(:user)
-      org = insert(:organisation)
 
       params = %{
         user_id: user.id,
@@ -63,9 +67,8 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
              }
     end
 
-    test "fails if required resource are missing", %{conn: conn} do
-      user = insert(:user)
-      org = insert(:organisation)
+    test "fails if required resource are missing", context do
+      %{org: org, user: user, conn: conn} = context
 
       params = %{
         user_id: user.id,
@@ -82,10 +85,15 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
   describe "index/2" do
     setup :setup_conn
 
-    test "User Widget Data", %{conn: conn} do
-      widget = insert(:widget)
-      user = insert(:user)
+    setup do
       org = insert(:organisation)
+      user = insert(:user)
+      [org: org, user: user]
+    end
+
+    test "User Widget Data", context do
+      %{org: org, user: user, conn: conn} = context
+      widget = insert(:widget)
 
       params = %{
         user_id: user.id,
@@ -109,7 +117,8 @@ defmodule AcqdatApiWeb.UserWidgetControllerTest do
       assert assertion_user_widget["widget"]["widget_type_id"] == widget.widget_type_id
     end
 
-    test "fails if invalid token in authorization header", %{conn: conn} do
+    test "fails if invalid token in authorization header", context do
+      %{org: org, user: user, conn: conn} = context
       bad_access_token = "qwerty1234567qwerty12"
       user = insert(:user)
       org = insert(:organisation)
