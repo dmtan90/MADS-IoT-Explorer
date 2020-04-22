@@ -35,7 +35,7 @@ defmodule AcqdatApiWeb.Router do
   end
 
   # NOTE: Please add resources here, only if they needs to be scoped by organisation
-  scope "/orgs/:organisation_id", AcqdatApiWeb do
+  scope "/orgs/:org_id", AcqdatApiWeb do
     pipe_through [:api, :api_bearer_auth, :api_ensure_auth]
 
     resources "/users", UserController, only: [:show] do
