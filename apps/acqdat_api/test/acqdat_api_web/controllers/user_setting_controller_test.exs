@@ -16,7 +16,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
         |> put_req_header("authorization", "Bearer #{bad_access_token}")
 
       data = %{}
-      conn = post(conn, Routes.organisation_user_settings_path(conn, :create, org.id, 1), data)
+      conn = post(conn, Routes.user_settings_path(conn, :create, org.id, 1), data)
       result = conn |> json_response(403)
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
@@ -25,8 +25,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
       org = insert(:organisation)
       user = insert(:user)
 
-      conn =
-        post(conn, Routes.organisation_user_settings_path(conn, :create, org.id, user.id), %{})
+      conn = post(conn, Routes.user_settings_path(conn, :create, org.id, user.id), %{})
 
       response = conn |> json_response(400)
 
@@ -50,8 +49,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
         data_settings: user_setting.data_settings
       }
 
-      conn =
-        post(conn, Routes.organisation_user_settings_path(conn, :create, org.id, user.id), data)
+      conn = post(conn, Routes.user_settings_path(conn, :create, org.id, user.id), data)
 
       response = conn |> json_response(200)
       assert Map.has_key?(response, "visual_settings")
@@ -71,7 +69,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
         |> put_req_header("authorization", "Bearer #{bad_access_token}")
 
       data = %{}
-      conn = post(conn, Routes.organisation_user_settings_path(conn, :create, org.id, 1), data)
+      conn = post(conn, Routes.user_settings_path(conn, :create, org.id, 1), data)
       result = conn |> json_response(403)
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
@@ -83,7 +81,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
       conn =
         put(
           conn,
-          Routes.organisation_user_settings_path(
+          Routes.user_settings_path(
             conn,
             :update,
             org.id,
@@ -125,7 +123,7 @@ defmodule AcqdatApiWeb.UserSettingControllerTest do
       conn =
         put(
           conn,
-          Routes.organisation_user_settings_path(
+          Routes.user_settings_path(
             conn,
             :update,
             org.id,

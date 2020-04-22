@@ -15,7 +15,7 @@ defmodule AcqdatApiWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", "Bearer #{bad_access_token}")
 
-      conn = get(conn, Routes.organisation_user_path(conn, :show, org.id, 1))
+      conn = get(conn, Routes.user_path(conn, :show, org.id, 1))
       result = conn |> json_response(403)
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
     end
@@ -24,7 +24,7 @@ defmodule AcqdatApiWeb.UserControllerTest do
       insert(:user)
       org = insert(:organisation)
 
-      conn = get(conn, Routes.organisation_user_path(conn, :show, org.id, -1))
+      conn = get(conn, Routes.user_path(conn, :show, org.id, -1))
       result = conn |> json_response(400)
       assert result == %{"errors" => %{"message" => "not found"}}
     end
@@ -37,7 +37,7 @@ defmodule AcqdatApiWeb.UserControllerTest do
         id: user.id
       }
 
-      conn = get(conn, Routes.organisation_user_path(conn, :show, org.id, params.id))
+      conn = get(conn, Routes.user_path(conn, :show, org.id, params.id))
       result = conn |> json_response(200)
 
       assert result["id"] == user.id

@@ -28,24 +28,23 @@ defmodule AcqdatApiWeb.Router do
     post "/validate-token", AuthController, :validate_token
     post "/sign-out", AuthController, :sign_out
 
+    resources "/orgs", OrganisationController, only: [:show]
     # NOTE: Kept widgets resources out of organisation_scope currently
     resources "/widgets", Widgets.WidgetController,
       only: [:create, :update, :delete, :index, :show]
   end
 
   # NOTE: Please add resources here, only if they needs to be scoped by organisation
-  scope "/", AcqdatApiWeb do
+  scope "/orgs/:organisation_id", AcqdatApiWeb do
     pipe_through [:api, :api_bearer_auth, :api_ensure_auth]
 
-    resources "/orgs", OrganisationController, only: [:show] do
-      resources "/users", UserController, only: [:show] do
-        resources "/settings", UserSettingController, only: [:create, :update], as: :settings
-      end
-
-      resources "/user_widgets", Widgets.UserController,
-        only: [:index, :create],
-        as: :user_widgets
+    resources "/users", UserController, only: [:show] do
+      resources "/settings", UserSettingController, only: [:create, :update], as: :settings
     end
+
+    resources "/user_widgets", Widgets.UserController,
+      only: [:index, :create],
+      as: :user_widgets
   end
 
   # TODO: Need to remove this scope, after everything is moved to new routes
