@@ -1,9 +1,9 @@
 defmodule AcqdatCore.Seed.Asset do
-  
+
   alias AcqdatCore.Schema.{Asset, Organisation}
   import AsNestedSet.Modifiable
   alias AcqdatCore.Repo
-  
+
   @asset_manifest [
     {
     "Bintan Factory",
@@ -35,9 +35,9 @@ defmodule AcqdatCore.Seed.Asset do
     asset =
       Repo.preload(
         %Asset{
-          name: parent, 
-          org_id: org.id, 
-          inserted_at: DateTime.truncate(DateTime.utc_now(), :second), 
+          name: parent,
+          org_id: org.id,
+          inserted_at: DateTime.truncate(DateTime.utc_now(), :second),
           updated_at: DateTime.truncate(DateTime.utc_now(), :second),
           uuid: UUID.uuid1(:hex),
           slug: Slugger.slugify(org.name <> parent),
@@ -64,15 +64,15 @@ defmodule AcqdatCore.Seed.Asset do
     child =
       Repo.preload(
         %Asset{
-          name: parent, 
-          org_id: root.org.id, 
+          name: parent,
+          org_id: root.org.id,
           parent_id: root.id,
-          uuid: UUID.uuid1(:hex), 
-          slug: Slugger.slugify(root.org.name <> root.name <> parent), 
-          inserted_at: DateTime.truncate(DateTime.utc_now(), :second), 
+          uuid: UUID.uuid1(:hex),
+          slug: Slugger.slugify(root.org.name <> root.name <> parent),
+          inserted_at: DateTime.truncate(DateTime.utc_now(), :second),
           updated_at: DateTime.truncate(DateTime.utc_now(), :second),
           properties: properties
-          }, 
+          },
           [:org])
 
     {:ok, root} = add_taxon(root, child, :child)

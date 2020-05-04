@@ -6,7 +6,8 @@ defmodule AcqdatApiWeb.SensorView do
     %{
       id: sensor.id,
       name: sensor.name,
-      uuid: sensor.uuid
+      uuid: sensor.uuid,
+      parameters: render_many(sensor.parameters, SensorView, "data_tree.json")
     }
   end
 

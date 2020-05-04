@@ -5,6 +5,21 @@ defmodule AcqdatCore.Model.Asset do
   alias AcqdatCore.Schema.Asset
   alias AcqdatCore.Repo
 
+  def get(id) when is_integer(id) do
+    case Repo.get(Asset, id) do
+      nil ->
+        {:error, "not found"}
+
+      asset ->
+        {:ok, asset}
+    end
+  end
+
+  def delete(asset) do
+    AsNestedSet.delete(asset) |> AsNestedSet.execute(Repo)
+  end
+
+  @spec child_assets(any) :: any
   def child_assets(org_id) do
     org_assets = fetch_root_assets(org_id)
 
@@ -17,6 +32,11 @@ defmodule AcqdatCore.Model.Asset do
         res_asset = fetch_child_sensors(List.first(entities), entities, asset)
         acc = acc ++ [res_asset]
       end)
+  end
+
+  def update(asset, params) do
+    changeset = Asset.update_changeset(asset, params)
+    Repo.update(changeset)
   end
 
   defp fetch_child_sensors(nil, _entities, asset) do

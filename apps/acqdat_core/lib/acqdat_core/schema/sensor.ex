@@ -29,7 +29,7 @@ defmodule AcqdatCore.Schema.Sensor do
     field(:parent_id, :integer)
     field(:parent_type, :string)
 
-    embeds_many :parameters, Parameters do
+    embeds_many :parameters, Parameters, on_replace: :delete do
       field(:name, :string, null: false)
       field(:uuid, :string, null: false)
       field(:data_type, :string, null: false)
