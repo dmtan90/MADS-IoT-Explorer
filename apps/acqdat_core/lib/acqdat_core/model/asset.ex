@@ -3,6 +3,7 @@ defmodule AcqdatCore.Model.Asset do
   import AsNestedSet.Queriable, only: [dump_one: 2]
   alias AcqdatCore.Model.Sensor, as: SensorModel
   alias AcqdatCore.Schema.Asset
+  alias AcqdatCore.Model.Helper, as: ModelHelper
   alias AcqdatCore.Repo
 
   def get(id) when is_integer(id) do
@@ -62,5 +63,18 @@ defmodule AcqdatCore.Model.Asset do
       )
 
     Repo.all(query)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    Asset |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}, preloads) do
+    paginated_asset_data =
+      Asset |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+
+    asset_data_with_preloads = paginated_asset_data.entries |> Repo.preload(preloads)
+
+    ModelHelper.paginated_response(asset_data_with_preloads, paginated_asset_data)
   end
 end

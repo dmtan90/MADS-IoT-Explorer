@@ -40,7 +40,7 @@ defmodule AcqdatApiWeb.Router do
     resources "/widget-type", Widgets.WidgetTypeController,
       only: [:create, :update, :delete, :index, :show]
 
-    get "/search_widgets", Widgets.WidgetController, :search_widget
+    get "/widgets/search", Widgets.WidgetController, :search_widget
 
     resources("/digital-twin", DigitalTwinController,
       only: [:create, :update, :delete, :index, :show]
@@ -52,7 +52,7 @@ defmodule AcqdatApiWeb.Router do
     pipe_through [:api, :api_bearer_auth, :api_ensure_auth]
     get "/users/search", UserController, :search_users
     resources "/sensor_type", SensorTypeController, only: [:create, :index, :delete, :update]
-
+    get "/assets/search", AssetController, :search_assets
     resources "/users", UserController, only: [:show, :update, :index] do
       resources "/settings", UserSettingController, only: [:create, :update], as: :settings
       resources "/widgets", Widgets.UserWidgetController, only: [:index, :create], as: :widgets
@@ -66,7 +66,7 @@ defmodule AcqdatApiWeb.Router do
     put("/users/:id/apps", UserController, :apps, as: :user_apps)
     put("/users/:id/teams", UserController, :update_teams, as: :user_teams)
     resources "/invitations", InvitationController, only: [:create]
-    resources "/assets", AssetController, only: [:show, :update, :delete]
+    resources "/assets", AssetController, only: [:show, :update, :delete, :index]
     resources "/sensors", SensorController, only: [:create, :update, :delete, :index, :show]
   end
 

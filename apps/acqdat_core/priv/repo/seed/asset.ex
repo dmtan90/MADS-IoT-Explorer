@@ -3,6 +3,7 @@ defmodule AcqdatCore.Seed.Asset do
   alias AcqdatCore.Schema.{Asset, Organisation}
   import AsNestedSet.Modifiable
   alias AcqdatCore.Repo
+  import Tirexs.HTTP
 
   @asset_manifest [
     {
@@ -47,7 +48,7 @@ defmodule AcqdatCore.Seed.Asset do
       )
 
      root = add_root(asset)
-
+     insert_asset("assets", root)
      for taxon <- children do
        create_taxon(taxon, root)
      end
@@ -89,11 +90,21 @@ defmodule AcqdatCore.Seed.Asset do
         |> Repo.preload(:org)
         |> create(parent, position)
         |> AsNestedSet.execute(Repo)
-
+      insert_asset("assets", taxon)
       {:ok, taxon}
     rescue
       error in Ecto.InvalidChangesetError ->
         {:error, error.changeset}
     end
+  end
+
+  def insert_asset(type, params) do
+    post("#{type}/_doc/#{params.id}",
+      id: params.id,
+      name: params.name,
+      properties: params.properties,
+      slug: params.slug,
+      uuid: params.uuid
+      )
   end
 end
