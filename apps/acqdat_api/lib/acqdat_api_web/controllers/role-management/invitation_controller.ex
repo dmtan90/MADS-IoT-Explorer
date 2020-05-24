@@ -7,7 +7,8 @@ defmodule AcqdatApiWeb.RoleManagement.InvitationController do
 
   plug AcqdatApiWeb.Plug.LoadOrg when action in [:create, :update, :index, :delete]
   plug AcqdatApiWeb.Plug.LoadInvitation when action in [:update, :delete]
-  plug AcqdatApiWeb.Plug.LoadCurrentUser when action in [:create, :update]
+  plug AcqdatApiWeb.Plug.LoadCurrentUser when action in [:index, :create, :update, :delete]
+  plug AcqdatApiWeb.AuthorizationPlug
   plug :validate_inviter when action in [:create]
 
   def index(conn, params) do

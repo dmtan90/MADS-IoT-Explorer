@@ -5,7 +5,9 @@ defmodule AcqdatApiWeb.EntityManagement.OrganisationController do
 
   defdelegate get_apps(data), to: OrgModel
 
+  plug AcqdatApiWeb.Plug.LoadCurrentUser
   plug :load_org when action in [:show, :get_apps]
+  plug AcqdatApiWeb.AuthorizationPlug
 
   def show(conn, _params) do
     case conn.status do

@@ -4,6 +4,8 @@ defmodule AcqdatApiWeb.RoleManagement.UserSettingController do
   import AcqdatApiWeb.Validators.RoleManagement.UserSetting
   import AcqdatApiWeb.Helpers
 
+  plug AcqdatApiWeb.Plug.LoadCurrentUser
+  plug AcqdatApiWeb.AuthorizationPlug
   plug :load_user_setting when action in [:update]
 
   def create(conn, params) do

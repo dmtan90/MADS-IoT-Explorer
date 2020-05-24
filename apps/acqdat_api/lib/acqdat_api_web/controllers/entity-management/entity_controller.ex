@@ -4,8 +4,10 @@ defmodule AcqdatApiWeb.EntityManagement.EntityController do
   alias AcqdatCore.Model.EntityManagement.Organisation, as: OrgModel
   import AcqdatApiWeb.Helpers
 
+  plug AcqdatApiWeb.Plug.LoadCurrentUser
   plug AcqdatApiWeb.Plug.LoadOrg when action in [:update_hierarchy]
   plug AcqdatApiWeb.Plug.LoadProject when action in [:update_hierarchy]
+  plug AcqdatApiWeb.AuthorizationPlug
   plug :load_hierarchy_tree when action in [:fetch_hierarchy, :update_hierarchy]
 
   def update_hierarchy(conn, params) do

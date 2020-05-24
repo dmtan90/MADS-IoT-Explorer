@@ -50,7 +50,7 @@ defmodule AcqdatCore.Support.Factory do
       last_name: sequence(:last_name, &"Stark-#{&1}"),
       email: sequence(:email, &"ceo-#{&1}@stark.com"),
       password_hash: "NOTASECRET",
-      role: build(:role),
+      role: build(:admin_role),
       org: build(:organisation)
     }
   end
@@ -70,7 +70,7 @@ defmodule AcqdatCore.Support.Factory do
       token: UUID.uuid1(:hex),
       salt: UUID.uuid1(:hex),
       inviter: build(:user),
-      role: build(:role),
+      role: build(:admin_role),
       org: build(:organisation)
     }
   end
@@ -100,6 +100,13 @@ defmodule AcqdatCore.Support.Factory do
   def role_factory() do
     %Role{
       name: sequence(:name, &"Role-#{&1}"),
+      description: "Member of the organisation"
+    }
+  end
+
+  def admin_role_factory() do
+    %Role{
+      name: "admin",
       description: "Member of the organisation"
     }
   end

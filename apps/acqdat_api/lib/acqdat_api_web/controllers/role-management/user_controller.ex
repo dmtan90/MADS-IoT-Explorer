@@ -6,6 +6,8 @@ defmodule AcqdatApiWeb.RoleManagement.UserController do
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.RoleManagement.User
 
+  plug AcqdatApiWeb.Plug.LoadCurrentUser
+  plug AcqdatApiWeb.AuthorizationPlug
   plug AcqdatApiWeb.Plug.LoadOrg when action in [:search_users, :index]
 
   plug AcqdatApiWeb.Plug.LoadUser

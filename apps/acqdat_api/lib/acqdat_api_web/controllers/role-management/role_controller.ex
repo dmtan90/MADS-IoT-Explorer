@@ -4,6 +4,9 @@ defmodule AcqdatApiWeb.RoleManagement.RoleController do
   import AcqdatApiWeb.Validators.RoleManagement.Role
   alias AcqdatCore.Model.RoleManagement.Role, as: RoleModel
 
+  plug AcqdatApiWeb.Plug.LoadCurrentUser
+  plug AcqdatApiWeb.AuthorizationPlug
+
   def index(conn, params) do
     changeset = verify_index_params(params)
 
