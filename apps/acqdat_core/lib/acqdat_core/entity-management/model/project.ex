@@ -3,6 +3,7 @@ defmodule AcqdatCore.Model.EntityManagement.Project do
   alias AcqdatCore.Schema.EntityManagement.Project
   alias AcqdatCore.Model.EntityManagement.Asset, as: AssetModel
   alias AcqdatCore.Model.EntityManagement.Sensor, as: SensorModel
+  alias AcqdatCore.Model.Helper, as: ModelHelper
   alias AcqdatCore.Repo
 
   def hierarchy_data(org_id, project_id) do
@@ -38,5 +39,18 @@ defmodule AcqdatCore.Model.EntityManagement.Project do
       )
 
     Repo.all(query)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    Project |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}, preloads) do
+    paginated_project_data =
+      Project |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+
+    project_data_with_preloads = paginated_project_data.entries |> Repo.preload(preloads)
+
+    ModelHelper.paginated_response(project_data_with_preloads, paginated_project_data)
   end
 end
