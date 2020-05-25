@@ -1,6 +1,8 @@
 defmodule AcqdatCore.Model.EntityManagement.Project do
   import Ecto.Query
   alias AcqdatCore.Schema.EntityManagement.Project
+  alias AcqdatCore.Schema.RoleManagement.User
+  alias AcqdatCore.Schema.RoleManagement.Role
   alias AcqdatCore.Model.EntityManagement.Asset, as: AssetModel
   alias AcqdatCore.Model.EntityManagement.Sensor, as: SensorModel
   alias AcqdatCore.Model.Helper, as: ModelHelper
@@ -52,5 +54,14 @@ defmodule AcqdatCore.Model.EntityManagement.Project do
     project_data_with_preloads = paginated_project_data.entries |> Repo.preload(preloads)
 
     ModelHelper.paginated_response(project_data_with_preloads, paginated_project_data)
+  end
+
+  def check_adminship(user_id) do
+    user_details = Repo.get!(User, user_id) |> Repo.preload([:role])
+
+    case user_details.role.name == "admin" do
+      true -> true
+      false -> false
+    end
   end
 end

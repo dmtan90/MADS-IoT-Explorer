@@ -73,7 +73,7 @@ defmodule AcqdatApiWeb.Router do
     post("/projects/:project_id/entities", EntityManagement.EntityController, :update_hierarchy)
     get("/projects/:project_id/entities", EntityManagement.EntityController, :fetch_hierarchy)
 
-    resources "/projects", EntityManagement.ProjectController, only: [:index]
+    resources "/projects", EntityManagement.ProjectController, only: [:index, :create]
 
     scope "/projects/:project_id", EntityManagement do
       resources "/assets", AssetController, only: [:show, :update]
