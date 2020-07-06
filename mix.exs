@@ -70,6 +70,10 @@ defmodule AcqdatUmbrella.MixProject do
       # elasticsearch
       {:tirexs, "~> 0.8"},
 
+      #mqtt client
+      {:tortoise, "~> 0.9"},
+
+
       # logger
       {:gen_retry, "~> 1.2.0"},
 
