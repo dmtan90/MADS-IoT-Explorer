@@ -17,7 +17,7 @@ defmodule AcqdatCore.Repo.Migrations.CreateAlerts do
       add :severity, AlertSeverityEnum.type(), null: false
       add :status, AlertStatusEnum.type(), null: false
       add :creator_id, :integer, null: false
-      add :project_id, :integer, null: false
+      add :project_id, :integer
       add :org_id, :integer, null: false
 
       timestamps(type: :timestamptz)
