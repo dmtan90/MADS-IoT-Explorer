@@ -13,7 +13,7 @@ defmodule AcqdatCore.Alerts.Model.Alert do
       nil ->
         {:error, "Alert not found"}
 
-        alert ->
+      alert ->
         {:ok, alert}
     end
   end

@@ -48,7 +48,7 @@ defmodule AcqdatCore.Alerts.Model.AlertTest do
       alerts = AlertModel.get_all(%{page_size: 1, page_number: 0, filters: %{}})
       assert alerts.total_entries == 1
 
-      first_alert = alerts.entries |> List.first
+      first_alert = alerts.entries |> List.first()
       assert first_alert.name == valid_params[:name]
       assert first_alert.description == valid_params[:description]
     end
@@ -128,7 +128,7 @@ defmodule AcqdatCore.Alerts.Model.AlertTest do
       alerts = AlertModel.get_all(%{page_size: 1, page_number: 0, filters: %{}})
       assert alerts.total_entries == 1
 
-      first_alert = alerts.entries |> List.first
+      first_alert = alerts.entries |> List.first()
       assert first_alert.name == valid_params[:name]
       assert first_alert.description == valid_params[:description]
     end
