@@ -23,13 +23,40 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     |> cast(params, [:lower_limit, :upper_limit])
   end
 
+
+  ############################# BEHAVIOURS IMPLEMENTATION ####################################
+
   @doc """
-  It is implementing the rule name function of the policy
+  It is implementing the rule name function of the policy and will be returning the policy name.
   """
   @impl Policy
   def rule_name() do
     @rule
   end
+
+  @doc """
+  So this rule preference will pass the map which will take a param from alert rule and accordingly create a rule preference which
+  will be stored in the alert rules table so that the entity over which this policy is user will act on values extracted from this rule_preference
+  """
+  @impl Policy
+  def rule_preferences(params) do
+    %{
+      name: @rule,
+      rule_data: [
+        %{
+          key: :lower_limit,
+          type: :input,
+          value: params["lower_limit"]
+        },
+        %{
+          key: :upper_limit,
+          type: :input,
+          value: params["upper_limit"]
+        }
+      ]
+    }
+  end
+
 
   @doc """
   Here preferences will have lower limit and upper limit and accordingly we will check for 4 condition inside check_eligibility function

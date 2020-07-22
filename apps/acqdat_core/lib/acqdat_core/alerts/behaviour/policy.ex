@@ -10,8 +10,8 @@ defmodule AcqdatCore.Alerts.Behaviour.Policy do
   `rule name`: when any policy implements this behaviour it needs to return the Policy name.
   `eligible`: inside that policy before implementing that policy it needs to check the eligibility of that
               policy with respect to the current value we received
-  `rule_preferences`: every policy will have a set of rule data upon which it will act or implements it's policy.The eligibility of any value will be
-                      checked with respect to this rule_preferences
+  `rule_preferences`: every policy will have a set of rule data upon which it will act or implements it's policy.This function will
+                     will simply return the map with their values so that any entity which uses that policy must have this map over which it can evaluate a particular parameter.
   """
 
   @callback rule_name() :: name :: String.t()

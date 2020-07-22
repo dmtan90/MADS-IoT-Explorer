@@ -6,6 +6,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     add :entity_id, :integer, null: false
     field :policy_name, :string #need to be added in migration
 
+    field :entity_parameters
     add :project_id, references("acqdat_projects", on_delete: :delete_all), null: false
     add :creator_id, references(:users), on_delete: :delete_all
     add :app, AppEnum.type()
