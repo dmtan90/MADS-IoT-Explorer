@@ -23,7 +23,6 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     |> cast(params, [:lower_limit, :upper_limit])
   end
 
-
   ############################# BEHAVIOURS IMPLEMENTATION ####################################
 
   @doc """
@@ -57,7 +56,6 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     }
   end
 
-
   @doc """
   Here preferences will have lower limit and upper limit and accordingly we will check for 4 condition inside check_eligibility function
   """
@@ -69,12 +67,10 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     check_eligibility?(lower_limit, upper_limit, value)
   end
 
-
-  #This is for the case when both our limit comes as zero
+  # This is for the case when both our limit comes as zero
   defp check_eligibility?(@decimal_zero, @decimal_zero, _), do: false
 
-
-  #This is for the case when upper limit is zero so basically we are checking for greater then lower limit criteria.
+  # This is for the case when upper limit is zero so basically we are checking for greater then lower limit criteria.
   defp check_eligibility?(lower_limit, @decimal_zero, value) do
     case Decimal.cmp(lower_limit, value) do
       :lt ->
@@ -88,8 +84,7 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     end
   end
 
-
-  #This is for the case when lower limit is zero so basically we are checking for lesser then upper limit criteria
+  # This is for the case when lower limit is zero so basically we are checking for lesser then upper limit criteria
   defp check_eligibility?(@decimal_zero, upper_limit, value) do
     case Decimal.cmp(value, upper_limit) do
       :lt ->
@@ -103,8 +98,7 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
     end
   end
 
-
-  #This is for the range case where value falls for lower and upper limit
+  # This is for the range case where value falls for lower and upper limit
 
   defp check_eligibility?(lower_limit, upper_limit, value) do
     value_lower =
