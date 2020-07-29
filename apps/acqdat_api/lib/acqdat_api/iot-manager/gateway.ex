@@ -6,6 +6,7 @@ defmodule AcqdatApi.IotManager.Gateway do
 
   defdelegate get_all(data, preloads), to: Gateway
   defdelegate delete(gateway), to: Gateway
+  defdelegate associate_sensors(gateway, sensor_ids), to: Gateway
 
   def create(params) do
     params = params_extraction(params)
@@ -31,7 +32,12 @@ defmodule AcqdatApi.IotManager.Gateway do
     Gateway.send_mqtt_config(gateway, command)
   end
 
-  ############################# private functions ###############
+  def preload_sensor(gateway) do
+    gateway |> Repo.preload(:sensors)
+  end
+
+
+  ############################# private functions ###############3
 
   defp verify_gateway({:ok, gateway}) do
     gateway = gateway |> Repo.preload([:org, :project])

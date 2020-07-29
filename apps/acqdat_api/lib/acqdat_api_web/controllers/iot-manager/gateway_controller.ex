@@ -161,11 +161,21 @@ defmodule AcqdatApiWeb.IotManager.GatewayController do
     end
   end
 
-  defp associate_sensors(conn, params) do
+  def associate_sensors(conn, %{"sensor_ids" => sensor_ids}) do
     case conn.status do
       nil ->
-        %{sensor_ids: sensor_ids} = params
-        gateway = Gateway.associate_sensors()
+        gateway = Gateway.preload_sensor(conn.assigns.gateway)
+
+        case Gateway.associate_sensors(gateway, sensor_ids) do
+          {:ok, message} ->
+            conn
+            |> put_status(200)
+            |> json(%{message: message})
+
+          {:error, message} ->
+            conn
+            |> send_error(400, message)
+        end
 
       404 ->
         conn

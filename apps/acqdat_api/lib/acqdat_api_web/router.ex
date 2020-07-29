@@ -79,11 +79,11 @@ defmodule AcqdatApiWeb.Router do
       only: [:index, :create, :update, :delete, :show]
 
     scope "/projects/:project_id", IotManager do
+      put "/gateways/:gateway_id/associate-sensors", GatewayController, :associate_sensors
       resources "/gateways", GatewayController, except: [:new, :edit]
       post "/gateways/:gateway_id/store_commands", GatewayController, :store_commands
       get("/hierarchy", GatewayController, :hierarchy)
       get "/gateways/:gateway_id/data_dump_index", GatewayController, :data_dump_index
-      put "/gateways/:gateway_id/associate-sensors", GatewayController, :associate_sensors
     end
 
     scope "/projects/:project_id", EntityManagement do
