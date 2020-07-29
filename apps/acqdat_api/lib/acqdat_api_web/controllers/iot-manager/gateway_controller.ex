@@ -11,10 +11,8 @@ defmodule AcqdatApiWeb.IotManager.GatewayController do
 
   plug AcqdatApiWeb.Plug.LoadOrg
   plug AcqdatApiWeb.Plug.LoadProject
-
-  plug AcqdatApiWeb.Plug.LoadGateway
-       when action in [:update, :delete, :show, :store_commands, :data_dump_index]
-
+  plug AcqdatApiWeb.Plug.LoadGateway when action in [:update, :delete, :show,
+    :store_commands, :associate_sensors, :data_dump_index]
   plug :load_hierarchy_tree when action in [:hierarchy]
 
   def index(conn, params) do
@@ -162,6 +160,20 @@ defmodule AcqdatApiWeb.IotManager.GatewayController do
         |> send_error(404, "Resource Not Found")
     end
   end
+
+  defp associate_sensors(conn, params) do
+    case conn.status do
+      nil ->
+        %{sensor_ids: sensor_ids} = params
+        gateway = Gateway.associate_sensors()
+
+      404 ->
+        conn
+        |> send_error(404, "Resource Not Found")
+    end
+  end
+
+  ############################### private functions #########################
 
   defp add_image_to_params(conn, params) do
     params = Map.put(params, "image_url", "")

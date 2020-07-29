@@ -226,6 +226,10 @@ defmodule AcqdatCore.Model.IotManager.Gateway do
     MQTTBroker.publish(project.uuid, topic, Jason.encode!(payload))
   end
 
+  def associate_sensors(gateway, sensor_ids) do
+
+  end
+
   ##################### private functions #####################
 
   def start_broker_if_needed(gateway) do

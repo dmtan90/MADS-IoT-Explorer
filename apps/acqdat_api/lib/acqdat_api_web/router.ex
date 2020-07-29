@@ -83,6 +83,7 @@ defmodule AcqdatApiWeb.Router do
       post "/gateways/:gateway_id/store_commands", GatewayController, :store_commands
       get("/hierarchy", GatewayController, :hierarchy)
       get "/gateways/:gateway_id/data_dump_index", GatewayController, :data_dump_index
+      put "/gateways/:gateway_id/associate-sensors", GatewayController, :associate_sensors
     end
 
     scope "/projects/:project_id", EntityManagement do

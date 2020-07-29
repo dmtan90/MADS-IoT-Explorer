@@ -115,6 +115,17 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       %{gateway: gateway} = context
       {:error, result} = Gateway.get(%{uuid: "x"})
       assert result == "Gateway not found"
+  describe "associate_sensors/1 " do
+    setup do
+      org = insert(:organisation)
+      project = insert(:project, org: org)
+      gateway = insert(:gateway, org: org, project: project)
+      sensors = insert_list(4, :sensor, org: org, project: project)
+      [sensors: sensors, gateway: gateway]
+    end
+
+    test "associates provided sensor list with gateway", context do
+      %{sensors: [sensor1, sensor2, snesor3, sensor4], gateway: gateway} = context
     end
   end
 end
