@@ -21,7 +21,7 @@ defmodule AcqdatApiWeb.IotManager.GatewayController do
     case conn.status do
       nil ->
         {:extract, {:ok, data}} = {:extract, extract_changeset_data(changeset)}
-        {:list, gateway} = {:list, Gateway.get_all(data, [:org, :project])}
+        {:list, gateway} = {:list, Gateway.get_all(data, [:org, :project, :sensors])}
 
         conn
         |> put_status(200)
@@ -167,10 +167,12 @@ defmodule AcqdatApiWeb.IotManager.GatewayController do
         gateway = Gateway.preload_sensor(conn.assigns.gateway)
 
         case Gateway.associate_sensors(gateway, sensor_ids) do
-          {:ok, message} ->
+          {:ok, _message} ->
+            gateway = Gateway.load_associations(conn.assigns.gateway)
+
             conn
             |> put_status(200)
-            |> json(%{message: message})
+            |> render("show.json", %{gateway: gateway})
 
           {:error, message} ->
             conn

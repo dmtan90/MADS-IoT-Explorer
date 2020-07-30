@@ -18,7 +18,7 @@ defmodule AcqdatApi.IotManager.Gateway do
   end
 
   def load_associations(gateway) do
-    Repo.preload(gateway, [:org, :project])
+    Repo.preload(gateway, [:org, :project, :sensors])
   end
 
   def setup_config(gateway, _channel = "http", params) do
@@ -40,7 +40,7 @@ defmodule AcqdatApi.IotManager.Gateway do
   ############################# private functions ###############3
 
   defp verify_gateway({:ok, gateway}) do
-    gateway = gateway |> Repo.preload([:org, :project])
+    gateway = gateway |> Repo.preload([:org, :project, :sensors])
     {:ok, gateway}
   end
 
