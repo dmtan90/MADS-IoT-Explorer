@@ -2,7 +2,6 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
   @moduledoc """
   AlertRules are the rules which an entity follows before creating alerts.
   """
-
   use AcqdatCore.Schema
   alias AcqdatCore.Schema.EntityManagement.Project
   alias AcqdatCore.Schema.RoleManagement.User
@@ -17,17 +16,27 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
   `description`: description of this alert rule
   `project`:  project id this alert rule is related to.
   `creator`: creator is the one which is creating this alert rule for the following project, this will be used for adding filter on who can create alert rule.
+  `recepient_ids`: Once a alert is generated using this alert rule all those recepients will get the notification of the alert
+  `assignee_ids`: The generated alert will be assigned to the assigniee ids
+  `severity`: The severity of that alert
+  `status`: The status wheather that alert is resolved or not.
   """
 
   schema "acqdat_alert_rules" do
     field(:entity, :string, null: false)
     field(:entity_id, :integer, null: false)
-    field(:policy_name, :string, null: false)
+    field(:policy_name, PolicyDefinitionModuleEnum, null: false)
     field(:entity_parameters, :map, null: false)
     field(:uuid, :string, null: false)
+    field(:communication_medium, {:array, :string})
     field(:slug, :string, null: false)
     field(:rule_parameters, :map, null: false)
+    field(:recepient_ids, {:array, :integer})
+    field(:assignee_ids, {:array, :integer})
     field(:policy_type, {:array, :string})
+    field(:severity, AlertSeverityEnum)
+    field(:status, AlertStatusEnum)
+    field(:app, AppEnum)
 
     field(:description, :string)
 
@@ -38,7 +47,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(entity entity_id policy_name uuid slug entity_parameters rule_parameters policy_type project_id creator_id)a
+  @required_params ~w(entity entity_id app communication_medium recepient_ids assignee_ids status policy_name uuid slug entity_parameters rule_parameters policy_type project_id creator_id severity)a
   @optional_params ~w(description)a
 
   @permitted_params @required_params ++ @optional_params

@@ -263,6 +263,7 @@ defmodule AcqdatApiWeb.RoleManagement.UserControllerTest do
       }
 
       organisation = %{"id" => user.org.id, "name" => user.org.name, "type" => "Organisation"}
+
       assert result == %{
                "users" => [
                  %{
