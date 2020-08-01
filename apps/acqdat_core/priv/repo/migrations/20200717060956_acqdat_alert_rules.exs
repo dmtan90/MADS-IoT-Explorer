@@ -11,7 +11,7 @@ defmodule AcqdatCore.Repo.Migrations.AcqdatAlertRules do
       add :app, AppEnum.type(), null: false
       add :policy_name, PolicyDefinitionModuleEnum.type(), null: false
       add :rule_parameters, :map, null: false
-      add :entity_parameters, :map, null: false
+      add :entity_parameters, {:array, :map}, null: false
       add :communication_medium, {:array, :string}
       add :recepient_ids, {:array, :integer}
       add :assignee_ids, {:array, :integer}

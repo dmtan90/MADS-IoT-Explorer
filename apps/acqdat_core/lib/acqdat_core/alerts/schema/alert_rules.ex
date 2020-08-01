@@ -26,7 +26,14 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     field(:entity, :string, null: false)
     field(:entity_id, :integer, null: false)
     field(:policy_name, PolicyDefinitionModuleEnum, null: false)
-    field(:entity_parameters, :map, null: false)
+
+    embeds_many :entity_parameters, EntityParameters, on_replace: :delete do
+      field(:name, :string, null: false)
+      field(:uuid, :string, null: false)
+      field(:data_type, :string, null: false)
+      field(:unit, :string)
+    end
+
     field(:uuid, :string, null: false)
     field(:communication_medium, {:array, :string})
     field(:slug, :string, null: false)
@@ -41,20 +48,25 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     field(:description, :string)
 
     # Associations
+    # optional
     belongs_to(:project, Project, on_replace: :delete)
     belongs_to(:creator, User, on_replace: :delete)
 
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(entity entity_id app communication_medium recepient_ids assignee_ids status policy_name uuid slug entity_parameters rule_parameters policy_type project_id creator_id severity)a
+  @required_params ~w(entity entity_id app communication_medium recepient_ids assignee_ids status policy_name uuid slug rule_parameters policy_type project_id creator_id severity)a
   @optional_params ~w(description)a
+  @embedded_required_params ~w(name uuid data_type)a
+  @embedded_optional_params ~w(unit)a
+  @permitted_embedded @embedded_optional_params ++ @embedded_required_params
 
   @permitted_params @required_params ++ @optional_params
 
   def changeset(%__MODULE__{} = alert_rule, params) do
     alert_rule
     |> cast(params, @permitted_params)
+    |> cast_embed(:entity_parameters, with: &parameters_changeset/2)
     |> add_uuid()
     |> add_slug()
     |> validate_required(@required_params)
@@ -81,5 +93,11 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
 
   defp random_string(length) do
     :crypto.strong_rand_bytes(length) |> Base.url_encode64() |> binary_part(0, length)
+  end
+
+  defp parameters_changeset(schema, params) do
+    schema
+    |> cast(params, @permitted_embedded)
+    |> validate_required(@embedded_required_params)
   end
 end

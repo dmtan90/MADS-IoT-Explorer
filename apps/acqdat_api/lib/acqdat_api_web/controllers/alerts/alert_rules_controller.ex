@@ -1,6 +1,7 @@
 defmodule AcqdatApiWeb.Alerts.AlertRulesController do
   @moduledoc """
-  ALERT RULES API
+  ALERT RULES API.
+  All the basic structure which support our alert creation logic will be drawn from their respective alert rule.
   """
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Alerts.AlertRules

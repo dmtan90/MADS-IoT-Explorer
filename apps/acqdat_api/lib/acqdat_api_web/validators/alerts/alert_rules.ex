@@ -6,7 +6,7 @@ defmodule AcqdatApiWeb.Validators.Alerts.AlertRules do
       entity!: :string,
       entity_id!: :integer,
       policy_name!: :string,
-      entity_parameters!: :map,
+      entity_parameters!: {:array, :map},
       uuid!: :string,
       communication_medium!: {:array, :string},
       slug!: :string,

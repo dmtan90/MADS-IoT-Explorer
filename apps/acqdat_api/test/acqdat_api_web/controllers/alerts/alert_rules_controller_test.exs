@@ -1,34 +1,29 @@
-defmodule AcqdatCore.Alerts.Schema.AlertRulesTest do
+defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
   @moduledoc """
-  Testing module for alert rules schema
+  Test cases for the API of alertrules endpoints
   """
   use ExUnit.Case, async: true
+  use AcqdatApiWeb.ConnCase
   use AcqdatCore.DataCase
-  alias AcqdatCore.Alerts.Schema.AlertRules
   import AcqdatCore.Support.Factory
 
-  describe "changeset/2" do
+  @doc """
+  test for the creation of alert rule
+  """
+  describe "create/2" do
+    setup :setup_conn
     setup :setup_alert_rules
 
-    test "returns a valid changeset", %{alert_rule: alert_rule} do
-      %{valid?: validity} = AlertRules.changeset(%AlertRules{}, alert_rule)
-      assert validity
-    end
+    test "create alert rule", %{conn: conn, alert_rule: alert_rule, org: org} do
+      conn =
+        post(
+          conn,
+          Routes.alert_rules_path(conn, :create, org.id, alert_rule.project.id),
+          alert_rule
+        )
 
-    test "returns invalid changeset for missing required params" do
-      %{valid?: validity} = changeset = AlertRules.changeset(%AlertRules{}, %{})
-      refute validity
-
-      assert %{
-               entity: ["can't be blank"],
-               entity_id: ["can't be blank"],
-               policy_name: ["can't be blank"],
-               entity_parameters: ["can't be blank"],
-               rule_parameters: ["can't be blank"],
-               policy_type: ["can't be blank"],
-               project_id: ["can't be blank"],
-               creator_id: ["can't be blank"]
-             } = errors_on(changeset)
+      response = conn |> json_response(200)
+      # TODO: Test needs to be created
     end
   end
 
