@@ -129,7 +129,7 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       [sensors: sensors, gateway: gateway]
     end
 
-    test "associates provided sensor list are unique to gateway", context do
+    test "associates sensors, provided sensor list are unique to gateway", context do
       %{sensors: [sensor1, sensor2, sensor3, sensor4], gateway: gateway} = context
       gateway = gateway |> Repo.preload([:sensors])
       Gateway.associate_sensors(gateway, [sensor1.id, sensor2.id, sensor3.id, sensor4.id])
@@ -144,7 +144,7 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       assert sensor4.gateway_id == gateway.id
     end
 
-    test "assciates provided sensor list are removing attached sensor from gateway", context do
+    test "associates, while removing sensors not provided in the list", context do
       %{sensors: [sensor1, sensor2, sensor3, sensor4], gateway: gateway} = context
       sensor1 = Repo.update!(Sensor.changeset(sensor1, %{gateway_id: gateway.id}))
       gateway = gateway |> Repo.preload([:sensors])
@@ -159,7 +159,7 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       assert sensor4.gateway_id == gateway.id
     end
 
-    test "assciates provided sensor list are adding attached sensor from gateway", context do
+    test "associates sensors in the list including previously associated", context do
       %{sensors: [sensor1, sensor2, sensor3, sensor4], gateway: gateway} = context
       sensor1 = Repo.update!(Sensor.changeset(sensor1, %{gateway_id: gateway.id}))
       gateway = gateway |> Repo.preload([:sensors])
@@ -170,23 +170,6 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       sensor4 = Repo.get!(Sensor, sensor4.id)
       assert sensor1.gateway_id == gateway.id
       assert sensor2.gateway_id == gateway.id
-      assert sensor3.gateway_id == gateway.id
-      assert sensor4.gateway_id == gateway.id
-    end
-
-    test "assciates provided sensor list are adding and subtracting attached sensor from gateway",
-         context do
-      %{sensors: [sensor1, sensor2, sensor3, sensor4], gateway: gateway} = context
-      sensor1 = Repo.update!(Sensor.changeset(sensor1, %{gateway_id: gateway.id}))
-      sensor2 = Repo.update!(Sensor.changeset(sensor2, %{gateway_id: gateway.id}))
-      gateway = gateway |> Repo.preload([:sensors])
-      Gateway.associate_sensors(gateway, [sensor1.id, sensor3.id, sensor4.id])
-      sensor1 = Repo.get!(Sensor, sensor1.id)
-      sensor2 = Repo.get!(Sensor, sensor2.id)
-      sensor3 = Repo.get!(Sensor, sensor3.id)
-      sensor4 = Repo.get!(Sensor, sensor4.id)
-      assert sensor1.gateway_id == gateway.id
-      assert sensor2.gateway_id != gateway.id
       assert sensor3.gateway_id == gateway.id
       assert sensor4.gateway_id == gateway.id
     end

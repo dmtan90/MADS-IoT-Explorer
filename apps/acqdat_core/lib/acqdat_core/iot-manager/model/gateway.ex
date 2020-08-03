@@ -252,10 +252,10 @@ defmodule AcqdatCore.Model.IotManager.Gateway do
 
     case result do
       {:ok, _message} ->
-        {:ok, "Attached sensor has been modified"}
+        {:ok, "Gateway Sensor List updated"}
 
       {:error, _message} ->
-        {:error, "Modification to sensor attachment to gateway has been failed"}
+        {:error, "Some error occurred while updating list"}
     end
   end
 
