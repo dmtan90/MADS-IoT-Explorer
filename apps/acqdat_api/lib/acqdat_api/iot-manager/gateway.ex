@@ -36,7 +36,6 @@ defmodule AcqdatApi.IotManager.Gateway do
     gateway |> Repo.preload(:sensors)
   end
 
-
   ############################# private functions ###############3
 
   defp verify_gateway({:ok, gateway}) do

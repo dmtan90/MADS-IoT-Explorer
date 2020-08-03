@@ -5,7 +5,6 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
   alias AcqdatCore.Model.IotManager.Gateway
   alias AcqdatCore.Schema.EntityManagement.Sensor
   alias AcqdatCore.Repo
-  alias AcqdatCore.Schema.IotManager.BrokerCredentials
 
   describe "create/1" do
     setup %{} do
@@ -113,8 +112,7 @@ defmodule AcqdatCore.Model.IotManager.GatewayTest do
       assert result.uuid == gateway.uuid
     end
 
-    test "not found if invalid uuid", context do
-      %{gateway: gateway} = context
+    test "not found if invalid uuid", _context do
       {:error, result} = Gateway.get(%{uuid: "x"})
       assert result == "Gateway not found"
     end
