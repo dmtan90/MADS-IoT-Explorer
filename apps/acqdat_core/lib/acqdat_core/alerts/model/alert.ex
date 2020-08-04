@@ -31,6 +31,10 @@ defmodule AcqdatCore.Alerts.Model.Alert do
     Alert |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
   end
 
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    Alert |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+  end
+
   def delete(alert) do
     case Repo.delete(alert) do
       {:ok, alert} -> {:ok, alert}

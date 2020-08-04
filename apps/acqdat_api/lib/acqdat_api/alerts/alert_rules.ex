@@ -5,6 +5,10 @@ defmodule AcqdatApi.Alerts.AlertRules do
   alias AcqdatCore.Alerts.Model.AlertRules
   import AcqdatApiWeb.Helpers
 
+  defdelegate update(alert_rules, params), to: AlertRules
+  defdelegate get_all(data), to: AlertRules
+  defdelegate delete(alert_rules), to: AlertRules
+
   def create(params) do
     params = params_extraction(params)
     verify_alert_rules(AlertRules.create(params))

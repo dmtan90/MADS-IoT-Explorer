@@ -23,7 +23,7 @@ defmodule AcqdatCore.Alerts.Schema.Alert do
       field(:data_type, :string, null: false)
       field(:entity_parameter_uuid, :string, null: false)
       field(:entity_parameter_name, :string, null: false)
-      field(:value, :string, null: false)
+      field(:value, :integer, null: false)
     end
 
     timestamps(type: :utc_datetime)

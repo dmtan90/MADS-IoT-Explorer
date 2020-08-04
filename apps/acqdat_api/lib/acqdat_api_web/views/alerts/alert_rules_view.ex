@@ -5,6 +5,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesView do
   def render("alert_rules.json", %{alert_rules: alert_rules}) do
     %{
       app: alert_rules.app,
+      org_id: alert_rules.org_id,
       assignee_ids: alert_rules.assignee_ids,
       communication_medium: alert_rules.communication_medium,
       creator_id: alert_rules.creator_id,
@@ -12,7 +13,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesView do
       entity: alert_rules.entity,
       entity_id: alert_rules.entity_id,
       entity_parameters:
-        render_many(alert_rules.entity_parameters, AlertRulesView, "parameter.json"),
+        render_one(alert_rules.entity_parameters, AlertRulesView, "parameter.json"),
       id: alert_rules.id,
       policy_name: alert_rules.policy_name,
       policy_type: alert_rules.policy_type,
@@ -29,9 +30,19 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesView do
   def render("parameter.json", %{alert_rules: params}) do
     %{
       data_type: params.data_type,
-      uuid: params.data_type,
-      unit: params.data_type,
-      name: params.data_type
+      uuid: params.uuid,
+      unit: params.unit,
+      name: params.name
+    }
+  end
+
+  def render("index.json", alert_rules) do
+    %{
+      alert_rules: render_many(alert_rules.entries, AlertRulesView, "alert_rules.json"),
+      page_number: alert_rules.page_number,
+      page_size: alert_rules.page_size,
+      total_entries: alert_rules.total_entries,
+      total_pages: alert_rules.total_pages
     }
   end
 end

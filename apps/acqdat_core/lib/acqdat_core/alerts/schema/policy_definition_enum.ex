@@ -9,5 +9,5 @@ defenum(PolicyDefinitionModuleEnum,
 
 # Creates an enum for different policy definitions.
 defenum(PolicyDefinitionEnum,
-  range_based: 0
+  RangeBasedPolicy: 0
 )

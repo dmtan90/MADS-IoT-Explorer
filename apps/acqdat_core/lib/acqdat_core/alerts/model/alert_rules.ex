@@ -2,8 +2,10 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
   @moduledoc """
   Contains CREATE, UPDATE, DELETE, GET and INDEX model functions
   """
+  import Ecto.Query
   alias AcqdatCore.Repo
   alias AcqdatCore.Alerts.Schema.AlertRules
+  alias AcqdatCore.Model.Helper, as: ModelHelper
 
   @doc """
     create function will prepare the changeset and just insert it into the database
@@ -39,5 +41,21 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
       alert_rules ->
         {:ok, alert_rules}
     end
+  end
+
+  @doc """
+  Check the existence of alert rule for a particular entity provided it's ID.
+  """
+  def check_rule(entity_id, entity) do
+    query =
+      from(rule in AlertRules,
+        where: rule.entity == ^entity and rule.entity_id == ^entity_id
+      )
+
+    Repo.one!(query)
+  end
+
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    AlertRules |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
   end
 end

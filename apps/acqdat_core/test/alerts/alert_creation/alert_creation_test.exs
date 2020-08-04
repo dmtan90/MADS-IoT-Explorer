@@ -4,28 +4,60 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
   """
   use ExUnit.Case, async: true
   use AcqdatCore.DataCase
+  use AcqdatIotWeb.ConnCase
   alias AcqdatCore.Schema.IotManager.Gateway
   alias AcqdatCore.Model.IotManager.Gateway, as: GModel
-  alias AcqdatCore.Alerts.AlertCreation
   alias AcqdatCore.Alerts.Model.AlertRules
+  alias AcqdatCore.Alerts.Schema.Alert, as: AlertSchema
   alias AcqdatCore.Schema.IotManager.GatewayDataDump
   alias AcqdatIot.DataParser
-  import AcqdatCore.Support.Factory
   alias AcqdatCore.Repo
+  import AcqdatCore.Support.Factory
 
   describe "create/1" do
+    setup %{} do
+      # Setting the shared mode so the internal processes share the same db
+      # conneciton.
+      Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
+    end
+
     setup :setup_alert_rules
 
     @doc """
     Here alert rule is created from sensor parameters so this parameters will be passed to gateway for mapping the parameters so that on
     data dump is done we can have a parameter uuid mapped to gateway to generate a alert.
     """
-    @tag timeout: :infinity
     test "create alert", %{alert_rule: alert_rules, sensor: sensor} do
       {:ok, alert_rules} = AlertRules.create(alert_rules)
       gateway = setup_gateway(sensor)
       data_dump = dump_iot_data(gateway)
       DataParser.start_parsing(data_dump)
+      # TODO: have added a small time out so worker processes release db
+      # connection, else the test exits and db connection is removed.
+      # Need to add a clean way to handle this.
+      :timer.sleep(50)
+      alert = List.first(Repo.all(AlertSchema))
+      assert Map.has_key?(alert, :app)
+      assert Map.has_key?(alert, :policy_name)
+      assert Map.has_key?(alert, :rule_parameters)
+      assert Map.has_key?(alert, :org_id)
+      assert Map.has_key?(alert, :assignee_ids)
+      assert Map.has_key?(alert, :communication_medium)
+      assert Map.has_key?(alert, :creator_id)
+      assert Map.has_key?(alert, :entity_id)
+      assert Map.has_key?(alert, :entity_name)
+      assert Map.has_key?(alert, :status)
+      assert Map.has_key?(alert, :severity)
+      assert alert.app == alert_rules.app
+      assert alert.assignee_ids == alert_rules.assignee_ids
+      assert alert.communication_medium == alert_rules.communication_medium
+      assert alert.policy_module_name == alert_rules.policy_name
+      assert alert.org_id == alert_rules.org_id
+      assert alert.creator_id == alert_rules.creator_id
+      assert alert.entity_id == alert_rules.entity_id
+      assert alert.entity_name == alert_rules.entity
+      assert alert.status == alert_rules.status
+      assert alert.severity == alert_rules.severity
     end
   end
 
@@ -38,7 +70,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
     project = insert(:project, org: org)
     asset = insert(:asset, org: org, project: project)
     gateway = insert_gateway(org, project, asset)
-    gateway = insert_mapped_parameters(gateway, sensor)
+    insert_mapped_parameters(gateway, sensor)
   end
 
   defp insert_gateway(org, project, asset) do
@@ -75,25 +107,27 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
 
   def setup_alert_rules(_context) do
     sensor = insert(:sensor)
-    parameters = fetch_parameters(sensor.sensor_type.parameters)
+    [param1, _param2] = fetch_parameters(sensor.sensor_type.parameters)
     [user1, user2, user3] = insert_list(3, :user)
 
     alert_rule = %{
       entity: "sensor",
       entity_id: sensor.id,
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
-      entity_parameters: parameters,
+      entity_parameters: param1,
       uuid: UUID.uuid1(:hex),
       communication_medium: ["in-app, sms, e-mail"],
       slug: Slugger.slugify(random_string(12)),
       rule_parameters: %{lower_limit: 10, upper_limit: 20},
-      recepient_ids: [user1.id, user2.id],
+      # here 0 is added because this is getting converted into charlist
+      recepient_ids: [0, user1.id, user2.id],
       assignee_ids: [user3.id],
       policy_type: ["user"],
       severity: "warning",
       status: "un_resolved",
       app: "iot_manager",
       project_id: sensor.project_id,
+      org_id: sensor.org_id,
       creator_id: user1.id
     }
 
@@ -111,7 +145,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
   end
 
   defp insert_mapped_parameters(gateway, sensor) do
-    [param1, param2] = sensor.sensor_type.parameters
+    [param1, _param2] = sensor.sensor_type.parameters
 
     mapped_parameters = %{
       "y_axis" => %{
@@ -132,7 +166,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       org_id: gateway.org_id,
       project_id: gateway.project_id,
       data: %{
-        "y_axis" => 21
+        "y_axis" => 45
       },
       inserted_at: DateTime.truncate(DateTime.utc_now(), :second),
       inserted_timestamp: DateTime.truncate(DateTime.utc_now(), :second)

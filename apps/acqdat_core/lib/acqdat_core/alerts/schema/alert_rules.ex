@@ -27,7 +27,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     field(:entity_id, :integer, null: false)
     field(:policy_name, PolicyDefinitionModuleEnum, null: false)
 
-    embeds_many :entity_parameters, EntityParameters, on_replace: :delete do
+    embeds_one :entity_parameters, EntityParameters, on_replace: :delete do
       field(:name, :string, null: false)
       field(:uuid, :string, null: false)
       field(:data_type, :string, null: false)
@@ -48,15 +48,15 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     field(:description, :string)
 
     # Associations
-    # optional
-    belongs_to(:project, Project, on_replace: :delete)
-    belongs_to(:creator, User, on_replace: :delete)
+    field(:creator_id, :integer)
+    field(:project_id, :integer)
+    field(:org_id, :integer)
 
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(entity entity_id app communication_medium recepient_ids assignee_ids status policy_name uuid slug rule_parameters policy_type project_id creator_id severity)a
-  @optional_params ~w(description)a
+  @required_params ~w(entity entity_id app communication_medium recepient_ids status policy_name uuid slug rule_parameters policy_type creator_id org_id severity)a
+  @optional_params ~w(description project_id assignee_ids)a
   @embedded_required_params ~w(name uuid data_type)a
   @embedded_optional_params ~w(unit)a
   @permitted_embedded @embedded_optional_params ++ @embedded_required_params
@@ -75,8 +75,6 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
 
   def common_changeset(changeset) do
     changeset
-    |> assoc_constraint(:project)
-    |> assoc_constraint(:creator)
     |> unique_constraint(:slug, name: :acqdat_alert_rules_slug_index)
     |> unique_constraint(:uuid, name: :acqdat_alert_rules_uuid_index)
   end

@@ -2,7 +2,7 @@ defmodule AcqdatCore.Support.Factory do
   use ExMachina.Ecto, repo: AcqdatCore.Repo
   use AcqdatCore.Schema
   use AcqdatCore.Factory.Hierarchy
-  use AcqdatCore.Support.Alerts.Factory
+  use AcqdatCore.Factory.Alerts
 
   alias AcqdatApiWeb.Guardian
   import Plug.Conn

@@ -100,7 +100,8 @@ defmodule AcqdatApiWeb.Router do
     # all the alert apis will be scoped here
     scope "/projects/:project_id", Alerts do
       resources "/policy", PolicyController, only: [:index]
-      resources "/alert-rules", AlertRulesController, only: [:create, :update, :delete, :show]
+      resources "/alert-rules", AlertRulesController, except: [:new, :edit]
+      resources "/alert", AlertController, except: [:new, :edit, :create]
     end
 
     scope "/projects/:project_id", EntityManagement do

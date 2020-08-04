@@ -6,10 +6,10 @@ defmodule AcqdatApiWeb.Validators.Alerts.AlertRules do
       entity!: :string,
       entity_id!: :integer,
       policy_name!: :string,
-      entity_parameters!: {:array, :map},
-      uuid!: :string,
+      entity_parameters!: :map,
+      uuid: :string,
       communication_medium!: {:array, :string},
-      slug!: :string,
+      slug: :string,
       rule_parameters!: :map,
       recepient_ids!: {:array, :integer},
       assignee_ids!: {:array, :integer},
@@ -17,9 +17,19 @@ defmodule AcqdatApiWeb.Validators.Alerts.AlertRules do
       severity!: :string,
       status!: :string,
       app!: :string,
-      project_id!: :integer,
+      project_id: :integer,
       creator_id!: :integer,
-      description: :string
+      description: :string,
+      org_id!: :integer
+    })
+  )
+
+  defparams(
+    verify_index_params(%{
+      page_size: :integer,
+      page_number: :integer,
+      org_id!: :integer,
+      project_id!: :integer
     })
   )
 end

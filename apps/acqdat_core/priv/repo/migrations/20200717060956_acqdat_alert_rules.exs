@@ -11,14 +11,15 @@ defmodule AcqdatCore.Repo.Migrations.AcqdatAlertRules do
       add :app, AppEnum.type(), null: false
       add :policy_name, PolicyDefinitionModuleEnum.type(), null: false
       add :rule_parameters, :map, null: false
-      add :entity_parameters, {:array, :map}, null: false
+      add :entity_parameters, :map, null: false
       add :communication_medium, {:array, :string}
       add :recepient_ids, {:array, :integer}
       add :assignee_ids, {:array, :integer}
       add :severity, AlertSeverityEnum.type(), null: false
       add :status, AlertStatusEnum.type(), null: false
-      add :project_id, references("acqdat_projects", on_delete: :delete_all), null: false
-      add :creator_id, references(:users), on_delete: :delete_all
+      add :creator_id, :integer, null: false
+      add :project_id, :integer
+      add :org_id, :integer, null: false
       add :policy_type, {:array, :string}
       add :description, :text
 
