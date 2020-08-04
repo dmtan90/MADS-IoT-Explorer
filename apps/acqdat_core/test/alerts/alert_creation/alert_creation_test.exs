@@ -10,7 +10,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
   alias AcqdatCore.Alerts.Model.AlertRules
   alias AcqdatCore.Alerts.Schema.Alert, as: AlertSchema
   alias AcqdatCore.Schema.IotManager.GatewayDataDump
-  alias AcqdatIot.DataParser
+  alias AcqdatCore.IotManager.DataParser
   alias AcqdatCore.Repo
   import AcqdatCore.Support.Factory
 
@@ -27,6 +27,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
     Here alert rule is created from sensor parameters so this parameters will be passed to gateway for mapping the parameters so that on
     data dump is done we can have a parameter uuid mapped to gateway to generate a alert.
     """
+    @tag timeout: :infinity
     test "create alert", %{alert_rule: alert_rules, sensor: sensor} do
       {:ok, alert_rules} = AlertRules.create(alert_rules)
       gateway = setup_gateway(sensor)
@@ -161,15 +162,20 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
   end
 
   defp dump_iot_data(gateway) do
+    gateway = Repo.preload(gateway, [:org, :project])
+
     params = %{
       gateway_id: gateway.id,
+      gateway_uuid: gateway.uuid,
+      org_uuid: gateway.org.uuid,
+      project_uuid: gateway.project.uuid,
       org_id: gateway.org_id,
       project_id: gateway.project_id,
       data: %{
         "y_axis" => 45
       },
-      inserted_at: DateTime.truncate(DateTime.utc_now(), :second),
-      inserted_timestamp: DateTime.truncate(DateTime.utc_now(), :second)
+      inserted_at: DateTime.to_unix(DateTime.utc_now()),
+      inserted_timestamp: DateTime.to_unix(DateTime.utc_now())
     }
 
     changeset = GatewayDataDump.changeset(%GatewayDataDump{}, params)

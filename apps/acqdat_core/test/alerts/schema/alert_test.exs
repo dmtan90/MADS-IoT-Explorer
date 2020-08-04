@@ -9,8 +9,8 @@ defmodule AcqdatCore.Alerts.Schema.AlertTest do
       params = %{
         name: "Test name",
         description: "Test description",
-        policy_name: "range_based",
-        policy_module_name: "Elixir.AcqdatCore.RangeBased",
+        policy_module_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
+        policy_name: "RangeBasedPolicy",
         app: "iot_manager",
         entity_name: "Gateway",
         entity_id: 1,
@@ -26,14 +26,14 @@ defmodule AcqdatCore.Alerts.Schema.AlertTest do
             data_type: "float",
             entity_parameter_uuid: "abc",
             entity_parameter_name: "temperature",
-            value: "34.5"
+            value: 34
           },
           %{
             name: "humidity",
             data_type: "float",
             entity_parameter_uuid: "abc",
             entity_parameter_name: "temperature",
-            value: "34.5"
+            value: 34
           }
         ]
       }

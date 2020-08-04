@@ -5,7 +5,6 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
   import Ecto.Query
   alias AcqdatCore.Repo
   alias AcqdatCore.Alerts.Schema.AlertRules
-  alias AcqdatCore.Model.Helper, as: ModelHelper
 
   @doc """
     create function will prepare the changeset and just insert it into the database

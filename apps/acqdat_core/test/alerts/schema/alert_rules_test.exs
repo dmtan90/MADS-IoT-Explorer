@@ -20,39 +20,45 @@ defmodule AcqdatCore.Alerts.Schema.AlertRulesTest do
       refute validity
 
       assert %{
+               creator_id: ["can't be blank"],
                entity: ["can't be blank"],
                entity_id: ["can't be blank"],
                policy_name: ["can't be blank"],
-               entity_parameters: ["can't be blank"],
-               rule_parameters: ["can't be blank"],
                policy_type: ["can't be blank"],
-               project_id: ["can't be blank"],
-               creator_id: ["can't be blank"]
+               rule_parameters: ["can't be blank"],
+               app: ["can't be blank"],
+               communication_medium: ["can't be blank"],
+               org_id: ["can't be blank"],
+               recepient_ids: ["can't be blank"],
+               severity: ["can't be blank"],
+               status: ["can't be blank"]
              } = errors_on(changeset)
     end
   end
 
   def setup_alert_rules(_context) do
     sensor = insert(:sensor)
-    parameters = fetch_parameters(sensor.sensor_type.parameters)
+    [param1, _param2] = fetch_parameters(sensor.sensor_type.parameters)
     [user1, user2, user3] = insert_list(3, :user)
 
     alert_rule = %{
       entity: "sensor",
       entity_id: sensor.id,
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
-      entity_parameters: parameters,
+      entity_parameters: param1,
       uuid: UUID.uuid1(:hex),
       communication_medium: ["in-app, sms, e-mail"],
       slug: Slugger.slugify(random_string(12)),
       rule_parameters: %{lower_limit: 10, upper_limit: 20},
-      recepient_ids: [user1.id, user2.id],
+      # here 0 is added because this is getting converted into charlist
+      recepient_ids: [0, user1.id, user2.id],
       assignee_ids: [user3.id],
       policy_type: ["user"],
       severity: "warning",
       status: "un_resolved",
       app: "iot_manager",
-      project: insert(:project),
+      project_id: sensor.project_id,
+      org_id: sensor.org_id,
       creator_id: user1.id
     }
 

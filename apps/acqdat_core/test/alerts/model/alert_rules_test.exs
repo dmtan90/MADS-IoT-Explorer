@@ -29,7 +29,7 @@ defmodule AcqdatCore.Alerts.Model.AlertRulesTest do
 
     test "with invalid params", %{alert_rule: alert_rule} do
       {:ok, alert_rule} = ARModel.create(alert_rule)
-      assert {:error, _alert_rule} = ARModel.update(alert_rule, %{project_id: -1})
+      assert {:error, _alert_rule} = ARModel.update(alert_rule, %{creator_id: nil})
     end
   end
 
@@ -44,25 +44,27 @@ defmodule AcqdatCore.Alerts.Model.AlertRulesTest do
 
   def setup_alert_rules(_context) do
     sensor = insert(:sensor)
-    parameters = fetch_parameters(sensor.sensor_type.parameters)
+    [param1, _param2] = fetch_parameters(sensor.sensor_type.parameters)
     [user1, user2, user3] = insert_list(3, :user)
 
     alert_rule = %{
       entity: "sensor",
       entity_id: sensor.id,
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
-      entity_parameters: parameters,
+      entity_parameters: param1,
       uuid: UUID.uuid1(:hex),
       communication_medium: ["in-app, sms, e-mail"],
       slug: Slugger.slugify(random_string(12)),
       rule_parameters: %{lower_limit: 10, upper_limit: 20},
-      recepient_ids: [user1.id, user2.id],
+      # here 0 is added because this is getting converted into charlist
+      recepient_ids: [0, user1.id, user2.id],
       assignee_ids: [user3.id],
       policy_type: ["user"],
       severity: "warning",
       status: "un_resolved",
       app: "iot_manager",
-      project: insert(:project),
+      project_id: sensor.project_id,
+      org_id: sensor.org_id,
       creator_id: user1.id
     }
 
