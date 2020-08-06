@@ -3,8 +3,6 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
   AlertRules are the rules which an entity follows before creating alerts.
   """
   use AcqdatCore.Schema
-  alias AcqdatCore.Schema.EntityManagement.Project
-  alias AcqdatCore.Schema.RoleManagement.User
 
   @typedoc """
   `entity`: entity name for which this alert rule is defined example: "sensor", "gateway"
@@ -42,7 +40,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     field(:assignee_ids, {:array, :integer})
     field(:policy_type, {:array, :string})
     field(:severity, AlertSeverityEnum)
-    field(:status, AlertStatusEnum)
+    field(:status, AlertRulesStatusEnum)
     field(:app, AppEnum)
 
     field(:description, :string)

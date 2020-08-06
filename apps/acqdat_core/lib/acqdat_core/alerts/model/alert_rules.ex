@@ -48,7 +48,7 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
   def check_rule(entity_id, entity) do
     query =
       from(rule in AlertRules,
-        where: rule.entity == ^entity and rule.entity_id == ^entity_id
+        where: rule.entity == ^entity and rule.entity_id == ^entity_id and rule.status == ^:enable
       )
 
     Repo.one!(query)

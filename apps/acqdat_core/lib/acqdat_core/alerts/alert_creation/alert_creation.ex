@@ -22,6 +22,9 @@ defmodule AcqdatCore.Alerts.AlertCreation do
 
   alias AcqdatCore.Alerts.Model.AlertRules
   alias AcqdatCore.Alerts.Model.Alert
+  alias AcqdatCore.Mailer.AlertNotification
+  alias AcqdatCore.Mailer
+  alias AcqdatCore.Model.RoleManagement.User
 
   @doc """
   Receives data from dataparser module and for each entity ID will check if a alert rule exist or not.
@@ -94,7 +97,7 @@ defmodule AcqdatCore.Alerts.AlertCreation do
       recepient_ids: alert_rule.recepient_ids,
       assignee_ids: alert_rule.assignee_ids,
       severity: alert_rule.severity,
-      status: alert_rule.status,
+      status: "un_resolved",
       creator_id: alert_rule.creator_id,
       project_id: alert_rule.project_id,
       org_id: alert_rule.org_id,
@@ -111,6 +114,27 @@ defmodule AcqdatCore.Alerts.AlertCreation do
   end
 
   def create_alert(params) do
-    Task.start_link(fn -> Alert.create(params) end)
+    # Task.start_link(fn ->
+
+    case Alert.create(params) do
+      {:ok, alert} ->
+        send_alert(alert)
+
+      {:error, _error} ->
+        {:error, :noreply}
+    end
+
+    # end)
+  end
+
+  defp send_alert(alert) do
+    Enum.each(alert.recepient_ids, fn recipient ->
+      if recipient != 0 do
+        email = User.extract_email(recipient)
+
+        AlertNotification.email(email, alert)
+        |> Mailer.deliver_now()
+      end
+    end)
   end
 end

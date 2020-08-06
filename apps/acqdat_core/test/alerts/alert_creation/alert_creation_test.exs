@@ -36,7 +36,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       # TODO: have added a small time out so worker processes release db
       # connection, else the test exits and db connection is removed.
       # Need to add a clean way to handle this.
-      :timer.sleep(50)
+      :timer.sleep(150)
       alert = List.first(Repo.all(AlertSchema))
       assert Map.has_key?(alert, :app)
       assert Map.has_key?(alert, :policy_name)
@@ -57,8 +57,25 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       assert alert.creator_id == alert_rules.creator_id
       assert alert.entity_id == alert_rules.entity_id
       assert alert.entity_name == alert_rules.entity
-      assert alert.status == alert_rules.status
+      assert alert.status == :un_resolved
       assert alert.severity == alert_rules.severity
+    end
+
+    test "alert not created when alert rule is disabled", %{
+      alert_rule: alert_rules,
+      sensor: sensor
+    } do
+      alert_rules = Map.replace!(alert_rules, :status, "disable")
+      {:ok, alert_rules} = AlertRules.create(alert_rules)
+      gateway = setup_gateway(sensor)
+      data_dump = dump_iot_data(gateway)
+      DataParser.start_parsing(data_dump)
+      # TODO: have added a small time out so worker processes release db
+      # connection, else the test exits and db connection is removed.
+      # Need to add a clean way to handle this.
+      :timer.sleep(150)
+      alert = List.first(Repo.all(AlertSchema))
+      assert alert == nil
     end
   end
 
@@ -125,7 +142,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       assignee_ids: [user3.id],
       policy_type: ["user"],
       severity: "warning",
-      status: "un_resolved",
+      status: "enable",
       app: "iot_manager",
       project_id: sensor.project_id,
       org_id: sensor.org_id,

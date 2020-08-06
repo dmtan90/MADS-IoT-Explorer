@@ -16,7 +16,7 @@ defmodule AcqdatCore.Repo.Migrations.AcqdatAlertRules do
       add :recepient_ids, {:array, :integer}
       add :assignee_ids, {:array, :integer}
       add :severity, AlertSeverityEnum.type(), null: false
-      add :status, AlertStatusEnum.type(), null: false
+      add :status, AlertRulesStatusEnum.type(), null: false
       add :creator_id, :integer, null: false
       add :project_id, :integer
       add :org_id, :integer, null: false

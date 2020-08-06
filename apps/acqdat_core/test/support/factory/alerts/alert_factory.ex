@@ -25,7 +25,7 @@ defmodule AcqdatCore.Factory.Alerts do
           assignee_ids: [user3.id],
           policy_type: ["user"],
           severity: "warning",
-          status: "un_resolved",
+          status: "enable",
           app: "iot_manager",
           project_id: sensor.project_id,
           org_id: sensor.org_id,
