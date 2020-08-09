@@ -21,6 +21,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
   """
 
   schema "acqdat_alert_rules" do
+    field(:rule_name, :string)
     field(:entity, :string, null: false)
     field(:entity_id, :integer, null: false)
     field(:policy_name, PolicyDefinitionModuleEnum, null: false)
@@ -53,7 +54,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(entity entity_id app communication_medium recepient_ids status policy_name uuid slug rule_parameters policy_type creator_id org_id severity)a
+  @required_params ~w(rule_name entity entity_id app communication_medium recepient_ids status policy_name uuid slug rule_parameters policy_type creator_id org_id severity)a
   @optional_params ~w(description project_id assignee_ids)a
   @embedded_required_params ~w(name uuid data_type)a
   @embedded_optional_params ~w(unit)a

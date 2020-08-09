@@ -4,6 +4,7 @@ defmodule AcqdatCore.Repo.Migrations.AcqdatAlertRules do
   #alert rule are the set of rules that are being defined on for a particular entity parameter
   def change do
     create table(:acqdat_alert_rules) do
+      add :rule_name, :string
       add :entity, :string, null: false
       add :entity_id, :integer, null: false
       add :uuid, :string, null: false

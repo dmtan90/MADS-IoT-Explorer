@@ -3,8 +3,11 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesView do
   alias AcqdatApiWeb.Alerts.AlertRulesView
 
   def render("alert_rules.json", %{alert_rules: alert_rules}) do
+    {:ok, severity} = AlertSeverityEnum.dump(alert_rules.severity)
+
     %{
       app: alert_rules.app,
+      rule_name: alert_rules.rule_name,
       org_id: alert_rules.org_id,
       assignee_ids: alert_rules.assignee_ids,
       communication_medium: alert_rules.communication_medium,
@@ -20,10 +23,11 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesView do
       project_id: alert_rules.project_id,
       recepient_ids: alert_rules.recepient_ids,
       rule_parameters: alert_rules.rule_parameters,
-      severity: alert_rules.severity,
+      severity: severity,
       slug: alert_rules.slug,
       status: alert_rules.status,
-      uuid: alert_rules.uuid
+      uuid: alert_rules.uuid,
+      created_at: alert_rules.inserted_at
     }
   end
 

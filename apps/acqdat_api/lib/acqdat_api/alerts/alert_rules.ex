@@ -4,6 +4,7 @@ defmodule AcqdatApi.Alerts.AlertRules do
   """
   alias AcqdatCore.Alerts.Model.AlertRules
   import AcqdatApiWeb.Helpers
+  alias AcqdatCore.Model.RoleManagement.User
 
   defdelegate update(alert_rules, params), to: AlertRules
   defdelegate get_all(data), to: AlertRules
@@ -15,6 +16,8 @@ defmodule AcqdatApi.Alerts.AlertRules do
   end
 
   def verify_alert_rules({:ok, alert_rules}) do
+    recepient_ids = send_alert(alert_rules)
+    alert_rules = Map.replace!(alert_rules, :recepient_ids, recepient_ids)
     {:ok, alert_rules}
   end
 
@@ -25,5 +28,14 @@ defmodule AcqdatApi.Alerts.AlertRules do
   defp params_extraction(params) do
     Map.from_struct(params)
     |> Map.drop([:_id, :__meta__])
+  end
+
+  defp send_alert(alert) do
+    Enum.reduce(alert.recepient_ids, fn recipient, acc ->
+      if recipient != 0 do
+        user = User.extract_email(recipient)
+        acc ++ [user.email]
+      end
+    end)
   end
 end

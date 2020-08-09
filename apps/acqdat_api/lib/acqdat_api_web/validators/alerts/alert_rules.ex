@@ -3,6 +3,7 @@ defmodule AcqdatApiWeb.Validators.Alerts.AlertRules do
 
   defparams(
     verify_alert_rules(%{
+      rule_name!: :string,
       entity!: :string,
       entity_id!: :integer,
       policy_name!: :string,
