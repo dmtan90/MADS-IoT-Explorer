@@ -38,22 +38,17 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
   will be stored in the alert rules table so that the entity over which this policy is user will act on values extracted from this rule_preference
   """
   @impl Policy
-  def rule_preferences(params) do
-    %{
-      name: @rule,
-      rule_data: [
-        %{
-          key: :lower_limit,
-          type: :input,
-          value: params["lower_limit"]
-        },
-        %{
-          key: :upper_limit,
-          type: :input,
-          value: params["upper_limit"]
-        }
-      ]
-    }
+  def rule_preferences() do
+    [
+      %{
+        key: :lower_limit,
+        type: :input
+      },
+      %{
+        key: :upper_limit,
+        type: :input
+      }
+    ]
   end
 
   @doc """

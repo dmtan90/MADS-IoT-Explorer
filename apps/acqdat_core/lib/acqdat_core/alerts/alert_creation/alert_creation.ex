@@ -86,7 +86,8 @@ defmodule AcqdatCore.Alerts.AlertCreation do
   defp data_manifest(alert_rule, parameter) do
     %{
       name:
-        "Alert for " <> alert_rule.entity <> "with id " <> Integer.to_string(alert_rule.entity_id),
+        "Alert for " <>
+          alert_rule.entity <> " with id " <> Integer.to_string(alert_rule.entity_id),
       description: alert_rule.description,
       policy_name: alert_rule.policy_name.rule_name(),
       policy_module_name: alert_rule.policy_name,
@@ -114,25 +115,23 @@ defmodule AcqdatCore.Alerts.AlertCreation do
   end
 
   def create_alert(params) do
-    # Task.start_link(fn ->
+    Task.start_link(fn ->
+      case Alert.create(params) do
+        {:ok, alert} ->
+          send_alert(alert)
 
-    case Alert.create(params) do
-      {:ok, alert} ->
-        send_alert(alert)
-
-      {:error, _error} ->
-        {:error, :noreply}
-    end
-
-    # end)
+        {:error, _error} ->
+          {:error, :noreply}
+      end
+    end)
   end
 
   defp send_alert(alert) do
     Enum.each(alert.recepient_ids, fn recipient ->
       if recipient != 0 do
-        email = User.extract_email(recipient)
+        user = User.extract_email(recipient)
 
-        AlertNotification.email(email, alert)
+        AlertNotification.email(user.email, alert, user)
         |> Mailer.deliver_now()
       end
     end)

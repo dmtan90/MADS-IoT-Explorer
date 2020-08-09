@@ -144,9 +144,9 @@ defmodule AcqdatCore.Model.RoleManagement.User do
     query =
       from(user in User,
         where: user.id == ^user_id,
-        select: user.email
+        select: user
       )
 
-    Repo.one!(query)
+    Repo.one!(query) |> Repo.preload(:org)
   end
 end

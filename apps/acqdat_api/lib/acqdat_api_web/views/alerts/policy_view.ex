@@ -9,6 +9,10 @@ defmodule AcqdatApiWeb.Alerts.PolicyView do
   end
 
   def render("policy.json", %{policy: policy}) do
-    %{policy: policy}
+    %{
+      policy_name: policy.rule_name,
+      rule_parameters: policy.rule_preferences,
+      policy_module: policy
+    }
   end
 end

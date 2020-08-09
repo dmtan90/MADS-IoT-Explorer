@@ -16,5 +16,5 @@ defmodule AcqdatCore.Alerts.Behaviour.Policy do
 
   @callback rule_name() :: name :: String.t()
   @callback eligible?(preferences :: map, value :: integer) :: true | false
-  @callback rule_preferences(params :: map) :: map
+  @callback rule_preferences() :: list
 end

@@ -5,14 +5,15 @@ defmodule AcqdatCore.Mailer.AlertNotification do
   @subject "Alert"
   @from_address "admin@datakrew.com"
 
-  def email(recepient_mail, alert) do
+  def email(recepient_mails, alert, user) do
     new_email()
     |> from(@from_address)
-    |> to(recepient_mail)
+    |> to(recepient_mails)
     |> subject(@subject)
     |> put_html_layout({AcqdatCore.EmailView, "email.html"})
     |> render("alert_notification.html",
-      alert: alert
+      alert: alert,
+      user: user
     )
   end
 end

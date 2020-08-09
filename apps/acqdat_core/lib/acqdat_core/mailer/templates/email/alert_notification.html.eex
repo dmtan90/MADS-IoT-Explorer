@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+
+<body>
+<div style="width:80%;margin: 0 auto;height:auto;box-sizing: border-box;">
+<label style="font-size:24px;font-family: 'Muli', sans-serif;line-height:42px;">
+
+Hello &nbsp; <%= @user.first_name %>, <br/>
+An alert has been generated in your MADS workspace of organisation <%= @user.org.name %> at <%= DateTime.to_iso8601(@alert.inserted_at) %> . Below are the details. <br/> <br/>
+App: &ensp; <%= Atom.to_string(@alert.app) %> <br/>
+Alert Rule:  &ensp; <%= @alert.name %> <br/>
+Condition:  &ensp; <%= Atom.to_string(@alert.policy_name) %> <br/>
+Severity:  &ensp; <%= Atom.to_string(@alert.severity) %><br/>
+Timestamp:  &ensp; <%= DateTime.to_iso8601(@alert.inserted_at) %><br/>
+<br/>
+    Thank you. <br/>
+    <br/>
+  Regards,<br/>
+  MADSbot<br/>
+</label>
+</div>
+</body>
+</html>
