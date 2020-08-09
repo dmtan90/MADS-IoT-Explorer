@@ -31,7 +31,7 @@ defmodule AcqdatApi.Alerts.AlertRules do
   end
 
   defp send_alert(alert) do
-    Enum.reduce(alert.recepient_ids, fn recipient, acc ->
+    Enum.reduce(alert.recepient_ids, [], fn recipient, acc ->
       if recipient != 0 do
         user = User.extract_email(recipient)
         acc ++ [user.email]
