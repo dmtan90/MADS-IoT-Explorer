@@ -5,6 +5,7 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
   import Ecto.Query
   alias AcqdatCore.Repo
   alias AcqdatCore.Alerts.Schema.AlertRules
+  alias AcqdatCore.Model.RoleManagement.User
 
   @doc """
     create function will prepare the changeset and just insert it into the database
@@ -56,5 +57,18 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
 
   def get_all(%{page_size: page_size, page_number: page_number}) do
     AlertRules |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+  end
+
+  @doc """
+  For extracting recipient emails
+  """
+
+  def send_alert(alert) do
+    Enum.reduce(alert.recepient_ids, [], fn recipient, acc ->
+      if recipient != 0 do
+        user = User.extract_email(recipient)
+        acc ++ [user]
+      end
+    end)
   end
 end

@@ -131,6 +131,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
     alert_rule = %{
       entity: "sensor",
       entity_id: sensor.id,
+      rule_name: "Temperature Status",
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
       entity_parameters: param1,
       uuid: UUID.uuid1(:hex),
