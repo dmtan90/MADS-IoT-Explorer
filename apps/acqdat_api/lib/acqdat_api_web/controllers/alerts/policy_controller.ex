@@ -4,7 +4,6 @@ defmodule AcqdatApiWeb.Alerts.PolicyController do
   """
   use AcqdatApiWeb, :controller
   alias AcqdatApi.Alerts.Policy
-  plug AcqdatApiWeb.Plug.LoadProject
   plug AcqdatApiWeb.Plug.LoadOrg
 
   def index(conn, _params) do
