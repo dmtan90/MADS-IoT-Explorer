@@ -85,9 +85,7 @@ defmodule AcqdatCore.Alerts.AlertCreation do
 
   defp data_manifest(alert_rule, parameter) do
     %{
-      name:
-        "Alert for " <>
-          alert_rule.entity <> " with id " <> Integer.to_string(alert_rule.entity_id),
+      name: alert_rule.rule_name,
       description: alert_rule.description,
       policy_name: alert_rule.policy_name.rule_name(),
       policy_module_name: alert_rule.policy_name,
