@@ -8,6 +8,7 @@ defmodule AcqdatApiWeb.Alerts.AlertView do
 
     %{
       rule_name: alert.name,
+      created_at: alert.inserted_at,
       app: alert.app,
       org_id: alert.org_id,
       assignee_ids: alert.assignee_ids,
