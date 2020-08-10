@@ -8,7 +8,6 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesController do
   import AcqdatApiWeb.Helpers
   import AcqdatApiWeb.Validators.Alerts.AlertRules
 
-  plug AcqdatApiWeb.Plug.LoadProject
   plug AcqdatApiWeb.Plug.LoadOrg
   plug AcqdatApiWeb.Plug.LoadAlertRules when action in [:update, :delete, :show]
 

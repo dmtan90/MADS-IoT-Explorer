@@ -68,6 +68,8 @@ defmodule AcqdatCore.Alerts.Model.AlertRules do
       if recipient != 0 do
         user = User.extract_email(recipient)
         acc ++ [user]
+      else
+        acc
       end
     end)
   end

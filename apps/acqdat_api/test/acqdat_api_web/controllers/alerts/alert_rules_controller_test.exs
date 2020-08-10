@@ -19,7 +19,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         post(
           conn,
-          Routes.alert_rules_path(conn, :create, org.id, alert_rule.project_id),
+          Routes.alert_rules_path(conn, :create, org.id),
           alert_rule
         )
 
@@ -48,7 +48,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         post(
           conn,
-          Routes.alert_rules_path(conn, :create, org.id, alert_rule.project_id),
+          Routes.alert_rules_path(conn, :create, org.id),
           alert_rule
         )
 
@@ -70,7 +70,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         post(
           conn,
-          Routes.alert_rules_path(conn, :create, org.id, alert_rule.project_id),
+          Routes.alert_rules_path(conn, :create, org.id),
           alert_rule
         )
 
@@ -79,7 +79,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         put(
           conn,
-          Routes.alert_rules_path(conn, :update, org.id, alert_rule.project_id, response["id"]),
+          Routes.alert_rules_path(conn, :update, org.id, response["id"]),
           params
         )
 
@@ -111,7 +111,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         put(
           conn,
-          Routes.alert_rules_path(conn, :update, org.id, alert_rule.project_id, alert_rule.id),
+          Routes.alert_rules_path(conn, :update, org.id, alert_rule.id),
           data
         )
 
@@ -130,7 +130,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         delete(
           conn,
-          Routes.alert_rules_path(conn, :delete, org.id, alert_rule.project_id, alert_rule.id)
+          Routes.alert_rules_path(conn, :delete, org.id, alert_rule.id)
         )
 
       response = conn |> json_response(200)
@@ -159,7 +159,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
       conn =
         delete(
           conn,
-          Routes.alert_rules_path(conn, :delete, org.id, alert_rule.project_id, alert_rule.id)
+          Routes.alert_rules_path(conn, :delete, org.id, alert_rule.id)
         )
 
       result = conn |> json_response(403)
@@ -177,10 +177,9 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
         "page_number" => 1
       }
 
-      {:ok, alert_rule} = AlertRules.create(alert_rule)
+      AlertRules.create(alert_rule)
 
-      conn =
-        get(conn, Routes.alert_rules_path(conn, :index, org.id, alert_rule.project_id, params))
+      conn = get(conn, Routes.alert_rules_path(conn, :index, org.id, params))
 
       response = conn |> json_response(200)
       assert response["alert_rules"]
@@ -188,7 +187,6 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
 
     test "fails if invalid token in authorization header", %{
       conn: conn,
-      alert_rule: alert_rule,
       org: org
     } do
       bad_access_token = "qwerty1234567qwerty12"
@@ -202,8 +200,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
         "page_number" => 1
       }
 
-      conn =
-        get(conn, Routes.alert_rules_path(conn, :index, org.id, alert_rule.project_id, params))
+      conn = get(conn, Routes.alert_rules_path(conn, :index, org.id, params))
 
       result = conn |> json_response(403)
       assert result == %{"errors" => %{"message" => "Unauthorized"}}
@@ -217,6 +214,7 @@ defmodule AcqdatApiWeb.Alerts.AlertRulesControllerTest do
 
     alert_rule = %{
       entity: "sensor",
+      rule_name: "Temperature",
       entity_id: sensor.id,
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
       entity_parameters: param1,

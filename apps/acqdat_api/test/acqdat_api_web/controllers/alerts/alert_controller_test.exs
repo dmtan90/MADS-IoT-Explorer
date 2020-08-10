@@ -20,7 +20,7 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
       conn =
         put(
           conn,
-          Routes.alert_path(conn, :update, org.id, alert.project_id, alert.id),
+          Routes.alert_path(conn, :update, org.id, alert.id),
           params
         )
 
@@ -48,7 +48,7 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
       conn =
         put(
           conn,
-          Routes.alert_path(conn, :update, org.id, alert.project_id, alert.id),
+          Routes.alert_path(conn, :update, org.id, alert.id),
           data
         )
 
@@ -66,7 +66,7 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
       conn =
         delete(
           conn,
-          Routes.alert_path(conn, :delete, org.id, alert.project_id, alert.id)
+          Routes.alert_path(conn, :delete, org.id, alert.id)
         )
 
       response = conn |> json_response(200)
@@ -91,7 +91,7 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
       conn =
         delete(
           conn,
-          Routes.alert_path(conn, :delete, org.id, alert.project_id, alert.id)
+          Routes.alert_path(conn, :delete, org.id, alert.id)
         )
 
       result = conn |> json_response(403)
@@ -108,8 +108,8 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
         "page_number" => 1
       }
 
-      [alert1, _, _] = insert_list(3, :alert)
-      conn = get(conn, Routes.alert_path(conn, :index, org.id, alert1.project_id, params))
+      insert_list(3, :alert)
+      conn = get(conn, Routes.alert_path(conn, :index, org.id, params))
 
       response = conn |> json_response(200)
       assert response["alerts"]
@@ -127,9 +127,9 @@ defmodule AcqdatApiWeb.Alerts.AlertControllerTest do
         "page_number" => 1
       }
 
-      [alert1, _, _] = insert_list(3, :alert)
+      insert_list(3, :alert)
 
-      conn = get(conn, Routes.alert_path(conn, :index, org.id, alert1.project_id, params))
+      conn = get(conn, Routes.alert_path(conn, :index, org.id, params))
 
       result = conn |> json_response(403)
       assert result == %{"errors" => %{"message" => "Unauthorized"}}

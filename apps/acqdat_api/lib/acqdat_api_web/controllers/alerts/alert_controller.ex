@@ -7,7 +7,6 @@ defmodule AcqdatApiWeb.Alerts.AlertController do
   import AcqdatApiWeb.Validators.Alerts.Alert
   alias AcqdatApi.Alerts.Alert
 
-  plug AcqdatApiWeb.Plug.LoadProject
   plug AcqdatApiWeb.Plug.LoadOrg
   plug AcqdatApiWeb.Plug.LoadAlert when action in [:update, :delete, :show]
 

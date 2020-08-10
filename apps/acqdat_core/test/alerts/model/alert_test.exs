@@ -100,7 +100,6 @@ defmodule AcqdatCore.Alerts.Model.AlertTest do
   describe "delete/1" do
     setup do
       {:ok, alert} = AlertModel.create(@valid_params)
-
       [alert: alert]
     end
 

@@ -5,7 +5,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertTest do
   alias AcqdatCore.Alerts.Schema.Alert
 
   describe "changeset/2" do
-    test "returns a valid changeset", context do
+    test "returns a valid changeset" do
       params = %{
         name: "Test name",
         description: "Test description",

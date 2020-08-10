@@ -14,8 +14,6 @@ defmodule AcqdatApi.Alerts.AlertRules do
   end
 
   def verify_alert_rules({:ok, alert_rules}) do
-    recepient_ids = AlertRules.send_alert(alert_rules)
-    alert_rules = Map.replace!(alert_rules, :recepient_ids, recepient_ids)
     {:ok, alert_rules}
   end
 

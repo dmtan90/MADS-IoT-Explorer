@@ -66,7 +66,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       sensor: sensor
     } do
       alert_rules = Map.replace!(alert_rules, :status, "disable")
-      {:ok, alert_rules} = AlertRules.create(alert_rules)
+      AlertRules.create(alert_rules)
       gateway = setup_gateway(sensor)
       data_dump = dump_iot_data(gateway)
       DataParser.start_parsing(data_dump)

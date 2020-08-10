@@ -7,7 +7,7 @@ defmodule AcqdatApiWeb.Alerts.AlertView do
     recepient_ids = AlertRules.send_alert(alert)
 
     %{
-      name: alert.name,
+      rule_name: alert.name,
       app: alert.app,
       org_id: alert.org_id,
       assignee_ids: alert.assignee_ids,

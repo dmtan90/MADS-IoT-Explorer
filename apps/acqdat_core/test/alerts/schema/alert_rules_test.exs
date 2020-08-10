@@ -42,6 +42,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRulesTest do
     [user1, user2, user3] = insert_list(3, :user)
 
     alert_rule = %{
+      rule_name: "Temperature",
       entity: "sensor",
       entity_id: sensor.id,
       policy_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
