@@ -14,7 +14,7 @@ defmodule AcqdatCore.Alerts.Model.AlertTest do
     entity_id: 1,
     communication_medium: ["email", "sms"],
     recepient_ids: [1, 2, 3],
-    severity: "warning",
+    severity: "low",
     status: "resolved",
     creator_id: 1,
     org_id: 1,

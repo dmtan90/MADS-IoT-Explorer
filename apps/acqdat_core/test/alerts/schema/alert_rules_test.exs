@@ -55,7 +55,7 @@ defmodule AcqdatCore.Alerts.Schema.AlertRulesTest do
       recepient_ids: [0, user1.id, user2.id],
       assignee_ids: [user3.id],
       policy_type: ["user"],
-      severity: "warning",
+      severity: "low",
       status: "enable",
       app: "iot_manager",
       project_id: sensor.project_id,
