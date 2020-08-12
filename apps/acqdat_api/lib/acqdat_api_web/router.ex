@@ -95,7 +95,6 @@ defmodule AcqdatApiWeb.Router do
       get "/gateways/:gateway_id/data_dump_index", GatewayController, :data_dump_index
     end
 
-
     get "/gateways/", IotManager.GatewayController, :all_gateways
     # all the alert apis will be scoped here
     scope "/", Alerts do
