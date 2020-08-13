@@ -116,6 +116,8 @@ defmodule AcqdatCore.Alerts.AlertCreation do
     Task.start_link(fn ->
       case Alert.create(params) do
         {:ok, alert} ->
+          {:ok, severity_code} = AlertSeverityEnum.dump(alert.severity)
+          alert = Map.put_new(alert, :severity_code, severity_code)
           send_alert(alert)
 
         {:error, _error} ->

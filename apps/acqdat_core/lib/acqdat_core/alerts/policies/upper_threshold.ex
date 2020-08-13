@@ -1,8 +1,8 @@
-defmodule AcqdatCore.Alerts.Policies.RangeBased do
+defmodule AcqdatCore.Alerts.Policies.UpperThreshold do
   @moduledoc """
-  This module will define range base policy.
-  So if any entity implements this policy as an alert rule for a particular parameter. it has to five lower and upper limit value.
-  If that parameters value at the time of data parsing falls into this lower and upper limit then that alert rule will generate an alert
+  This module will define upper threshold policy.
+  So if any entity implements this policy as an alert rule for a particular parameter. it has to provide upper limit value.
+  If that parameters value at the time of data parsing crosses this upper limit then that alert rule will generate an alert
   depending upon the severity.
   """
   use AcqdatCore.Schema
@@ -10,7 +10,7 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
   @behaviour Policy
 
   @type t :: %__MODULE__{}
-  @rule "Alert when data is outside a bounded range"
+  @rule "Alert when data is greater then an upper threshold"
   @decimal_zero Decimal.from_float(0.0)
 
   embedded_schema do
@@ -40,10 +40,6 @@ defmodule AcqdatCore.Alerts.Policies.RangeBased do
   @impl Policy
   def rule_preferences() do
     [
-      %{
-        key: :lower_limit,
-        type: :input
-      },
       %{
         key: :upper_limit,
         type: :input

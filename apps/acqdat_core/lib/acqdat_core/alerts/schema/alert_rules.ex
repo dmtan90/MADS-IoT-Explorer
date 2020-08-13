@@ -54,8 +54,8 @@ defmodule AcqdatCore.Alerts.Schema.AlertRules do
     timestamps(type: :utc_datetime)
   end
 
-  @required_params ~w(rule_name entity entity_id app communication_medium recepient_ids status policy_name uuid slug rule_parameters policy_type creator_id org_id severity)a
-  @optional_params ~w(description project_id assignee_ids)a
+  @required_params ~w(rule_name entity entity_id app communication_medium recepient_ids status policy_name uuid slug rule_parameters creator_id org_id severity)a
+  @optional_params ~w(policy_type description project_id assignee_ids)a
   @embedded_required_params ~w(name uuid data_type)a
   @embedded_optional_params ~w(unit)a
   @permitted_embedded @embedded_optional_params ++ @embedded_required_params
