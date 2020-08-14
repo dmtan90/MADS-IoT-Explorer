@@ -118,6 +118,15 @@ defmodule AcqdatCore.Alerts.AlertCreation do
         {:ok, alert} ->
           {:ok, severity_code} = AlertSeverityEnum.dump(alert.severity)
           alert = Map.put_new(alert, :severity_code, severity_code)
+
+          app =
+            Atom.to_string(alert.app)
+            |> String.split("_")
+            |> Enum.reduce([], fn x, acc -> acc ++ [String.capitalize(x)] end)
+            |> Enum.reduce("", fn x, acc -> acc <> x <> " " end)
+            |> String.trim_trailing(" ")
+
+          alert = Map.put_new(alert, :alert_app_name, app)
           send_alert(alert)
 
         {:error, _error} ->

@@ -98,7 +98,7 @@ defmodule AcqdatApiWeb.Router do
     get "/gateways/", IotManager.GatewayController, :all_gateways
     # all the alert apis will be scoped here
     scope "/", Alerts do
-      resources "/policy", PolicyController, only: [:index]
+      resources "/policies", PolicyController, only: [:index]
       resources "/alert-rules", AlertRulesController, except: [:new, :edit]
       resources "/alert", AlertController, except: [:new, :edit, :create]
     end
