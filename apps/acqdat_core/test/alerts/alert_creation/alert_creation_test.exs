@@ -142,7 +142,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       recepient_ids: [0, user1.id, user2.id],
       assignee_ids: [user3.id],
       policy_type: ["user"],
-      severity: "low",
+      severity: "Low",
       status: "enable",
       app: "iot_manager",
       project_id: sensor.project_id,

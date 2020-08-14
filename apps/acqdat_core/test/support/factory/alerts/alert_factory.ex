@@ -24,7 +24,7 @@ defmodule AcqdatCore.Factory.Alerts do
           recepient_ids: [user1.id, user2.id],
           assignee_ids: [user3.id],
           policy_type: ["user"],
-          severity: "low",
+          severity: "Low",
           status: "enable",
           app: "iot_manager",
           project_id: sensor.project_id,
@@ -43,7 +43,7 @@ defmodule AcqdatCore.Factory.Alerts do
           entity_name: "sensor",
           entity_id: sensor.id,
           policy_module_name: "Elixir.AcqdatCore.Alerts.Policies.RangeBased",
-          policy_name: "RangeBasedPolicy",
+          policy_name: "Alert when data is outside a bounded range",
           communication_medium: ["in-app, sms, e-mail"],
           rule_parameters: [
             %{
@@ -63,7 +63,7 @@ defmodule AcqdatCore.Factory.Alerts do
           ],
           recepient_ids: [user1.id, user2.id],
           assignee_ids: [user3.id],
-          severity: "low",
+          severity: "Low",
           status: "un_resolved",
           app: "iot_manager",
           project_id: sensor.project_id,
