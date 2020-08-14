@@ -25,6 +25,18 @@ defmodule AcqdatCore.Alerts.AlertCreation do
   alias AcqdatCore.Mailer.AlertNotification
   alias AcqdatCore.Mailer
   alias AcqdatCore.Model.RoleManagement.User
+  alias AcqdatCore.Alerts.Server
+
+  @doc """
+  For calling server for starting out alert creation
+  """
+  def gateway_alert(data) do
+    GenServer.cast(Server, {:gateway_alert, data})
+  end
+
+  def sensor_alert(data) do
+    GenServer.cast(Server, {:sensor_alert, data})
+  end
 
   @doc """
   Receives data from dataparser module and for each entity ID will check if a alert rule exist or not.
