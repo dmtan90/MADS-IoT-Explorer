@@ -36,7 +36,7 @@ defmodule AcqdatCore.Alerts.AlertCreationTest do
       # TODO: have added a small time out so worker processes release db
       # connection, else the test exits and db connection is removed.
       # Need to add a clean way to handle this.
-      :timer.sleep(150)
+      :timer.sleep(450)
       alert = List.first(Repo.all(AlertSchema))
       assert Map.has_key?(alert, :app)
       assert Map.has_key?(alert, :policy_name)
