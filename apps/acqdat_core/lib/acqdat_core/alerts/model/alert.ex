@@ -36,6 +36,10 @@ defmodule AcqdatCore.Alerts.Model.Alert do
     query |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
   end
 
+  def get_all(%{page_size: page_size, page_number: page_number}) do
+    Alert |> order_by(:id) |> Repo.paginate(page: page_number, page_size: page_size)
+  end
+
   defp filter_where(params) do
     Enum.reduce(params, dynamic(true), fn
       {"name", name}, dynamic_query ->
