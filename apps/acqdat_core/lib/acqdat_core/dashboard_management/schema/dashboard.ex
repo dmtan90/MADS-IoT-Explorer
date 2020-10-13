@@ -97,12 +97,12 @@ defmodule AcqdatCore.DashboardManagement.Schema.Dashboard.Settings do
     field(:sidebar_color, :string, default: "#1e3664")
     field(:client_name, :string)
     field(:thumbnail_url, :string)
+    field(:panels_order, :map)
   end
 
-  @permitted ~w(background_color sidebar_color client_name thumbnail_url)a
+  @permitted ~w(background_color sidebar_color client_name thumbnail_url panels_order)a
 
   def changeset(%__MODULE__{} = settings, params) do
-    settings
-    |> cast(params, @permitted)
+    settings |> cast(params, @permitted)
   end
 end
