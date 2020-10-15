@@ -1,6 +1,7 @@
 defmodule AcqdatApiWeb.EntityManagement.AssetView do
   use AcqdatApiWeb, :view
   alias AcqdatApiWeb.EntityManagement.{AssetView, AssetTypeView, SensorView}
+  alias AcqdatApiWeb.IotManager.GatewayView
   alias AcqdatCore.Model.EntityManagement.Asset, as: AssetModel
 
   def render("asset_tree.json", %{asset: asset}) do
@@ -37,6 +38,56 @@ defmodule AcqdatApiWeb.EntityManagement.AssetView do
       mapped_parameters: asset_mapped_parameters,
       asset_type: render_one(asset.asset_type, AssetTypeView, "asset_type.json"),
       entities: (assets || []) ++ (sensors || [])
+      # TODO: Need to uncomment below fields depending on the future usecases in the view
+      # description: asset.description,
+      # image_url: asset.image_url,
+      # inserted_at: asset.inserted_at,
+      # metadata: asset.metadata,
+      # slug: asset.slug,
+      # updated_at: asset.updated_at,
+      # uuid: asset.uuid,
+    }
+  end
+
+  def render("asset_tree_with_gateway.json", %{asset: asset}) do
+    assets =
+      if Map.has_key?(asset, :assets) do
+        render_many(asset.assets, AssetView, "asset_tree_with_gateway.json")
+      end
+
+    sensors =
+      if Map.has_key?(asset, :sensors) do
+        render_many(asset.sensors, SensorView, "sensor_tree.json")
+      end
+
+    gateways =
+      if Map.has_key?(asset, :gateways) do
+        render_many(asset.gateways, GatewayView, "gateway_tree.json")
+      end
+
+    asset_mapped_parameters =
+      if Map.has_key?(asset, :sensors) do
+        AssetModel.fetch_mapped_parameters(asset)
+      end
+
+    %{
+      type: "Asset",
+      id: asset.id,
+      parent_id: asset.parent_id,
+      name: asset.name,
+      properties: asset.properties,
+      type: "Asset",
+      id: asset.id,
+      name: asset.name,
+      description: asset.description,
+      properties: asset.properties,
+      parent_id: asset.parent_id,
+      asset_type_id: asset.asset_type_id,
+      creator_id: asset.creator_id,
+      metadata: render_many(asset.metadata, AssetView, "metadata.json"),
+      mapped_parameters: asset_mapped_parameters,
+      asset_type: render_one(asset.asset_type, AssetTypeView, "asset_type.json"),
+      entities: (assets || []) ++ (sensors || []) ++ (gateways || [])
       # TODO: Need to uncomment below fields depending on the future usecases in the view
       # description: asset.description,
       # image_url: asset.image_url,
