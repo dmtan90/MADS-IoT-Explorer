@@ -6,13 +6,13 @@ defmodule Notifications do
   alias AcqdatCore.Mailer.AlertNotification
   alias AcqdatCore.Mailer
   alias AcqdatCore.Model.EntityManagement.Organisation
-  alias Notifications.Vendors.Twilio
+  alias Notifications.Vendors
 
-  def send_notifications(alert, alert_rule) do
+  def send_notifications(alert, alert_rule, vendor) do
     Enum.each(alert.communication_medium, fn medium ->
       case medium do
         "e-mail" -> send_alert(alert)
-        "sms" -> send_sms(alert, alert_rule)
+        "sms" -> send_sms(alert, alert_rule, vendor)
         "in-app" -> nil
       end
     end)
@@ -29,7 +29,7 @@ defmodule Notifications do
     end)
   end
 
-  defp send_sms(alert, alert_rule) do
+  defp send_sms(alert, alert_rule, vendor) do
     contacts = create_contact_list(alert_rule)
     message = create_message(alert)
 
@@ -39,7 +39,7 @@ defmodule Notifications do
 
       _ ->
         Enum.each(contacts, fn contact ->
-          Twilio.send_sms(message, contact, "+12059646511")
+          Vendors.module(Vendors.services(vendor)).send_sms(message, contact, "+12059646511")
         end)
     end
   end
