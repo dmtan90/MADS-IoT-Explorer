@@ -110,8 +110,14 @@ defmodule Virta.Core.Workflow do
   end
 
   @impl true
-  def loop(inport_args, outport_args, instance_pid, _configuration,
-      rinports \\ nil, rgraph_name \\ nil) do
+  def loop(
+        inport_args,
+        outport_args,
+        instance_pid,
+        _configuration,
+        rinports \\ nil,
+        rgraph_name \\ nil
+      ) do
     receive do
       {request_id, port, value} ->
         {inports, graph_name} =

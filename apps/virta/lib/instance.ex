@@ -31,7 +31,15 @@ defmodule Virta.Instance do
       |> Enum.reduce(Map.new(), fn node, lookup_table ->
         outport_args = get_outport_args(graph, node, lookup_table, graph)
         configuration = node.configuration
-        {:ok, pid} = Task.start_link(Map.get(node, :module), :loop, [%{}, outport_args, self(), configuration])
+
+        {:ok, pid} =
+          Task.start_link(Map.get(node, :module), :loop, [
+            %{},
+            outport_args,
+            self(),
+            configuration
+          ])
+
         Map.put(lookup_table, node, pid)
       end)
 

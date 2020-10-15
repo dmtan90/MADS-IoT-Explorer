@@ -90,23 +90,21 @@ defmodule VirtaTest do
     node_configuration = %{constant: 3}
     addend = 1
     augend = 2
+
     adder =
       Graph.new(type: :directed)
       |> Graph.add_edge(
         %Node{module: Virta.Core.In, id: 0},
-        %Node{module: Virta.Math.ConstantAdd, id: 1,
-          configuration: node_configuration},
+        %Node{module: Virta.Math.ConstantAdd, id: 1, configuration: node_configuration},
         label: %EdgeData{from: :addend, to: :addend}
       )
       |> Graph.add_edge(
         %Node{module: Virta.Core.In, id: 0},
-        %Node{module: Virta.Math.ConstantAdd, id: 1,
-          configuration: node_configuration},
+        %Node{module: Virta.Math.ConstantAdd, id: 1, configuration: node_configuration},
         label: %EdgeData{from: :augend, to: :augend}
       )
       |> Graph.add_edge(
-        %Node{module: Virta.Math.ConstantAdd, id: 1,
-          configuration: node_configuration},
+        %Node{module: Virta.Math.ConstantAdd, id: 1, configuration: node_configuration},
         %Node{module: Virta.Core.Out, id: 2},
         label: %EdgeData{from: :sum, to: :sum}
       )
@@ -120,5 +118,4 @@ defmodule VirtaTest do
     {request_id, output} = Virta.Executor.call(name, data)
     assert output == %{sum: 6}
   end
-
 end

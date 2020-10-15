@@ -17,7 +17,7 @@ defmodule AcqdatCore.StreamLogic.Schema.Workflow do
     field(:uuid, :string, null: false)
     field(:enabled, :boolean, default: true)
 
-    #associations
+    # associations
     belongs_to(:project, Project)
     belongs_to(:org, Organisation)
 
@@ -38,12 +38,11 @@ defmodule AcqdatCore.StreamLogic.Schema.Workflow do
     |> assoc_constraint(:org)
   end
 
-  def update_changeset(%__MODULE__{}=workflow, params) do
+  def update_changeset(%__MODULE__{} = workflow, params) do
     workflow
     |> cast(params, @permitted)
     |> validate_required(@required)
     |> assoc_constraint(:project)
     |> assoc_constraint(:org)
   end
-
 end

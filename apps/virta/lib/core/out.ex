@@ -38,8 +38,7 @@ defmodule Virta.Core.Out do
   end
 
   @impl true
-  def run(request_id, inport_args, _outport_args, instance_pid,
-      _configuration \\ %{}) do
+  def run(request_id, inport_args, _outport_args, instance_pid, _configuration \\ %{}) do
     send(instance_pid, {request_id, :output, inport_args})
   end
 end

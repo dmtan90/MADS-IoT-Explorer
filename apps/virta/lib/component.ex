@@ -219,7 +219,6 @@ defmodule Virta.Component do
   """
   @callback component_properties() :: map()
 
-
   defmacro __using__(_) do
     quote do
       @behaviour Virta.Component

@@ -24,10 +24,10 @@ defmodule AcqdatCore.StreamLogic.Token do
   * `:metadata`: extra information about the message.
   """
   @type t :: %__MODULE__{
-    message_type: String.t(),
-    message_payload: map,
-    metadata: map
-  }
+          message_type: String.t(),
+          message_payload: map,
+          metadata: map
+        }
 
   def new(opts) when opts == %{} do
     {:error, "expect data and data_type"}
@@ -35,11 +35,15 @@ defmodule AcqdatCore.StreamLogic.Token do
 
   def new(opts) do
     if valid_data_type?(opts.data_type) do
-      {:ok, struct(%__MODULE__{
-        message_type: "",
-        message_payload: %{},
-        metadata: %{}
-      }, opts)}
+      {:ok,
+       struct(
+         %__MODULE__{
+           message_type: "",
+           message_payload: %{},
+           metadata: %{}
+         },
+         opts
+       )}
     else
       {:error, "invalid data type"}
     end
